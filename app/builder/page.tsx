@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import React, { useEffect, useCallback } from "react"
+import React, { useEffect, useCallback, useState } from "react"
 import { useResumeStore } from "@/store/resumeStore"
 import { useUIStore } from "@/store/uiStore"
 import { SectionNav } from "@/components/builder/SectionNav"
@@ -23,7 +23,8 @@ import { useSettingsStore } from "@/store/settingsStore"
 import dynamic from "next/dynamic"
 
 import { Button } from "@/components/ui/Button"
-import { Download, FileText } from "lucide-react"
+import { Download, FileText, Menu, X, Eye } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 const PDFDownloadLink = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
@@ -39,6 +40,8 @@ function BuilderContent() {
   const { accentColor, setAccentColor, zoom, setZoom, templateId, setTemplate } = useSettingsStore()
   const settingsState = useSettingsStore()
   const resumeData = useResumeStore((state) => state.getActiveData())
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false)
 
   useEffect(() => {
     if (type) {
@@ -47,7 +50,87 @@ function BuilderContent() {
   }, [type])
 
   return (
-    <div className="flex min-h-screen bg-slate-950 font-sans text-slate-200">
+    <div className="flex flex-col md:flex-row min-h-screen bg-slate-950 font-sans text-slate-200">
+      {/* Mobile Header */}
+      <div className="md:hidden sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800 p-4 flex items-center justify-between">
+        <h2 className="text-xl font-heading font-bold text-white">Builder</h2>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={() => setIsMobilePreviewOpen(true)}>
+            <Eye className="text-slate-200" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>
+            <Menu className="text-slate-200" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Mobile Preview Overlay */}
+      <AnimatePresence>
+        {isMobilePreviewOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed inset-0 z-[100] bg-slate-950 flex flex-col md:hidden overflow-hidden"
+          >
+            <div className="p-4 flex flex-col gap-4 border-b border-slate-800 bg-slate-950">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-heading font-bold text-white">Preview</h2>
+                <Button variant="ghost" size="icon" onClick={() => setIsMobilePreviewOpen(false)}>
+                  <X className="text-slate-200" />
+                </Button>
+              </div>
+              <div className="flex gap-4 items-center justify-between">
+                <div className="flex items-center gap-2 bg-slate-800/50 px-3 py-2 rounded-lg flex-1">
+                  <span className="text-xs text-slate-500 w-10">{Math.round(zoom * 100)}%</span>
+                  <input 
+                    type="range" 
+                    min="0.3" 
+                    max="1.5" 
+                    step="0.05" 
+                    value={zoom} 
+                    onChange={(e) => setZoom(parseFloat(e.target.value))}
+                    className="flex-1 h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary"
+                  />
+                </div>
+                <input 
+                  type="color" 
+                  value={accentColor} 
+                  onChange={(e) => setAccentColor(e.target.value)}
+                  className="w-8 h-8 rounded-full overflow-hidden border-none bg-transparent cursor-pointer flex-shrink-0"
+                />
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto bg-slate-900/30 relative">
+              <div className="absolute inset-0 overflow-auto scrollbar-hide py-4 px-2">
+                <Preview />
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Nav Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-[100] bg-slate-950 flex flex-col md:hidden overflow-hidden"
+          >
+            <div className="p-4 flex items-center justify-between border-b border-slate-800 bg-slate-950">
+              <h2 className="text-xl font-heading font-bold text-white">Navigation</h2>
+              <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
+                <X className="text-slate-200" />
+              </Button>
+            </div>
+            <div className="p-6 overflow-y-auto flex-1 pb-24">
+              <SectionNav onNavClick={() => setIsMobileMenuOpen(false)} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Sidebar Navigation */}
       <aside className="w-64 border-r border-slate-800 bg-slate-900/50 flex-shrink-0 sticky top-0 h-screen overflow-y-auto hidden md:block">
         <div className="p-6">

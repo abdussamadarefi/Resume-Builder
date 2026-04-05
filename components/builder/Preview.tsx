@@ -23,11 +23,11 @@ export function Preview() {
 
   React.useEffect(() => {
     if (contentRef.current) {
-      const height = contentRef.current.scrollHeight
-      const a4HeightPx = 1122 // ~297mm at 96dpi
-      setIsOverflowing(height > a4HeightPx)
+      // Use clientHeight + small buffer to account for subpixel rounding from CSS mm to px
+      const isActuallyOverflowing = contentRef.current.scrollHeight > contentRef.current.clientHeight + 2;
+      setIsOverflowing(isActuallyOverflowing)
     }
-  }, [activeData, templateId])
+  }, [activeData, templateId, fontSize, lineHeight, margin])
   
   return (
     <div className="w-full h-full flex flex-col items-center p-4 bg-slate-800/20 overflow-auto">

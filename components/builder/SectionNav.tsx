@@ -28,7 +28,7 @@ const sections = [
   { id: "data", label: "Data & Privacy", icon: Shield },
 ] as const
 
-export function SectionNav() {
+export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
   const activeSection = useUIStore((state) => state.activeSection)
   const setActiveSection = useUIStore((state) => state.setActiveSection)
   const activeData = useResumeStore((state) => state.getActiveData())
@@ -41,7 +41,10 @@ export function SectionNav() {
         return (
           <button
             key={id}
-            onClick={() => setActiveSection(id as SectionKey)}
+            onClick={() => {
+              setActiveSection(id as SectionKey)
+              if (onNavClick) onNavClick()
+            }}
             className={cn(
               "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group text-left",
               activeSection === id

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "skills": {
+    "app-builder": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "computedHash": "5cdda6366e3c6018e85e76a1ec769d2fad56928f461586acbe56db32e803ce49"
+    },
+    "backend-patterns": {
+      "source": "affaan-m/everything-claude-code",
+      "sourceType": "github",
+      "computedHash": "6456e45aca107569db0bf67910f58b60af891330864bfdb3fc1c7a9df1ceffbc"
+    },
+    "design-thinking": {
+      "source": "melodic-software/claude-code-plugins",
+      "sourceType": "github",
+      "computedHash": "db6da12611becc566c177d863a1218fe93f98aba3d05f3aa6d4c2ef0bb4c6c69"
+    },
+    "figma-design": {
+      "source": "manutej/luxor-claude-marketplace",
+      "sourceType": "github",
+      "computedHash": "6f3e8e17db0e888b2881728576c6a521bb35035410f25da3cb0e606c129bff8f"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "516bd2154eb843a8240e43d5b285229129853114ad7075a5e141e1c08e408c84"
+    }
+  }
+}

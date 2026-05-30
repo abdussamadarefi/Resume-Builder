@@ -1,10 +1,12 @@
 "use client"
 
+import React, { useState } from "react"
 import { useSettingsStore } from "@/store/settingsStore"
 import { useResumeStore } from "@/store/resumeStore"
 import { Label } from "@/components/ui/Label"
-import { Layout, Type, Palette, Eye, EyeOff } from "lucide-react"
+import { Layout, Type, Palette, Eye, EyeOff, Sparkles, RefreshCw } from "lucide-react"
 import { SectionKey } from "@/types"
+import { runAutoFit } from "@/lib/optimizer"
 
 const colors = [
   { name: "Blue", value: "#3b82f6" },
@@ -59,8 +61,14 @@ export function SettingsForm() {
   const setSectionVisibility = useResumeStore((state) => state.setSectionVisibility)
   const visibility = activeData.sectionVisibility
 
+  const [isOptimizing, setIsOptimizing] = useState(false)
+
   const toggleSection = (key: string) => {
     setSectionVisibility(key as SectionKey, !visibility[key])
+  }
+
+  const handleAutoFitClick = () => {
+    runAutoFit(fontSize, setFontSize, lineHeight, setLineHeight, margin, setMargin, setIsOptimizing)
   }
 
   return (
@@ -118,10 +126,29 @@ export function SettingsForm() {
       </section>
 
       <section>
-        <h3 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
-          <Type className="text-primary" size={24} />
-          Typography & Spacing
-        </h3>
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-xl font-bold text-white flex items-center gap-2">
+            <Type className="text-primary" size={24} />
+            Typography & Spacing
+          </h3>
+          {activeData.meta.type === "resume" && (
+            <button
+              onClick={handleAutoFitClick}
+              disabled={isOptimizing}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-primary to-indigo-600 hover:opacity-90 disabled:opacity-50 text-[10px] font-bold uppercase tracking-wider text-white rounded-xl shadow-lg shadow-primary/10 transition-all active:scale-95 flex-shrink-0"
+            >
+              {isOptimizing ? (
+                <>
+                  <RefreshCw className="animate-spin" size={12} /> Optimizing...
+                </>
+              ) : (
+                <>
+                  <Sparkles size={12} /> Auto-Fit to 1 Page
+                </>
+              )}
+            </button>
+          )}
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-8 rounded-3xl bg-slate-900/40 border border-slate-800">
           <div className="space-y-4">
             <Label className="text-slate-400">Font Size ({fontSize}px)</Label>

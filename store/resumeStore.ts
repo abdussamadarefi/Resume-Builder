@@ -66,6 +66,7 @@ interface ResumeState {
   createNewResume: (type: DocumentType) => void;
   deleteResume: (id: string) => void;
   renameResume: (id: string, title: string) => void;
+  duplicateResume: (id: string) => void;
 }
 
 const createInitialData = (id: string, type: DocumentType = "resume"): ResumeData => ({
@@ -312,6 +313,26 @@ export const useResumeStore = create<ResumeState>()(
             [id]: { ...state.resumes[id], meta: { ...state.resumes[id].meta, title } },
           },
         })),
+
+      duplicateResume: (id) => {
+        const resumeToDuplicate = get().resumes[id];
+        if (!resumeToDuplicate) return;
+        const newId = crypto.randomUUID();
+        const duplicated = {
+          ...JSON.parse(JSON.stringify(resumeToDuplicate)),
+          meta: {
+            ...resumeToDuplicate.meta,
+            id: newId,
+            title: `${resumeToDuplicate.meta.title} (Copy)`,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+        };
+        set((state) => ({
+          resumes: { ...state.resumes, [newId]: duplicated },
+          activeId: newId,
+        }));
+      },
 
       addPublication: (entry) =>
         set((state) => ({

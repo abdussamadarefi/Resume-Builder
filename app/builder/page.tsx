@@ -32,22 +32,85 @@ const PDFDownloadLink = dynamic(
 )
 import { PDFRenderer } from "@/components/export/PDFRenderer"
 
+const SECTION_INFO: Record<string, { title: string; desc: string }> = {
+  personal: { title: "Personal Information", desc: "How recruiters can contact you" },
+  summary: { title: "Profile Summary", desc: "A brief, impactful introduction of your career" },
+  experience: { title: "Work Experience", desc: "Your professional chronology and key achievements" },
+  education: { title: "Education History", desc: "Your academic degrees and qualifications" },
+  skills: { title: "Core Skills", desc: "Categorized tools, technologies, and competencies" },
+  projects: { title: "Projects & Portfolio", desc: "Key professional or open-source achievements" },
+  certifications: { title: "Certifications", desc: "Professional credentials and licenses" },
+  languages: { title: "Languages", desc: "Your native and secondary spoken languages" },
+  publications: { title: "Publications & Research", desc: "Journal articles, book chapters, and preprints" },
+  grants: { title: "Grants & Funding", desc: "Acquired project fellowships and research grants" },
+  teaching: { title: "Teaching Experience", desc: "Courses taught, lectures, and academic instruction" },
+  references: { title: "References", desc: "Professional contacts who can vouch for you" },
+  custom: { title: "Custom Section", desc: "Any additional details you wish to highlight" },
+  settings: { title: "Design & Layout Settings", desc: "Customize spacing, colors, and font sizes" },
+  data: { title: "Data & Backup Manager", desc: "Export, import, or clear your locally-stored data" },
+}
+
 function BuilderContent() {
   const searchParams = useSearchParams()
   const type = searchParams.get("type") as "resume" | "cv" | null
   const createNewResume = useResumeStore((state) => state.createNewResume)
+  const switchResume = useResumeStore((state) => state.switchResume)
+  const resumes = useResumeStore((state) => state.resumes)
   const activeSection = useUIStore((state) => state.activeSection)
+  const workspaceInitialized = useUIStore((state) => state.workspaceInitialized)
+  const setWorkspaceInitialized = useUIStore((state) => state.setWorkspaceInitialized)
   const { accentColor, setAccentColor, zoom, setZoom, templateId, setTemplate } = useSettingsStore()
   const settingsState = useSettingsStore()
   const resumeData = useResumeStore((state) => state.getActiveData())
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
 
+  // Track Zustand store hydration
   useEffect(() => {
-    if (type) {
-      // Logic to initialize if needed
+    setIsHydrated(useResumeStore.persist.hasHydrated())
+    return useResumeStore.persist.onFinishHydration(() => {
+      setIsHydrated(true)
+    })
+  }, [])
+
+  // Initialize the document type once from URL query parameters on load, after hydration
+  useEffect(() => {
+    if (!isHydrated || workspaceInitialized) return
+
+    if (type && resumeData?.meta?.type) {
+      setWorkspaceInitialized(true)
+      if (resumeData.meta.type !== type) {
+        const match = Object.values(resumes).find((r) => r.meta.type === type)
+        if (match) {
+          switchResume(match.meta.id)
+        } else {
+          createNewResume(type)
+        }
+      }
+    } else {
+      setWorkspaceInitialized(true)
     }
-  }, [type])
+  }, [isHydrated, workspaceInitialized, type, resumeData?.meta?.type, resumes, switchResume, createNewResume, setWorkspaceInitialized])
+
+  // Synchronize the URL parameter to reflect the active document type
+  useEffect(() => {
+    if (isHydrated && workspaceInitialized && resumeData?.meta?.type) {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get("type") !== resumeData.meta.type) {
+        params.set("type", resumeData.meta.type)
+        window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`)
+      }
+    }
+  }, [isHydrated, workspaceInitialized, resumeData?.meta?.type])
+
+  if (!isHydrated || !resumeData || !resumeData.meta) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-950 text-slate-400 font-sans">
+        Loading workspace...
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-slate-950 font-sans text-slate-200">
@@ -132,9 +195,14 @@ function BuilderContent() {
         )}
       </AnimatePresence>
       {/* Sidebar Navigation */}
-      <aside className="w-64 border-r border-slate-800 bg-slate-900/50 flex-shrink-0 sticky top-0 h-screen overflow-y-auto hidden md:block">
+      <aside className="w-64 border-r border-slate-800 bg-slate-950 flex-shrink-0 sticky top-0 h-screen overflow-y-auto hidden md:block">
         <div className="p-6">
-          <h2 className="text-xl font-heading font-bold text-white mb-8">Builder</h2>
+          <div className="flex items-center gap-2 mb-8">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary to-indigo-600 flex items-center justify-center shadow-lg shadow-primary/25 text-white font-bold text-sm tracking-tighter">
+              RF
+            </div>
+            <h2 className="text-lg font-heading font-bold text-white tracking-tight">ResumeForge</h2>
+          </div>
           <SectionNav />
         </div>
       </aside>
@@ -143,11 +211,11 @@ function BuilderContent() {
       <main className="flex-1 max-w-3xl mx-auto p-6 md:p-12 overflow-y-auto">
         <div className="mb-12 flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-heading font-bold text-white capitalize mb-2">
-              {activeSection}
+            <h1 className="text-3xl font-heading font-bold text-white mb-2">
+              {SECTION_INFO[activeSection]?.title || activeSection}
             </h1>
-            <p className="text-slate-400">
-              Fill in the details for your professional profile.
+            <p className="text-slate-400 text-sm">
+              {SECTION_INFO[activeSection]?.desc || "Fill in the details for your professional profile."}
             </p>
           </div>
           
@@ -229,7 +297,7 @@ function BuilderContent() {
                 onChange={(e) => setAccentColor(e.target.value)}
                 className="w-6 h-6 rounded-full overflow-hidden border-none bg-transparent cursor-pointer"
               />
-              {type && <span className="px-2 py-1 bg-primary/20 text-primary rounded-md font-bold uppercase text-[10px] tracking-tight">{type}</span>}
+              <span className="px-2 py-1 bg-primary/20 text-primary rounded-md font-bold uppercase text-[10px] tracking-tight">{resumeData.meta.type}</span>
             </div>
           </div>
           <div className="flex-1 rounded-xl overflow-hidden border border-slate-800 relative">

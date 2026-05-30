@@ -1,11 +1,10 @@
-"use client"
-
 import { useResumeStore } from "@/store/resumeStore"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { motion } from "framer-motion"
 import React from "react"
 import { Camera, X } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export function PersonalInfoForm() {
   const activeData = useResumeStore((state) => state.getActiveData())
@@ -24,7 +23,45 @@ export function PersonalInfoForm() {
     if (!file.type.startsWith("image/")) return
     const reader = new FileReader()
     reader.onload = (ev) => {
-      updatePersonal({ photoUrl: ev.target?.result as string })
+      const img = new Image()
+      img.src = ev.target?.result as string
+      img.onload = () => {
+        const canvas = document.createElement("canvas")
+        const maxWidth = 250
+        const maxHeight = 250
+        let width = img.width
+        let height = img.height
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width)
+            width = maxWidth
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height)
+            height = maxHeight
+          }
+        }
+
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext("2d")
+        if (ctx) {
+          ctx.fillStyle = "#ffffff"
+          ctx.fillRect(0, 0, width, height)
+          ctx.drawImage(img, 0, 0, width, height)
+          try {
+            const compressed = canvas.toDataURL("image/jpeg", 0.75)
+            updatePersonal({ photoUrl: compressed })
+          } catch (err) {
+            console.error("Failed to compress image", err)
+            updatePersonal({ photoUrl: ev.target?.result as string })
+          }
+        } else {
+          updatePersonal({ photoUrl: ev.target?.result as string })
+        }
+      }
     }
     reader.readAsDataURL(file)
   }
@@ -186,7 +223,7 @@ export function PersonalInfoForm() {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
+        <div className={cn("space-y-2", activeData.meta.type !== "cv" && "col-span-2")}>
           <Label htmlFor="github">GitHub</Label>
           <Input 
             id="github"
@@ -196,17 +233,32 @@ export function PersonalInfoForm() {
             placeholder="github.com/johndoe"
           />
         </div>
+        {activeData.meta.type === "cv" && (
+          <div className="space-y-2">
+            <Label htmlFor="orcid">ORCID</Label>
+            <Input 
+              id="orcid"
+              name="orcid"
+              value={personal.orcid ?? ""}
+              onChange={handleChange}
+              placeholder="0000-0000-0000-0000"
+            />
+          </div>
+        )}
+      </div>
+
+      {activeData.meta.type === "cv" && (
         <div className="space-y-2">
-          <Label htmlFor="orcid">ORCID <span className="text-slate-500 font-normal">(CV only)</span></Label>
+          <Label htmlFor="nationality">Nationality</Label>
           <Input 
-            id="orcid"
-            name="orcid"
-            value={personal.orcid ?? ""}
+            id="nationality"
+            name="nationality"
+            value={personal.nationality ?? ""}
             onChange={handleChange}
-            placeholder="0000-0000-0000-0000"
+            placeholder="American / French"
           />
         </div>
-      </div>
+      )}
     </motion.div>
   )
 }

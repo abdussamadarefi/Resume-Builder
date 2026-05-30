@@ -81,6 +81,26 @@ export function EducationForm() {
                   placeholder="2022"
                 />
               </div>
+              {activeData.meta.type === "cv" && (
+                <>
+                  <div className="space-y-2">
+                    <Label>Thesis Title</Label>
+                    <Input 
+                      value={entry.thesisTitle ?? ""}
+                      onChange={(e) => updateEducation(entry.id, { thesisTitle: e.target.value })}
+                      placeholder="Thesis Title"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Supervisor</Label>
+                    <Input 
+                      value={entry.supervisor ?? ""}
+                      onChange={(e) => updateEducation(entry.id, { supervisor: e.target.value })}
+                      placeholder="Supervisor Name"
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         ))}

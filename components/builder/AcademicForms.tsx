@@ -46,7 +46,7 @@ export function PublicationsForm() {
           >
             <button
               onClick={() => removePublication(pub.id)}
-              className="absolute top-6 right-6 p-2 text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-red-400/10"
+              className="absolute top-6 right-6 p-2 text-slate-500 hover:text-red-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all rounded-lg hover:bg-red-400/10"
             >
               <Trash2 size={18} />
             </button>
@@ -120,7 +120,7 @@ export function GrantsForm() {
             animate={{ opacity: 1, scale: 1 }}
             className="p-8 rounded-3xl bg-slate-900/40 border border-slate-800 relative group"
           >
-            <button onClick={() => removeGrant(grant.id)} className="absolute top-6 right-6 p-2 text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-red-400/10">
+            <button onClick={() => removeGrant(grant.id)} className="absolute top-6 right-6 p-2 text-slate-500 hover:text-red-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all rounded-lg hover:bg-red-400/10">
               <Trash2 size={18} />
             </button>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -180,7 +180,7 @@ export function TeachingForm() {
             animate={{ opacity: 1, scale: 1 }}
             className="p-8 rounded-3xl bg-slate-900/40 border border-slate-800 relative group"
           >
-            <button onClick={() => removeTeaching(t.id)} className="absolute top-6 right-6 p-2 text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-red-400/10">
+            <button onClick={() => removeTeaching(t.id)} className="absolute top-6 right-6 p-2 text-slate-500 hover:text-red-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all rounded-lg hover:bg-red-400/10">
               <Trash2 size={18} />
             </button>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -117,7 +117,7 @@ function ProjectItem({ item, isExpanded, onToggle, onUpdate, onRemove }: any) {
             <div className="p-6 pt-0 space-y-4 border-t border-slate-800 mt-2">
               <div className="space-y-2"><Label>Project Name</Label><Input placeholder="e.g. ResumeForge" value={item.name} onChange={(e) => onUpdate({ name: e.target.value })} /></div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2"><Label>Start Date</Label><Input placeholder="e.g. Jan 2023" value={item.startDate} onChange={(e) => onUpdate({ startDate: e.target.value })} /></div>
                 <div className="space-y-2"><Label>End Date</Label><Input placeholder="e.g. Present" value={item.endDate} onChange={(e) => onUpdate({ endDate: e.target.value })} /></div>
               </div>

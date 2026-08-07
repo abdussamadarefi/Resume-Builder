@@ -55,7 +55,7 @@ export function DataManagement() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="p-8 rounded-3xl bg-blue-500/5 border border-blue-500/10 flex gap-6 items-start">
+      <div className="p-6 sm:p-8 rounded-3xl bg-blue-500/5 border border-blue-500/10 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-start text-center sm:text-left">
         <div className="p-3 bg-blue-500/10 rounded-2xl text-blue-500">
           <ShieldCheck size={28} />
         </div>

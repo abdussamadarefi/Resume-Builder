@@ -105,7 +105,7 @@ function CustomItem({ item, isExpanded, onToggle, onUpdate, onRemove }: { item: 
             <div className="p-6 pt-0 space-y-4 border-t border-slate-800 mt-2">
               <div className="space-y-2"><Label>Entry Title</Label><Input placeholder="e.g. Volunteer Work, Hobbies, etc." value={item.title} onChange={(e) => onUpdate({ title: e.target.value })} /></div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2"><Label>Subtitle/Role</Label><Input placeholder="e.g. Lead Organizer" value={item.subtitle} onChange={(e) => onUpdate({ subtitle: e.target.value })} /></div>
                 <div className="space-y-2"><Label>Date/Year</Label><Input placeholder="e.g. 2021 - 2023" value={item.date} onChange={(e) => onUpdate({ date: e.target.value })} /></div>
               </div>

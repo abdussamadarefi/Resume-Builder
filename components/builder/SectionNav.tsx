@@ -170,7 +170,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                           </div>
                         </button>
 
-                        <div className="flex items-center gap-0.5 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-0.5 opacity-100 sm:opacity-0 sm:group-hover/item:opacity-100 transition-opacity">
                           <button
                             onClick={() => duplicateResume(res.meta.id)}
                             className="p-1 hover:bg-slate-700 rounded text-slate-400 hover:text-slate-100 transition-colors"

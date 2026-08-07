@@ -19,6 +19,7 @@ import { CustomForm } from "@/components/builder/CustomForm"
 import { SettingsForm } from "@/components/builder/SettingsForm"
 import { DataManagement } from "@/components/builder/DataManagement"
 import { Preview } from "@/components/builder/Preview"
+import { SectionNavButtons } from "@/components/builder/SectionNavButtons"
 import { useSettingsStore } from "@/store/settingsStore"
 import dynamic from "next/dynamic"
 
@@ -208,10 +209,10 @@ function BuilderContent() {
       </aside>
 
       {/* Main Form Area */}
-      <main className="flex-1 max-w-3xl mx-auto p-6 md:p-12 overflow-y-auto">
-        <div className="mb-12 flex justify-between items-start">
+      <main className="flex-1 max-w-3xl mx-auto p-4 sm:p-6 md:p-12 overflow-y-auto">
+        <div className="mb-8 sm:mb-12 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div>
-            <h1 className="text-3xl font-heading font-bold text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white mb-2">
               {SECTION_INFO[activeSection]?.title || activeSection}
             </h1>
             <p className="text-slate-400 text-sm">
@@ -219,7 +220,7 @@ function BuilderContent() {
             </p>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             <PDFDownloadLink
               document={<PDFRenderer 
                 data={resumeData} 
@@ -270,6 +271,9 @@ function BuilderContent() {
               <p>Section &quot;{activeSection}&quot; is coming soon.</p>
             </div>
           )}
+
+          {/* Back / Next navigation buttons */}
+          <SectionNavButtons />
         </div>
       </main>
 

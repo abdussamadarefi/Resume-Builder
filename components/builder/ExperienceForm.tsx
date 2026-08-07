@@ -46,7 +46,7 @@ export function ExperienceForm() {
 
             <button 
               onClick={() => removeWork(entry.id)}
-              className="absolute top-4 right-4 p-2 text-slate-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-red-500/10"
+              className="absolute top-4 right-4 p-2 text-slate-600 hover:text-red-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all rounded-lg hover:bg-red-500/10"
             >
               <Trash2 size={16} />
             </button>

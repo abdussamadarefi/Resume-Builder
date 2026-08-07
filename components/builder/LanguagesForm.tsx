@@ -92,7 +92,7 @@ function LanguageItem({ item, onUpdate, onRemove }: { item: any; onUpdate: (upda
         <GripVertical size={16} />
       </div>
       
-      <div className="flex-1 grid grid-cols-2 gap-3">
+      <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Input 
           placeholder="Language (e.g. English)" 
           value={item.name} 

@@ -78,7 +78,7 @@ export function SettingsForm() {
           <Layout className="text-primary" size={24} />
           Choose Layout
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {templates.map((t) => (
             <button
               key={t.id}
@@ -126,7 +126,7 @@ export function SettingsForm() {
       </section>
 
       <section>
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
           <h3 className="text-xl font-bold text-white flex items-center gap-2">
             <Type className="text-primary" size={24} />
             Typography & Spacing
@@ -183,7 +183,7 @@ export function SettingsForm() {
           Section Visibility
         </h3>
         <p className="text-sm text-slate-500 mb-6">Toggle sections to show or hide them on your resume preview and export.</p>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {Object.entries(SECTION_LABELS).map(([key, label]) => {
             const isVisible = visibility?.[key] !== false
             return (

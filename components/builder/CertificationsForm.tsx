@@ -108,7 +108,7 @@ function CertItem({ item, isExpanded, onToggle, onUpdate, onRemove }: { item: an
             <div className="p-6 pt-0 space-y-4 border-t border-slate-800 mt-2">
               <div className="space-y-2"><Label>Certification Name</Label><Input placeholder="e.g. AWS Certified Solutions Architect" value={item.name} onChange={(e) => onUpdate({ name: e.target.value })} /></div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2"><Label>Issuing Organization</Label><Input placeholder="e.g. Amazon Web Services" value={item.issuer} onChange={(e) => onUpdate({ issuer: e.target.value })} /></div>
                 <div className="space-y-2"><Label>Date Earned</Label><Input placeholder="e.g. Aug 2023" value={item.date} onChange={(e) => onUpdate({ date: e.target.value })} /></div>
               </div>

@@ -130,7 +130,7 @@ export function PersonalInfoForm() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="firstName">First Name</Label>
           <Input 
@@ -164,7 +164,7 @@ export function PersonalInfoForm() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="email">Email Address</Label>
           <Input 
@@ -199,7 +199,7 @@ export function PersonalInfoForm() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="website">Website / Portfolio</Label>
           <Input 
@@ -222,7 +222,7 @@ export function PersonalInfoForm() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className={cn("space-y-2", activeData.meta.type !== "cv" && "col-span-2")}>
           <Label htmlFor="github">GitHub</Label>
           <Input 

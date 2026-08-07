@@ -8,6 +8,10 @@
 # testing
 /coverage
 
+# AI agents
+/.agents/
+/.kilo/
+
 # next.js
 /.next/
 /out/

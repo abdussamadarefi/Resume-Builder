@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# md file
+
+
+
 # testing
 /coverage
 

@@ -3,28 +3,21 @@
 import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
-  FileText, ArrowRight, Code, Mail, 
-  ShieldCheck, Sparkles, HelpCircle, Heart, UserCheck, RefreshCcw
+  FileText, ArrowRight, Code, 
+  ShieldCheck, Sparkles, UserCheck, RefreshCcw, Eye, FileCode2
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
-const GithubIcon = ({ size = 24, ...props }: { size?: number } & React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 24 24"
-    width={size}
-    height={size}
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    {...props}
-  >
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-    <path d="M9 18c-4.51 2-5-2-7-2" />
-  </svg>
-)
+import LandingLayout from "@/components/landing/LandingLayout"
+import HowItWorks from "@/components/landing/HowItWorks"
+import StatsCounter from "@/components/landing/StatsCounter"
+import TemplateShowcase from "@/components/landing/TemplateShowcase"
+import StudentVsProfessional from "@/components/landing/StudentVsProfessional"
+import ResumeVsCV from "@/components/landing/ResumeVsCV"
+import Testimonials from "@/components/landing/Testimonials"
+import FAQ from "@/components/landing/FAQ"
+import CTABanner from "@/components/landing/CTABanner"
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -49,55 +42,57 @@ const mockColors: Record<MockColor, { hex: string; bg: string; text: string }> =
   gold: { hex: "#deb887", bg: "bg-amber-500/10", text: "text-amber-400" },
 }
 
+const featureCards = [
+  {
+    icon: ShieldCheck,
+    title: "Privacy-First Architecture",
+    description: "We track nothing. No databases, no accounts, and no trackers. All resume files reside on your local storage.",
+    iconBg: "bg-emerald-500/10",
+    iconColor: "text-emerald-400",
+  },
+  {
+    icon: Sparkles,
+    title: "ATS-Friendly Layouts",
+    description: "Carefully formatted layouts designed to parse cleanly on automated applicant tracking system readers.",
+    iconBg: "bg-blue-500/10",
+    iconColor: "text-blue-400",
+  },
+  {
+    icon: FileText,
+    title: "Multi-Format Exports",
+    description: "Download native, vector PDF files with selectable text or edit-ready DOCX formats to match hiring queries.",
+    iconBg: "bg-purple-500/10",
+    iconColor: "text-purple-400",
+  },
+  {
+    icon: Code,
+    title: "Open Source & Free",
+    description: "Free forever with zero paywalls. Backed by the open-source community for collaborative development.",
+    iconBg: "bg-amber-500/10",
+    iconColor: "text-amber-400",
+  },
+  {
+    icon: Eye,
+    title: "Real-Time Preview",
+    description: "See your resume update live as you type. No waiting, no refreshing — instant visual feedback on every change.",
+    iconBg: "bg-cyan-500/10",
+    iconColor: "text-cyan-400",
+  },
+  {
+    icon: FileCode2,
+    title: "Resume & CV Support",
+    description: "Create concise 1-2 page resumes for industry or comprehensive multi-page academic CVs with dedicated sections.",
+    iconBg: "bg-rose-500/10",
+    iconColor: "text-rose-400",
+  },
+]
+
 export default function Home() {
   const [mockTemplate, setMockTemplate] = useState<MockTemplate>("nexus")
   const [mockColor, setMockColor] = useState<MockColor>("blue")
 
   return (
-    <main className="relative min-h-screen bg-[#030712] text-slate-100 overflow-hidden flex flex-col font-sans">
-      
-      {/* Dynamic Posh Background - Gradient Orbs & Grid */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-15%] w-[50%] h-[50%] bg-gradient-to-br from-indigo-500/20 to-purple-600/10 blur-[150px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-15%] w-[50%] h-[50%] bg-gradient-to-tr from-emerald-500/10 to-blue-600/10 blur-[150px] rounded-full animate-pulse delay-1000" />
-        <div className="absolute top-[40%] left-[30%] w-[350px] h-[350px] bg-indigo-500/5 blur-[120px] rounded-full" />
-        
-        {/* Fine Linear grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f29370a_1px,transparent_1px),linear-gradient(to_bottom,#1f29370a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30" />
-      </div>
-
-      {/* Header / Navbar */}
-      <header className="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-indigo-600 flex items-center justify-center shadow-lg shadow-primary/20 text-white font-bold text-sm tracking-tighter">
-            RF
-          </div>
-          <span className="font-heading font-extrabold text-xl tracking-tight text-white">
-            Resume<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-400">Forge</span>
-          </span>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <a 
-            href="https://github.com/abdussamadarefi/Resume-Builder" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            id="header-link-github"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900/60 transition-colors text-xs font-semibold"
-          >
-            <GithubIcon size={15} />
-            <span className="hidden sm:inline">Star on GitHub</span>
-          </a>
-          <Link
-            href="/builder?type=resume"
-            id="header-btn-get-started"
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-bold uppercase tracking-wider text-white shadow-lg transition-all active:scale-[0.98]"
-          >
-            Launch Builder
-          </Link>
-        </div>
-      </header>
-
+    <LandingLayout>
       {/* Hero Section */}
       <section className="relative z-10 w-full max-w-7xl mx-auto px-6 flex-1 flex flex-col lg:flex-row items-center justify-center gap-16 py-12 md:py-24">
         
@@ -458,97 +453,71 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Feature Grid Section */}
-      <section className="relative z-10 w-full max-w-7xl mx-auto px-6 py-16 md:py-28 border-t border-slate-900/60 bg-slate-950/20">
+      {/* Stats Counter */}
+      <StatsCounter />
+
+      {/* How It Works */}
+      <HowItWorks />
+
+      {/* Feature Grid Section (Expanded to 6 cards) */}
+      <section className="relative z-10 w-full max-w-7xl mx-auto px-6 py-16 md:py-28 border-t border-slate-900/60">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-          <h2 className="text-2xl sm:text-3xl font-heading font-black text-white tracking-tight">
-            Designed for the Security Conscious Professional
-          </h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            ResumeForge combines complete client-side security with production-grade template performance.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider mb-4">
+              <ShieldCheck size={11} /> Core Features
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-white tracking-tight mt-4">
+              Designed for the Security Conscious{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400">Professional</span>
+            </h2>
+            <p className="text-slate-400 text-sm md:text-base leading-relaxed mt-4">
+              ResumeForge combines complete client-side security with production-grade template performance.
+            </p>
+          </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          {/* Card 1 */}
-          <div className="p-8 rounded-3xl bg-slate-900/30 border border-slate-900 hover:border-slate-800 transition-all hover:bg-slate-900/40">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6">
-              <ShieldCheck size={20} />
-            </div>
-            <h3 className="text-base font-bold text-white mb-2">Privacy-First Architecture</h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              We track nothing. No databases, no accounts, and no trackers. All resume files reside on your local storage.
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="p-8 rounded-3xl bg-slate-900/30 border border-slate-900 hover:border-slate-800 transition-all hover:bg-slate-900/40">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-6">
-              <Sparkles size={20} />
-            </div>
-            <h3 className="text-base font-bold text-white mb-2">ATS-Friendly Layouts</h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              Carefully formatted layouts designed to parse cleanly on automated applicant tracking system readers.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="p-8 rounded-3xl bg-slate-900/30 border border-slate-900 hover:border-slate-800 transition-all hover:bg-slate-900/40">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-6">
-              <FileText size={20} />
-            </div>
-            <h3 className="text-base font-bold text-white mb-2">Multi-Format Exports</h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              Download native, vector PDF files with selectable text or edit-ready DOCX formats to match hiring queries.
-            </p>
-          </div>
-
-          {/* Card 4 */}
-          <div className="p-8 rounded-3xl bg-slate-900/30 border border-slate-900 hover:border-slate-800 transition-all hover:bg-slate-900/40">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-6">
-              <Code size={20} />
-            </div>
-            <h3 className="text-base font-bold text-white mb-2">Open Source & Free</h3>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              Free forever with zero paywalls. Backed by the open-source community for collaborative development.
-            </p>
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featureCards.map((card, index) => (
+            <motion.div
+              key={card.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, delay: index * 0.08 }}
+              className="p-8 rounded-3xl bg-slate-900/30 border border-slate-900 hover:border-slate-800 transition-all hover:bg-slate-900/40"
+            >
+              <div className={`w-10 h-10 rounded-xl ${card.iconBg} flex items-center justify-center ${card.iconColor} mb-6`}>
+                <card.icon size={20} />
+              </div>
+              <h3 className="text-base font-bold text-white mb-2">{card.title}</h3>
+              <p className="text-slate-400 text-xs leading-relaxed">{card.description}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* Footer Section */}
-      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 py-12 border-t border-slate-900 mt-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-500 font-medium">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-lg bg-slate-800 flex items-center justify-center text-white text-[10px] font-extrabold">
-            RF
-          </div>
-          <span>© 2026 ResumeForge. Zero auth. Zero cost.</span>
-        </div>
+      {/* Template Showcase */}
+      <TemplateShowcase />
 
-        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-          <Link href="/builder?type=resume" className="hover:text-white transition-colors">Resume Builder</Link>
-          <Link href="/builder?type=cv" className="hover:text-white transition-colors">Academic CV</Link>
-          <a 
-            href="https://github.com/abdussamadarefi/Resume-Builder" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            id="footer-link-github"
-            className="hover:text-white transition-colors flex items-center gap-1"
-          >
-            <GithubIcon size={13} /> Source
-          </a>
-          <a 
-            href="mailto:abdussamadarefi@gmail.com" 
-            id="footer-link-contact"
-            className="hover:text-white transition-colors flex items-center gap-1"
-          >
-            <Mail size={13} /> Contact
-          </a>
-        </div>
-      </footer>
+      {/* Student vs Professional */}
+      <StudentVsProfessional />
 
-    </main>
+      {/* Resume vs CV Comparison */}
+      <ResumeVsCV />
+
+      {/* Testimonials */}
+      <Testimonials />
+
+      {/* FAQ */}
+      <FAQ />
+
+      {/* CTA Banner */}
+      <CTABanner />
+    </LandingLayout>
   )
 }

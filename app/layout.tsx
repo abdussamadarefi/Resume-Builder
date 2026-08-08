@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://resumeforge.vercel.app"),
   title: "ResumeForge | Premium AI Resume & CV Builder",
   description: "Craft pixel-perfect, ATS-friendly corporate resumes and academic CVs. A privacy-first, zero-backend platform where all your data stays safely in your browser. Free, open-source, and zero signup required.",
   keywords: [

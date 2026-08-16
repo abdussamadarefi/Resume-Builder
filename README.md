@@ -1,47 +1,112 @@
 # ResumeForge 📄✨
 
-![Next.js](https://img.shields.io/badge/Next.js-14+-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Zustand](https://img.shields.io/badge/Zustand-Bear-brown?style=for-the-badge)
+<div align="center">
 
-**ResumeForge** is a fully client-side, zero-backend, privacy-first resume and CV builder. 
+![Next.js](https://img.shields.io/badge/Next.js-14.2-000000?style=for-the-badge&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-10B981?style=for-the-badge)
 
-Designed for professionals, academics, and job-seekers, it offers a frictionless experience to build pixel-perfect, ATS-friendly resumes without the need for signups, monthly subscriptions, or cloud data tracking. Everything is processed and stored securely right in your browser.
+**A next-generation, zero-backend, privacy-first Resume & Academic CV workspace.**
 
-## 🌟 Key Features
+[Live Demo](https://resumeforge.vercel.app) • [View Templates](https://resumeforge.vercel.app/templates) • [Read Guides](https://resumeforge.vercel.app/articles) • [Report Bug](https://github.com/abdussamadarefi/Resume-Builder/issues)
 
-- **Zero Cost & Friction**: Fully open-source and free to use. No accounts or paywalls.
-- **Privacy First**: 100% of your data stays in your browser's `localStorage`. No databases, no tracking.
-- **Real-Time Preview**: Instantly see how your resume looks as you type.
-- **Dual Export Options**:
-  - High-Quality, Text-Selectable PDF generation via `@react-pdf/renderer`.
-  - Fast, visual fallback PDF via `html2canvas/jsPDF`.
-  - DOCX Export compatibility.
-- **Versatile Modes**: 
-  - **Resume Mode**: Strict 1-2 page formatting suited for corporate and industry roles.
-  - **CV Mode**: Multi-page layout for extensive academic, medical, and research backgrounds.
-- **Dynamic Templates**: Choose between multiple professionally crafted designs (Nexus, Meridian, Atlas, etc.).
+</div>
+
+---
+
+## 💡 What is ResumeForge?
+
+**ResumeForge** is a fully client-side, open-source resume and academic CV builder built for job seekers, students, researchers, and executives. 
+
+Unlike traditional resume builders that lock features behind paywalls or sell user data, ResumeForge operates with **zero backend servers and zero databases**. All your data stays 100% securely inside your browser's `localStorage`.
+
+---
+
+## 🔥 Key Features
+
+- 🔒 **100% Privacy-First Architecture**: Zero data collection, zero trackers, zero cookies, zero signups. Your data never leaves your browser.
+- 🎨 **10 ATS-Friendly Templates**: Includes Nexus, Scholar, Arya, Atlas, Cascade, Compact, Executive, Meridian, Minimo, and Prism.
+- 📄 **Resume vs. CV Dual Modes**:
+  - **Resume Mode** (9 sections): Strict 1–2 page layout tailored for corporate and industry roles.
+  - **CV Mode** (14 sections): Multi-page format with dedicated sections for Publications, Teaching, Research, and Grants.
+- ⚡ **Real-Time Live Preview**: Instant visual feedback as you type, with dynamic color theme and font pairing controls.
+- 🖨️ **Multi-Format Vector Exports**:
+  - **Native Vector PDF**: Crisp, text-selectable PDF output powered by `@react-pdf/renderer`.
+  - **DOCX Export**: Edit-ready Word documents built with `docx`.
+  - **Quick PDF Fallback**: Fast visual canvas capture via `html2canvas`.
+- 📚 **Rich Content & Resource Hub**:
+  - Full **Templates Gallery** with category filtering.
+  - 5 SEO-rich **Career Articles & Guides** (Writing in 2025, Resume vs. CV, ATS Optimization, Student Guide, Career Change).
+  - Complete **Privacy Policy**, **Terms of Service**, and **Cookie Policy**.
+
+---
+
+## 🎨 Built-In Templates
+
+| Template | Category | Style | Best For |
+| :--- | :--- | :--- | :--- |
+| **Nexus** | Modern | Centered 3-Column Grid | Tech & Corporate Professionals |
+| **Scholar** | Academic | Formal Serif | Professors, Postdocs & Researchers |
+| **Arya** | Creative | Accent Sidebar | Designers & Creative Roles |
+| **Atlas** | Professional | Two-Column Split | Experienced Industry Applicants |
+| **Cascade** | Elegant | Flowing Sections | Corporate Executives |
+| **Compact** | Minimal | Dense Space-Saving | Students & Entry-Level Job Seekers |
+| **Executive** | Premium | Sophisticated Classic | Senior Leaders & Directors |
+| **Meridian** | Modern | Split with Skill Indicators | Software Engineers & Consultants |
+| **Minimo** | Clean | Ultra-Minimal | Fresh Graduates |
+| **Prism** | Bold | Geometric Header | Product Managers & Marketers |
+
+---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14+ (App Router)
-- **Language**: TypeScript & React 18
-- **Styling**: Tailwind CSS, Framer Motion, Lucide Icons
-- **State Management**: Zustand (Global), React Hook Form, Zod (Validation)
-- **PDF Generation**: `@react-pdf/renderer`, `html2canvas/jsPDF`
-- **Testing Environment**: Playwright (E2E), Vitest (Unit Testing)
+- **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Static Generation)
+- **Frontend**: [React 18](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/), [Lucide Icons](https://lucide.dev/)
+- **State & Forms**: [Zustand](https://zustand-demo.pmnd.rs/), [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)
+- **PDF & Document Engine**: `@react-pdf/renderer`, `docx`, `html2canvas`
+
+---
+
+## 📂 Project Structure
+
+```text
+Resume-Builder/
+├── app/                  # Next.js App Router (Landing, Builder, Pages)
+│   ├── about/            # Project story, tech stack & mission
+│   ├── articles/         # 5 Career guides & article hub
+│   ├── api/              # AI optimization endpoints
+│   ├── builder/          # Main interactive resume workspace
+│   ├── cookies/          # Cookie policy (Zero cookie declaration)
+│   ├── privacy/          # Privacy policy
+│   ├── templates/        # Interactive template showcase gallery
+│   ├── terms/            # Terms of service
+│   ├── robots.ts          # SEO Crawling rules
+│   └── sitemap.ts         # Dynamic sitemap generation
+├── components/           # UI & Feature components
+│   ├── builder/          # Form inputs (Work, Education, Skills, etc.)
+│   ├── export/           # PDF & DOCX export renderers
+│   ├── landing/          # Hero, Navbar, Footer, FAQ, Stats, Showcases
+│   ├── templates/        # 10 Visual layout renderers
+│   └── ui/               # Base UI primitives (Buttons, Inputs)
+├── lib/                  # Export utilities, ATS optimizer, helpers
+├── store/                # Zustand stores (resumeStore, settingsStore, uiStore)
+├── styles/               # CSS Design tokens & globals
+└── types/                # Shared TypeScript interfaces (resume.ts)
+```
+
+---
 
 ## 🚀 Getting Started
 
-Follow these instructions to run the project locally on your machine.
-
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18.0.0 or higher recommended)
-- `npm`, `yarn`, or `pnpm`
+- [Node.js](https://nodejs.org/) `v18.0.0` or higher
+- `npm` (v9+) or `yarn` / `pnpm`
 
-### Installation
+### Installation & Local Setup
 
 1. **Clone the repository:**
    ```bash
@@ -52,52 +117,44 @@ Follow these instructions to run the project locally on your machine.
 2. **Install dependencies:**
    ```bash
    npm install
-   # or
-   yarn install
    ```
 
 3. **Run the development server:**
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
 
 4. **Open your browser:**
-   Navigate to [http://localhost:3000](http://localhost:3000) to see the builder in action!
+   Navigate to `http://localhost:3000` to view the application.
 
-## 📂 Project Structure
+5. **Build for production:**
+   ```bash
+   npm run build
+   ```
 
-```text
-resumeforge/
-├── app/                  # Next.js App Router (Builder, Templates, Preview)
-├── components/           # UI, Builder sections, Template components
-│   ├── builder/          # Form sections (Work, Education, Skills, etc.)
-│   ├── templates/        # Visual layouts (Nexus, Meridian, Atlas, etc.)
-│   └── export/           # PDF and DOCX generation components
-├── store/                # Zustand state (resumeStore, settingsStore, uiStore)
-├── lib/                  # Export logic, validation, and utilities
-└── types/                # TypeScript interfaces (resume.ts, index.ts)
-```
+---
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are always welcome!
-If you'd like to improve the codebase:
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/abdussamadarefi/Resume-Builder/issues).
 
-1. Fork the project.
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+### Development Guidelines
+1. Maintain strict type safety across shared interfaces in `types/`.
+2. Ensure any new template supports both web (Tailwind/HTML) and vector PDF (`@react-pdf/renderer`) rendering paths.
+3. Keep state updates optimized to preserve instant real-time live preview responsiveness.
 
-When committing, please maintain type safety across the shared interfaces in `types/` and ensure that all new templates support both web and PDF renderer formats.
+---
 
 ## 📄 License
 
-This project is open-source and free for everyone.
-## 📬 Contact
+This project is open-source under the **MIT License**.
 
-**Abdus Samad Arefi** - Developer  
-✉️ Email: [abdussamadarefi@gmail.com](mailto:abdussamadarefi@gmail.com)  
-💻 GitHub: [@abdussamadarefi](https://github.com/abdussamadarefi)
+---
+
+## 📬 Contact & Author
+
+Created with ❤️ by **Abdus Samad Arefi**
+
+- 💻 GitHub: [@abdussamadarefi](https://github.com/abdussamadarefi)
+- ✉️ Email: [abdussamadarefi@gmail.com](mailto:abdussamadarefi@gmail.com)
+- 🌐 Live Site: [resumee.pro.bd](https://resumee.pro.bd)

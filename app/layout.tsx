@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
+import Script from "next/script";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-heading" });
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://resumeforge.vercel.app"),
+  metadataBase: new URL("https://resumee.pro.bd"),
   title: "ResumeForge | Premium AI Resume & CV Builder",
   description: "Craft pixel-perfect, ATS-friendly corporate resumes and academic CVs. A privacy-first, zero-backend platform where all your data stays safely in your browser. Free, open-source, and zero signup required.",
   keywords: [
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ResumeForge | Premium AI Resume & CV Builder",
     description: "Build beautiful, text-selectable resumes and CVs with real-time preview and parallel PDF rendering. 100% privacy-first.",
-    url: "https://resumeforge.vercel.app",
+    url: "https://resumee.pro.bd",
     siteName: "ResumeForge",
     images: [
       {
@@ -76,7 +79,24 @@ export default function RootLayout({
           <div className="noise fixed inset-0 z-[9999]" />
           {children}
         </ThemeProvider>
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
 }
+

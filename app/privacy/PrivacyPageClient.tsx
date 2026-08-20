@@ -9,30 +9,38 @@ const sections = [
   {
     icon: Database,
     title: "1. Information We Collect",
-    content: `**We collect absolutely no personal data.** ResumeForge is a fully client-side application. There are no servers, databases, or backend infrastructure that process or store your information.
+    content: `ResumeForge is a fully client-side application. Your resume and CV data is stored exclusively in your browser's \`localStorage\` and is **never transmitted to any external server**.
 
-All resume and CV data you enter is stored exclusively in your web browser's \`localStorage\`. This data never leaves your device and is never transmitted to any external server.
+**What we collect via Google Analytics 4:**
+We use Google Analytics 4 (GA4) to understand aggregate site usage. GA4 may collect:
+- Page views and navigation patterns
+- General geographic region (country/city level, derived from IP)
+- Device type, browser, and operating system
+- Anonymized interaction events (e.g., template selected, resume exported)
 
-**What we don't collect:**
+**What we do NOT collect:**
 - No names, email addresses, or personal identifiers
-- No usage analytics or behavioral data
-- No IP addresses or geolocation data
-- No device fingerprints or browser information
-- No resume content or document data`,
+- No resume content, text, or document data
+- No login credentials (we have no accounts)
+- Google Analytics does not have access to your localStorage data`,
   },
   {
     icon: Cookie,
     title: "2. Cookies & Tracking",
-    content: `**ResumeForge uses zero cookies.** We do not use any cookies — not for tracking, not for analytics, not for functionality, and not for advertising.
+    content: `ResumeForge uses **Google Analytics 4 (GA4)** for anonymous site usage analytics. GA4 may set first-party cookies (such as \`_ga\` and \`_ga_*\`) to distinguish unique visitors and track sessions.
 
-We also do not use:
-- Pixel trackers or web beacons
-- Third-party analytics tools (no Google Analytics, no Hotjar, no Mixpanel)
-- Social media tracking scripts
-- Advertising networks or retargeting pixels
-- Fingerprinting or any form of cross-site tracking
+**These cookies:**
+- Do NOT contain any personal information or resume data
+- Are used solely for aggregate traffic analysis
+- Can be blocked via your browser's cookie settings or ad-blockers
+- Are NOT used for advertising, retargeting, or cross-site tracking
 
-Your browsing activity on ResumeForge is completely invisible to us.`,
+**We do NOT use:**
+- Social media tracking pixels
+- Advertising networks or remarketing services
+- Fingerprinting or invasive tracking techniques
+
+You can opt out of Google Analytics tracking by installing the [Google Analytics Opt-out Browser Add-on](https://tools.google.com/dlpage/gaoptout).`,
   },
   {
     icon: Server,
@@ -50,29 +58,37 @@ Your browsing activity on ResumeForge is completely invisible to us.`,
   {
     icon: Globe,
     title: "4. Third-Party Services",
-    content: `ResumeForge is hosted on **Vercel**, which provides standard web hosting infrastructure. Vercel may collect standard server logs (IP addresses, request timestamps) as part of their hosting service — this is outside our control.
+    content: `ResumeForge integrates with the following third-party services:
 
-**We do not integrate with any third-party services** for:
-- Analytics or tracking
-- Advertising
+**Google Analytics 4 (by Google LLC):**
+- Purpose: Anonymous aggregate usage analytics
+- Data collected: Page views, session duration, device/browser info, general location (country level)
+- Privacy policy: [Google Privacy Policy](https://policies.google.com/privacy)
+- Opt out: [Google Analytics Opt-out Add-on](https://tools.google.com/dlpage/gaoptout)
+
+**Vercel (Hosting):**
+- Purpose: Web hosting and content delivery
+- Vercel may collect standard server logs (IP addresses, request timestamps)
+
+**We do NOT use third-party services for:**
+- Advertising or retargeting
 - User authentication
-- Data processing
-- Payment processing (the service is free)
-
-The application is served as static files and runs entirely in your browser.`,
+- Data processing of resume content
+- Payment processing (the service is free)`,
   },
   {
     icon: Eye,
     title: "5. GDPR & International Privacy",
-    content: `Since we don't collect, process, or store any personal data on our servers, many GDPR requirements are automatically satisfied:
+    content: `We are committed to complying with GDPR and international privacy regulations:
 
-- **Right to Access:** All your data is already in your browser — you have full access at all times.
-- **Right to Deletion:** Clear your browser's localStorage to delete all data instantly.
+- **Right to Access:** All your resume data is in your browser — you have full access at all times. Analytics data is anonymized and aggregated by Google.
+- **Right to Deletion:** Clear your browser's localStorage to delete all resume data instantly. You can also clear GA cookies via browser settings.
 - **Right to Portability:** Export your resume as PDF or DOCX at any time.
-- **Data Minimization:** We collect zero data — you can't minimize below zero.
-- **Consent:** No data collection means no consent is needed.
+- **Data Minimization:** We collect only anonymous aggregate analytics. No personal identifiers are stored.
+- **Consent:** By using our site, you acknowledge the use of Google Analytics for usage insights. You can opt out at any time using the GA Opt-out Add-on or browser cookie settings.
+- **Right to Object:** You can block all analytics tracking via browser settings, ad-blockers, or the Google Analytics Opt-out Add-on.
 
-We respect the privacy laws of all jurisdictions by simply not collecting data in the first place.`,
+Your resume data never leaves your device. Analytics data is processed by Google in accordance with their privacy policy.`,
   },
   {
     icon: Trash2,
@@ -115,11 +131,11 @@ export default function PrivacyPageClient() {
             Privacy Policy
           </h1>
           <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-            ResumeForge is built on a fundamental principle: your data belongs to you and only you. 
-            We don&apos;t collect, store, or process any personal information.
+            ResumeForge is built on a fundamental principle: your resume data belongs to you and only you.
+            We use minimal, anonymous analytics to improve the service — but your content never leaves your browser.
           </p>
           <p className="text-xs text-slate-600 font-medium">
-            Last updated: August 8, 2026
+            Last updated: August 16, 2026
           </p>
         </motion.div>
 
@@ -132,8 +148,8 @@ export default function PrivacyPageClient() {
         >
           <h2 className="text-sm font-bold text-emerald-400 mb-2">TL;DR — Privacy in One Sentence</h2>
           <p className="text-slate-300 text-sm leading-relaxed">
-            ResumeForge has <strong className="text-white">no servers, no databases, no cookies, no tracking, and no analytics</strong>. 
-            All your resume data stays in your browser&apos;s localStorage on your device. We literally cannot see your data.
+            Your resume data stays <strong className="text-white">100% in your browser&apos;s localStorage</strong> and is never transmitted anywhere. 
+            We use <strong className="text-white">Google Analytics 4</strong> for anonymous aggregate traffic insights (page views, device type) — but GA has zero access to your resume content. You can opt out of analytics anytime.
           </p>
         </motion.div>
 

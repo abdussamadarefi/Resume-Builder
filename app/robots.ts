@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/builder"],
       },
     ],
-    sitemap: "https://resumeforge.vercel.app/sitemap.xml",
+    sitemap: "https://resumee.pro.bd/sitemap.xml",
   }
 }

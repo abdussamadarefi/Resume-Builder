@@ -8,16 +8,22 @@ import LandingLayout from "@/components/landing/LandingLayout"
 const sections = [
   {
     icon: XCircle,
-    title: "1. We Use Zero Cookies",
-    content: `ResumeForge does not use any cookies whatsoever. This includes:
+    title: "1. Cookies We Use",
+    content: `ResumeForge uses **Google Analytics 4 (GA4)** for anonymous traffic analysis. GA4 sets the following first-party cookies:
 
-- **No session cookies** — We don't have user sessions
-- **No persistent cookies** — We don't track return visits  
-- **No third-party cookies** — We don't integrate with ad networks or analytics
-- **No functional cookies** — We use localStorage instead
-- **No consent cookies** — There's no cookie to track your cookie preferences (ironic, right?)
+- **\`_ga\`** — Distinguishes unique visitors. Expires after 2 years.
+- **\`_ga_*\`** — Maintains session state. Expires after 2 years.
 
-Since we use zero cookies, you will never see a "cookie consent" banner on our site.`,
+**These cookies:**
+- Contain only a randomly generated ID — no personal information
+- Are NOT used for advertising or cross-site tracking
+- Can be blocked via browser settings or ad-blockers without affecting the resume builder
+
+**Cookies we do NOT use:**
+- No session cookies (we have no user sessions)
+- No advertising or retargeting cookies
+- No social media cookies
+- No consent-tracking cookies`,
   },
   {
     icon: Database,
@@ -65,17 +71,22 @@ Simply using a different browser or an incognito/private window gives you a comp
   },
   {
     icon: Info,
-    title: "4. Third-Party Cookies",
-    content: `ResumeForge does not load any third-party scripts, widgets, or services that might set their own cookies. We do not use:
+    title: "4. Third-Party Services & Cookies",
+    content: `**Google Analytics 4 (by Google LLC):**
+GA4 is the only third-party service that sets cookies on our site. It is used solely for understanding aggregate traffic patterns (e.g., which pages are popular, what devices visitors use). Google processes this data according to their [Privacy Policy](https://policies.google.com/privacy).
 
-- Google Analytics, Google Tag Manager, or any Google tracking services
+You can opt out of GA tracking entirely by:
+- Installing the [Google Analytics Opt-out Browser Add-on](https://tools.google.com/dlpage/gaoptout)
+- Using a browser ad-blocker (e.g., uBlock Origin)
+- Disabling cookies for this site in your browser settings
+
+**We do NOT use:**
 - Facebook Pixel, Meta tracking, or social media widgets
-- Hotjar, Mixpanel, Amplitude, or any analytics platforms
-- Intercom, Drift, or any chat widgets
+- Hotjar, Mixpanel, Amplitude, or similar analytics
+- Intercom, Drift, or chat widgets
 - Any advertising networks or remarketing services
-- Any CDN that sets cookies (our fonts are loaded via Next.js optimization)
 
-**Hosting provider (Vercel):** Our hosting provider may use essential cookies for infrastructure purposes (e.g., load balancing). This is standard for all web hosting and is outside our control. These cookies, if any, contain no personal data and are not used for tracking.`,
+**Hosting provider (Vercel):** May set essential infrastructure cookies for load balancing. These contain no personal data.`,
   },
 ]
 
@@ -91,17 +102,17 @@ export default function CookiesPageClient() {
           className="text-center mb-16 space-y-4"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-bold uppercase tracking-wider">
-            <Cookie size={11} /> Zero Cookies
+            <Cookie size={11} /> Minimal Cookies
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-white tracking-tight">
             Cookie Policy
           </h1>
           <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-            The shortest cookie policy you&apos;ll ever read: we don&apos;t use cookies. 
-            Here&apos;s what we use instead and how to manage your data.
+            We use only essential Google Analytics cookies for anonymous traffic insights.
+            Your resume data is stored in localStorage and is never sent to any server.
           </p>
           <p className="text-xs text-slate-600 font-medium">
-            Last updated: August 8, 2026
+            Last updated: August 16, 2026
           </p>
         </motion.div>
 
@@ -112,19 +123,19 @@ export default function CookiesPageClient() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12"
         >
+          <div className="p-5 rounded-2xl bg-blue-500/5 border border-blue-500/20 text-center">
+            <Cookie size={24} className="text-blue-400 mx-auto mb-2" />
+            <div className="text-sm font-bold text-white">GA4 Only</div>
+            <div className="text-[11px] text-slate-500">Anonymous analytics cookies.</div>
+          </div>
           <div className="p-5 rounded-2xl bg-red-500/5 border border-red-500/20 text-center">
             <XCircle size={24} className="text-red-400 mx-auto mb-2" />
-            <div className="text-sm font-bold text-white">0 Cookies</div>
-            <div className="text-[11px] text-slate-500">None. Zero. Zilch.</div>
-          </div>
-          <div className="p-5 rounded-2xl bg-amber-500/5 border border-amber-500/20 text-center">
-            <XCircle size={24} className="text-amber-400 mx-auto mb-2" />
-            <div className="text-sm font-bold text-white">0 Trackers</div>
-            <div className="text-[11px] text-slate-500">No analytics. No pixels.</div>
+            <div className="text-sm font-bold text-white">0 Ad Trackers</div>
+            <div className="text-[11px] text-slate-500">No ads. No retargeting.</div>
           </div>
           <div className="p-5 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 text-center">
             <CheckCircle2 size={24} className="text-emerald-400 mx-auto mb-2" />
-            <div className="text-sm font-bold text-white">localStorage Only</div>
+            <div className="text-sm font-bold text-white">localStorage</div>
             <div className="text-[11px] text-slate-500">Your device. Your data.</div>
           </div>
         </motion.div>

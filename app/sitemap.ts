@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next"
 
-const BASE_URL = "https://resumeforge.vercel.app"
+const BASE_URL = "https://resumee.pro.bd"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [

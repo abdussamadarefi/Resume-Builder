@@ -1,0 +1,50 @@
+[
+  {
+    "id": "faq1",
+    "question": "Is ResumeForge truly 100% free with no hidden charges?",
+    "answer": "Yes, completely free. There are no trial periods, no watermark overlays, no monthly subscriptions, and no premium template lockouts. Every template, feature, and export format is available to everyone for free.",
+    "category": "General",
+    "enabled": true,
+    "order": 0
+  },
+  {
+    "id": "faq2",
+    "question": "Where is my resume data stored? Can anyone see what I write?",
+    "answer": "Your resume data is stored exclusively in your browser's local storage (localStorage). It is never sent to our servers, saved to an external database, or shared with third parties. If you close your browser, your data remains safely stored on your device until you clear your cache.",
+    "category": "Privacy",
+    "enabled": true,
+    "order": 1
+  },
+  {
+    "id": "faq3",
+    "question": "Are these templates compatible with Applicant Tracking Systems (ATS)?",
+    "answer": "Yes! All 10 templates are engineered specifically for ATS parsing standards. They use semantic headings, standard font hierarchies, single or two-column clean flow, and output selectable vector text in PDF and standard Word XML in DOCX exports.",
+    "category": "ATS",
+    "enabled": true,
+    "order": 2
+  },
+  {
+    "id": "faq4",
+    "question": "What is the difference between Resume Mode and CV Mode?",
+    "answer": "Resume Mode is focused on standard corporate job applications (1-2 pages) highlighting work experience, technical skills, and achievements. Academic CV Mode unlocks 14 specialized academic sections including peer-reviewed publications, research grants, teaching appointments, conference presentations, ORCID integration, and academic references.",
+    "category": "General",
+    "enabled": true,
+    "order": 3
+  },
+  {
+    "id": "faq5",
+    "question": "What export formats are supported?",
+    "answer": "ResumeForge supports high-resolution Vector PDF (via native @react-pdf rendering engine), Microsoft Word (.docx with native styles), and Browser Print/Save.",
+    "category": "Export",
+    "enabled": true,
+    "order": 4
+  },
+  {
+    "id": "faq6",
+    "question": "How does the AI Resume Assistant work?",
+    "answer": "The AI assistant utilizes Google Gemini 1.5 Flash to help you rewrite weak bullet points into high-impact, quantifiable achievements tailored across Achiever, Professional, and Concise tones. Only the single bullet text being optimized is transmitted to the AI API; your full resume is never transmitted.",
+    "category": "General",
+    "enabled": true,
+    "order": 5
+  }
+]

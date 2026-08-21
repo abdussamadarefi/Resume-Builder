@@ -3,128 +3,23 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { ArrowRight, Sparkles, Filter } from "lucide-react"
+import { ArrowRight, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 import LandingLayout from "@/components/landing/LandingLayout"
+import templatesData from "@/content/templates.json"
+import templatesPageData from "@/content/templates-page.json"
 
 type FilterType = "all" | "resume" | "cv" | "both"
 
-const templates = [
-  {
-    name: "Nexus",
-    tag: "Modern",
-    description: "Clean, centered header with a 3-column grid layout. Perfect for tech professionals who want a polished, modern look with clear section hierarchy.",
-    bestFor: "Professionals",
-    type: "both" as const,
-    accent: "#3b82f6",
-    features: ["ATS-Optimized", "Grid Layout", "Skill Tags"],
-    headerStyle: "centered" as const,
-  },
-  {
-    name: "Scholar",
-    tag: "Academic",
-    description: "Traditional serif typography with formal academic formatting. Ideal for CVs with publications, research experience, and teaching positions.",
-    bestFor: "Academics",
-    type: "cv" as const,
-    accent: "#8b5cf6",
-    features: ["Serif Typography", "Publication Format", "Academic Sections"],
-    headerStyle: "classic" as const,
-  },
-  {
-    name: "Arya",
-    tag: "Creative",
-    description: "Bold sidebar design with a colored accent panel. Great for creatives who want to stand out while maintaining readability.",
-    bestFor: "Creatives",
-    type: "resume" as const,
-    accent: "#e11d48",
-    features: ["Sidebar Layout", "Color Accent", "Photo Support"],
-    headerStyle: "sidebar" as const,
-  },
-  {
-    name: "Atlas",
-    tag: "Professional",
-    description: "Balanced two-column layout with clear section hierarchy. A versatile template suitable for most industries and experience levels.",
-    bestFor: "Professionals",
-    type: "both" as const,
-    accent: "#10b981",
-    features: ["Two-Column", "Versatile", "Clean Headers"],
-    headerStyle: "centered" as const,
-  },
-  {
-    name: "Cascade",
-    tag: "Elegant",
-    description: "Flowing layout with cascading sections and refined typography. Conveys sophistication and attention to detail.",
-    bestFor: "Professionals",
-    type: "resume" as const,
-    accent: "#f59e0b",
-    features: ["Flowing Layout", "Refined Type", "Section Dividers"],
-    headerStyle: "classic" as const,
-  },
-  {
-    name: "Compact",
-    tag: "Minimal",
-    description: "Dense, information-rich layout that maximizes content per page. Perfect for students and recent graduates with limited experience.",
-    bestFor: "Students",
-    type: "resume" as const,
-    accent: "#06b6d4",
-    features: ["Space Efficient", "Dense Layout", "1-Page Friendly"],
-    headerStyle: "centered" as const,
-  },
-  {
-    name: "Executive",
-    tag: "Premium",
-    description: "Sophisticated design for senior professionals and executives. Commands attention with premium typography and strategic whitespace.",
-    bestFor: "Executives",
-    type: "resume" as const,
-    accent: "#1e40af",
-    features: ["Executive Style", "Premium Feel", "Strategic Spacing"],
-    headerStyle: "classic" as const,
-  },
-  {
-    name: "Meridian",
-    tag: "Modern",
-    description: "Contemporary split layout with visual skill indicators. A modern approach that balances aesthetics with ATS compatibility.",
-    bestFor: "Professionals",
-    type: "both" as const,
-    accent: "#7c3aed",
-    features: ["Split Layout", "Skill Bars", "Modern Design"],
-    headerStyle: "sidebar" as const,
-  },
-  {
-    name: "Minimo",
-    tag: "Clean",
-    description: "Ultra-minimal design that lets your content speak for itself. No distractions — just clean, professional formatting.",
-    bestFor: "Students",
-    type: "resume" as const,
-    accent: "#64748b",
-    features: ["Ultra-Minimal", "Content-First", "Maximum Readability"],
-    headerStyle: "centered" as const,
-  },
-  {
-    name: "Prism",
-    tag: "Bold",
-    description: "Eye-catching header with geometric accents and bold typography. Makes a strong first impression while maintaining structure.",
-    bestFor: "Creatives",
-    type: "resume" as const,
-    accent: "#ec4899",
-    features: ["Bold Header", "Geometric Accents", "Strong Impact"],
-    headerStyle: "centered" as const,
-  },
-]
+function MiniPreview({ template }: { template: any }) {
+  const accent = template.accent_color || template.accent || "#3b82f6"
+  const isSidebar = template.id === "arya" || template.id === "meridian"
 
-const filterOptions: { label: string; value: FilterType }[] = [
-  { label: "All Templates", value: "all" },
-  { label: "Resume", value: "resume" },
-  { label: "CV", value: "cv" },
-  { label: "Both", value: "both" },
-]
-
-function MiniPreview({ template }: { template: typeof templates[0] }) {
   return (
-    <div className="w-full aspect-[1/1.35] bg-white rounded-xl p-4 text-slate-800 flex flex-col select-none overflow-hidden shadow-inner">
-      {template.headerStyle === "sidebar" ? (
+    <div className="w-full aspect-[1/1.35] bg-white rounded-xl p-4 text-slate-800 flex flex-col select-none overflow-hidden shadow-inner border border-slate-100">
+      {isSidebar ? (
         <div className="flex flex-1 gap-2.5 overflow-hidden">
-          <div className="w-[30%] rounded-lg p-2 text-white flex flex-col gap-2.5" style={{ backgroundColor: template.accent }}>
+          <div className="w-[30%] rounded-lg p-2 text-white flex flex-col gap-2.5" style={{ backgroundColor: accent }}>
             <div className="w-8 h-8 rounded-full bg-white/30 mx-auto" />
             <div className="h-1.5 w-12 bg-white/40 rounded mx-auto" />
             <div className="h-1 w-10 bg-white/20 rounded mx-auto" />
@@ -135,78 +30,36 @@ function MiniPreview({ template }: { template: typeof templates[0] }) {
             </div>
           </div>
           <div className="flex-1 space-y-3 p-1">
-            <div className="h-1.5 w-3/4 rounded" style={{ backgroundColor: template.accent + "40" }} />
+            <div className="h-1.5 w-3/4 rounded" style={{ backgroundColor: accent + "40" }} />
             <div className="space-y-1">
               <div className="h-1 w-full bg-slate-200 rounded" />
               <div className="h-1 w-5/6 bg-slate-200 rounded" />
               <div className="h-1 w-4/5 bg-slate-200 rounded" />
             </div>
-            <div className="h-1 w-1/2 rounded mt-3" style={{ backgroundColor: template.accent + "40" }} />
+            <div className="h-1 w-1/2 rounded mt-3" style={{ backgroundColor: accent + "40" }} />
             <div className="space-y-1">
               <div className="h-1 w-full bg-slate-100 rounded" />
               <div className="h-1 w-3/4 bg-slate-100 rounded" />
             </div>
           </div>
         </div>
-      ) : template.headerStyle === "classic" ? (
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="text-center pb-3 mb-3 border-b-2" style={{ borderColor: template.accent }}>
-            <div className="h-2 w-24 bg-slate-800 rounded mx-auto" />
-            <div className="h-1 w-20 rounded mx-auto mt-1.5" style={{ backgroundColor: template.accent + "80" }} />
-            <div className="h-1 w-28 bg-slate-300 rounded mx-auto mt-1" />
-          </div>
-          <div className="space-y-3 flex-1">
-            <div>
-              <div className="h-1 w-20 bg-slate-400 rounded mb-1.5" />
-              <div className="space-y-1">
-                <div className="h-1 w-full bg-slate-200 rounded" />
-                <div className="h-1 w-5/6 bg-slate-200 rounded" />
-                <div className="h-1 w-4/5 bg-slate-200 rounded" />
-              </div>
-            </div>
-            <div>
-              <div className="h-1 w-16 bg-slate-400 rounded mb-1.5" />
-              <div className="space-y-1">
-                <div className="h-1 w-full bg-slate-100 rounded" />
-                <div className="h-1 w-3/4 bg-slate-100 rounded" />
-              </div>
-            </div>
-          </div>
-        </div>
       ) : (
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="text-center pb-3 mb-3">
-            <div className="h-2 w-24 rounded mx-auto" style={{ backgroundColor: template.accent }} />
-            <div className="h-1 w-28 bg-slate-400 rounded mx-auto mt-1.5" />
-            <div className="h-1 w-32 bg-slate-300 rounded mx-auto mt-1" />
+        <div className="flex-1 flex flex-col gap-3">
+          <div className="text-center pb-2 border-b border-slate-200">
+            <div className="h-2 w-28 mx-auto rounded mb-1" style={{ backgroundColor: accent }} />
+            <div className="h-1 w-36 mx-auto bg-slate-300 rounded" />
           </div>
-          <div className="grid grid-cols-3 gap-3 flex-1">
-            <div className="col-span-2 space-y-3">
-              <div>
-                <div className="h-1 w-20 rounded mb-1.5" style={{ backgroundColor: template.accent + "60" }} />
-                <div className="space-y-1">
-                  <div className="h-1 w-full bg-slate-200 rounded" />
-                  <div className="h-1 w-5/6 bg-slate-200 rounded" />
-                  <div className="h-1 w-4/5 bg-slate-200 rounded" />
-                </div>
-              </div>
+          <div className="space-y-2 flex-1">
+            <div className="h-1.5 w-16 rounded" style={{ backgroundColor: accent + "60" }} />
+            <div className="space-y-1">
+              <div className="h-1 w-full bg-slate-200 rounded" />
+              <div className="h-1 w-11/12 bg-slate-200 rounded" />
+              <div className="h-1 w-4/5 bg-slate-200 rounded" />
             </div>
-            <div className="space-y-3">
-              <div>
-                <div className="h-1 w-12 rounded mb-1.5" style={{ backgroundColor: template.accent + "60" }} />
-                <div className="space-y-1">
-                  <div className="h-1 w-full bg-slate-100 rounded" />
-                  <div className="h-1 w-2/3 bg-slate-100 rounded" />
-                </div>
-              </div>
-              <div>
-                <div className="h-1 w-10 rounded mb-1.5" style={{ backgroundColor: template.accent + "60" }} />
-                <div className="flex flex-wrap gap-0.5">
-                  <div className="h-1.5 w-6 bg-slate-100 rounded-sm" />
-                  <div className="h-1.5 w-5 bg-slate-100 rounded-sm" />
-                  <div className="h-1.5 w-7 bg-slate-100 rounded-sm" />
-                </div>
-              </div>
+            <div className="h-1.5 w-20 rounded mt-2" style={{ backgroundColor: accent + "60" }} />
+            <div className="space-y-1">
+              <div className="h-1 w-full bg-slate-200 rounded" />
+              <div className="h-1 w-3/4 bg-slate-200 rounded" />
             </div>
           </div>
         </div>
@@ -216,11 +69,18 @@ function MiniPreview({ template }: { template: typeof templates[0] }) {
 }
 
 export default function TemplatesPageClient() {
-  const [filter, setFilter] = useState<FilterType>("all")
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all")
 
-  const filteredTemplates = templates.filter((t) => {
-    if (filter === "all") return true
-    return t.type === filter
+  const { badge_text, title, subtitle, filter_tabs } = templatesPageData
+
+  const activeTemplates = templatesData.filter((t: any) => t.enabled !== false)
+
+  const filtered = activeTemplates.filter((t: any) => {
+    if (activeFilter === "all") return true
+    if (activeFilter === "resume") return t.doc_type === "resume" || t.type === "resume" || t.doc_type === "both" || t.type === "both"
+    if (activeFilter === "cv") return t.doc_type === "cv" || t.type === "cv" || t.doc_type === "both" || t.type === "both"
+    if (activeFilter === "both") return t.doc_type === "both" || t.type === "both"
+    return true
   })
 
   return (
@@ -231,119 +91,128 @@ export default function TemplatesPageClient() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16 space-y-4"
+          className="text-center mb-12 space-y-4"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider">
-            <Sparkles size={11} /> Template Gallery
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold uppercase tracking-wider">
+            <Sparkles size={11} /> {badge_text || "Template Gallery"}
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-white tracking-tight">
-            Choose Your Perfect Template
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
+            {title || "Choose Your Perfect Template"}
           </h1>
-          <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
-            10 professionally designed templates for resumes and academic CVs. 
-            All templates are ATS-friendly, print-ready, and completely free.
+          <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed max-w-xl mx-auto">
+            {subtitle || "10 professionally designed templates for resumes and academic CVs. All templates are ATS-friendly, print-ready, and free."}
           </p>
         </motion.div>
 
         {/* Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="flex justify-center mb-12"
-        >
-          <div className="inline-flex items-center gap-1 p-1 bg-slate-900 rounded-2xl border border-slate-800">
-            <Filter size={14} className="text-slate-500 ml-3 mr-1" />
-            {filterOptions.map((option) => (
+        <div className="flex justify-center mb-12">
+          <div className="inline-flex p-1 rounded-2xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 gap-1">
+            {(filter_tabs || [
+              { id: "all", label: "All Templates" },
+              { id: "resume", label: "Resume" },
+              { id: "cv", label: "CV" },
+              { id: "both", label: "Both" },
+            ]).map((tab: any) => (
               <button
-                key={option.value}
-                onClick={() => setFilter(option.value)}
+                key={tab.id}
+                onClick={() => setActiveFilter(tab.id as FilterType)}
                 className={cn(
-                  "px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all",
-                  filter === option.value
-                    ? "bg-primary/20 text-primary border border-primary/30"
-                    : "text-slate-500 hover:text-slate-300"
+                  "px-4 py-2 rounded-xl text-xs font-bold transition-all",
+                  activeFilter === tab.id
+                    ? "bg-primary text-white shadow-lg shadow-primary/20"
+                    : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800/40"
                 )}
               >
-                {option.label}
+                {tab.label}
               </button>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Template Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredTemplates.map((template, index) => (
-            <motion.div
-              key={template.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-              layout
-              className="group"
-            >
-              <div className="relative p-5 rounded-3xl bg-slate-900/30 border border-slate-800/60 hover:border-slate-700/60 transition-all hover:bg-slate-900/50">
-                {/* Hover glow */}
-                <div
-                  className="absolute inset-0 rounded-3xl blur-[50px] opacity-0 group-hover:opacity-10 transition-opacity"
-                  style={{ backgroundColor: template.accent }}
-                />
+          {filtered.map((t: any, index: number) => {
+            const accent = t.accent_color || t.accent || "#3b82f6"
+            const tags = t.tags || t.features || ["ATS-Friendly", "Print-Ready"]
+            const type = t.doc_type || t.type || "both"
 
-                {/* Preview */}
-                <div className="relative mb-5 group-hover:scale-[1.02] transform transition-transform">
-                  <MiniPreview template={template} />
+            return (
+              <motion.div
+                key={t.id || t.name}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="group relative rounded-3xl bg-white/80 dark:bg-slate-900/30 border border-slate-200 dark:border-slate-800/60 hover:border-slate-300 dark:hover:border-slate-700/60 transition-all duration-300 overflow-hidden flex flex-col shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-slate-900/50"
+              >
+                {/* Preview Thumbnail */}
+                <div className="p-6 pb-0">
+                  <div className="relative group-hover:scale-[1.02] transition-transform duration-300">
+                    <MiniPreview template={t} />
+
+                    {/* ATS Badge */}
+                    {t.ats_score && (
+                      <div className="absolute top-3 right-3 px-2 py-1 rounded-md bg-white/90 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200 dark:border-slate-700/50 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 shadow-sm">
+                        {t.ats_score}% ATS
+                      </div>
+                    )}
+
+                    {/* Featured Pill */}
+                    {t.featured && (
+                      <div className="absolute top-3 left-3 px-2 py-1 rounded-md bg-amber-500/15 dark:bg-amber-500/20 backdrop-blur-md border border-amber-500/30 text-[10px] font-bold text-amber-700 dark:text-amber-300 shadow-sm">
+                        Featured
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Info */}
-                <div className="relative space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-white">{template.name}</h3>
-                    <span
-                      className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg"
-                      style={{
-                        backgroundColor: template.accent + "15",
-                        color: template.accent,
-                      }}
-                    >
-                      {template.tag}
-                    </span>
-                  </div>
-
-                  <p className="text-slate-400 text-xs leading-relaxed">{template.description}</p>
-
-                  {/* Features */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {template.features.map((feature) => (
+                {/* Content */}
+                <div className="p-6 flex flex-col flex-1 justify-between gap-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                        {t.name}
+                      </h3>
                       <span
-                        key={feature}
-                        className="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-slate-800/60 text-slate-500"
+                        className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded"
+                        style={{ backgroundColor: accent + "20", color: accent }}
                       >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-800/60">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">
-                        Best for {template.bestFor}
-                      </span>
-                      <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-slate-800 text-slate-500">
-                        {template.type === "both" ? "Resume & CV" : template.type === "cv" ? "CV" : "Resume"}
+                        {t.category || t.tag}
                       </span>
                     </div>
+
+                    <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed line-clamp-2">
+                      {t.description}
+                    </p>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1.5 pt-2">
+                      {tags.map((tag: string) => (
+                        <span
+                          key={tag}
+                          className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700/40 font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800/40 flex items-center justify-between gap-3">
+                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                      {type === "both" ? "Resume & CV" : type === "cv" ? "Academic CV" : "Resume"}
+                    </span>
                     <Link
-                      href={`/builder?template=${template.name.toLowerCase()}`}
-                      className="group/btn inline-flex items-center gap-1.5 text-xs font-bold transition-colors hover:text-white"
-                      style={{ color: template.accent }}
+                      href={`/builder?template=${(t.id || t.name).toLowerCase()}&type=${type === "cv" ? "cv" : "resume"}`}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:underline"
                     >
-                      Use Template <ArrowRight size={12} className="group-hover/btn:translate-x-0.5 transition-transform" />
+                      Use Template <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </LandingLayout>

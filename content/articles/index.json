@@ -1,0 +1,67 @@
+[
+  {
+    "slug": "how-to-write-resume-2025",
+    "title": "How to Write a Professional Resume in 2025",
+    "description": "A comprehensive guide to crafting a modern, ATS-friendly resume that stands out to both recruiters and automated systems.",
+    "category": "Resume Guide",
+    "category_color": "#3b82f6",
+    "read_time": "12 min read",
+    "target_audience": "Students & Professionals",
+    "published_at": "2026-08-16",
+    "is_published": true,
+    "featured": true,
+    "order": 0
+  },
+  {
+    "slug": "resume-vs-cv-difference",
+    "title": "Resume vs. CV: What's the Difference & When to Use Each",
+    "description": "Understand the key differences between resumes and CVs, and learn which document to use for different career opportunities.",
+    "category": "Career Advice",
+    "category_color": "#8b5cf6",
+    "read_time": "8 min read",
+    "target_audience": "Students & Academics",
+    "published_at": "2026-08-16",
+    "is_published": true,
+    "featured": false,
+    "order": 1
+  },
+  {
+    "slug": "ats-friendly-resume-tips",
+    "title": "10 Tips to Make Your Resume ATS-Friendly",
+    "description": "Learn how applicant tracking systems work and what you can do to ensure your resume passes automated screening.",
+    "category": "ATS Optimization",
+    "category_color": "#10b981",
+    "read_time": "10 min read",
+    "target_audience": "Job Seekers",
+    "published_at": "2026-08-16",
+    "is_published": true,
+    "featured": true,
+    "order": 2
+  },
+  {
+    "slug": "first-resume-guide-students",
+    "title": "A Complete Guide to Writing Your First Resume",
+    "description": "No experience? No problem. Step-by-step instructions for students and recent graduates creating their very first resume.",
+    "category": "Student Guide",
+    "category_color": "#f59e0b",
+    "read_time": "11 min read",
+    "target_audience": "Students",
+    "published_at": "2026-08-16",
+    "is_published": true,
+    "featured": false,
+    "order": 3
+  },
+  {
+    "slug": "career-change-resume",
+    "title": "How to Write a Resume for a Career Change",
+    "description": "Switching industries? Learn how to highlight transferable skills and reframe your experience for a new career path.",
+    "category": "Career Change",
+    "category_color": "#e11d48",
+    "read_time": "9 min read",
+    "target_audience": "Professionals",
+    "published_at": "2026-08-16",
+    "is_published": true,
+    "featured": false,
+    "order": 4
+  }
+]

@@ -58,18 +58,18 @@ export function SectionNavButtons() {
   if (currentIndex === -1) return null
 
   return (
-    <div className="mt-12 pt-8 border-t border-slate-800/60">
+    <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800/60">
       {/* Progress bar */}
       <div className="mb-5">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
             Progress
           </span>
-          <span className="text-[10px] font-bold text-slate-500 tabular-nums">
+          <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 tabular-nums">
             {progress} / {total}
           </span>
         </div>
-        <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+        <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-primary to-indigo-500 rounded-full transition-all duration-500 ease-out"
             style={{ width: `${(progress / total) * 100}%` }}
@@ -83,22 +83,22 @@ export function SectionNavButtons() {
           <button
             onClick={() => handleNavigate(prevSection)}
             className={cn(
-              "group flex items-center gap-2 px-4 py-3 rounded-xl",
-              "bg-slate-900/60 border border-slate-800 hover:border-slate-700",
-              "text-slate-400 hover:text-white",
-              "transition-all duration-200 active:scale-[0.98]",
+              "group flex items-center gap-2.5 px-5 py-3.5 rounded-xl",
+              "bg-white dark:bg-slate-900/60 border border-slate-300 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700",
+              "text-slate-800 dark:text-slate-200 hover:text-primary dark:hover:text-white",
+              "transition-all duration-200 active:scale-[0.98] shadow-sm dark:shadow-none",
               "min-w-0 flex-1 max-w-[48%]"
             )}
           >
             <ChevronLeft
               size={16}
-              className="flex-shrink-0 text-slate-500 group-hover:text-primary group-hover:-translate-x-0.5 transition-all"
+              className="flex-shrink-0 text-slate-400 dark:text-slate-500 group-hover:text-primary group-hover:-translate-x-0.5 transition-all"
             />
             <div className="min-w-0 text-left">
-              <div className="text-[9px] font-bold text-slate-600 uppercase tracking-widest">
+              <div className="text-[9px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest">
                 Back
               </div>
-              <div className="text-xs font-semibold truncate">
+              <div className="text-xs font-bold truncate">
                 {prevSection.label}
               </div>
             </div>
@@ -111,18 +111,18 @@ export function SectionNavButtons() {
           <button
             onClick={() => handleNavigate(nextSection)}
             className={cn(
-              "group flex items-center justify-end gap-2 px-4 py-3 rounded-xl",
-              "bg-gradient-to-r from-primary/10 to-indigo-500/10 border border-primary/20 hover:border-primary/40",
-              "text-slate-300 hover:text-white",
-              "transition-all duration-200 active:scale-[0.98]",
+              "group flex items-center justify-end gap-2.5 px-5 py-3.5 rounded-xl",
+              "bg-primary/10 hover:bg-primary/20 border border-primary/30 hover:border-primary/50",
+              "text-primary font-bold",
+              "transition-all duration-200 active:scale-[0.98] shadow-sm",
               "min-w-0 flex-1 max-w-[48%]"
             )}
           >
             <div className="min-w-0 text-right">
-              <div className="text-[9px] font-bold text-primary/60 uppercase tracking-widest">
+              <div className="text-[9px] font-bold text-primary/70 uppercase tracking-widest">
                 Next
               </div>
-              <div className="text-xs font-semibold truncate">
+              <div className="text-xs font-bold truncate">
                 {nextSection.label}
               </div>
             </div>

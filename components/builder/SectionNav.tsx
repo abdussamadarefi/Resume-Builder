@@ -64,7 +64,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
   return (
     <div className="space-y-6">
       {/* Workspace Manager */}
-      <div className="p-4 bg-slate-900/60 border border-slate-800/80 rounded-2xl relative shadow-inner">
+      <div className="p-4 bg-slate-100/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl relative shadow-sm dark:shadow-inner transition-colors">
         <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 block">
           Document Workspace
         </label>
@@ -72,7 +72,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
         <div className="relative">
           <div className="flex gap-2 items-center">
             {isEditing ? (
-              <div className="flex items-center gap-1 bg-slate-950 border border-slate-800 rounded-xl px-2 py-1.5 flex-1 shadow-inner">
+              <div className="flex items-center gap-1 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl px-2 py-1.5 flex-1 shadow-inner">
                 <input
                   type="text"
                   value={tempTitle}
@@ -81,32 +81,32 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                     if (e.key === "Enter") handleRename()
                     if (e.key === "Escape") setIsEditing(false)
                   }}
-                  className="bg-transparent text-xs text-white font-medium focus:outline-none flex-1 w-full min-w-0"
+                  className="bg-transparent text-xs text-slate-900 dark:text-white font-medium focus:outline-none flex-1 w-full min-w-0"
                   autoFocus
                 />
-                <button onClick={handleRename} className="text-emerald-400 hover:text-emerald-300 p-1 rounded-md hover:bg-slate-900 transition-colors">
+                <button onClick={handleRename} className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
                   <Check size={13} />
                 </button>
-                <button onClick={() => setIsEditing(false)} className="text-rose-400 hover:text-rose-300 p-1 rounded-md hover:bg-slate-900 transition-colors">
+                <button onClick={() => setIsEditing(false)} className="text-rose-600 dark:text-rose-400 hover:text-rose-500 p-1 rounded-md hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
                   <X size={13} />
                 </button>
               </div>
             ) : (
-              <div className="flex-1 min-w-0 flex items-center justify-between bg-slate-950/60 hover:bg-slate-950 border border-slate-850 rounded-xl px-3 py-2 transition-all group">
+              <div className="flex-1 min-w-0 flex items-center justify-between bg-white dark:bg-slate-950/60 hover:bg-slate-50 dark:hover:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 transition-all group shadow-sm dark:shadow-none">
                 <button
                   onClick={() => setIsOpen(!isOpen)}
                   className="flex-1 min-w-0 flex items-center justify-between text-left mr-2 focus:outline-none"
                 >
                   <div className="truncate pr-1">
-                    <div className="text-xs font-bold text-white truncate group-hover:text-primary transition-colors">
+                    <div className="text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-primary transition-colors">
                       {activeData.meta.title}
                     </div>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className={cn(
                         "text-[8px] font-extrabold uppercase px-1 py-0.2 rounded tracking-wide",
                         activeData.meta.type === "cv" 
-                          ? "bg-blue-500/20 text-blue-400" 
-                          : "bg-emerald-500/20 text-emerald-400"
+                          ? "bg-blue-500/15 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400" 
+                          : "bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
                       )}>
                         {activeData.meta.type === "cv" ? "CV" : "Resume"}
                       </span>
@@ -120,7 +120,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                 
                 <button 
                   onClick={() => setIsEditing(true)}
-                  className="p-1 hover:bg-slate-800 rounded text-slate-500 hover:text-slate-200 transition-colors flex-shrink-0"
+                  className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors flex-shrink-0"
                   title="Rename Document"
                 >
                   <Pencil size={11} />
@@ -133,7 +133,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
           {isOpen && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-              <div className="absolute left-0 right-0 mt-2 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 max-h-[250px] overflow-y-auto scrollbar-thin">
+              <div className="absolute left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200 max-h-[250px] overflow-y-auto scrollbar-thin">
                 <div className="space-y-0.5">
                   {Object.values(resumes).map((res) => {
                     const isActive = res.meta.id === activeData.meta.id
@@ -142,7 +142,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                         key={res.meta.id} 
                         className={cn(
                           "flex items-center justify-between p-2 rounded-lg text-left transition-colors group/item",
-                          isActive ? "bg-primary/10 border border-primary/20" : "hover:bg-slate-800/40"
+                          isActive ? "bg-primary/10 border border-primary/20" : "hover:bg-slate-100 dark:hover:bg-slate-800/40"
                         )}
                       >
                         <button
@@ -154,7 +154,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                         >
                           <div className={cn(
                             "text-xs font-bold truncate pr-1",
-                            isActive ? "text-primary" : "text-slate-200"
+                            isActive ? "text-primary" : "text-slate-800 dark:text-slate-200"
                           )}>
                             {res.meta.title}
                           </div>
@@ -162,8 +162,8 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                             <span className={cn(
                               "text-[8px] font-extrabold uppercase px-1 rounded",
                               res.meta.type === "cv" 
-                                ? "bg-blue-500/25 text-blue-400" 
-                                : "bg-emerald-500/25 text-emerald-400"
+                                ? "bg-blue-500/20 text-blue-600 dark:text-blue-400" 
+                                : "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
                             )}>
                               {res.meta.type === "cv" ? "CV" : "Resume"}
                             </span>
@@ -173,7 +173,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                         <div className="flex items-center gap-0.5 opacity-100 sm:opacity-0 sm:group-hover/item:opacity-100 transition-opacity">
                           <button
                             onClick={() => duplicateResume(res.meta.id)}
-                            className="p-1 hover:bg-slate-700 rounded text-slate-400 hover:text-slate-100 transition-colors"
+                            className="p-1 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition-colors"
                             title="Duplicate Document"
                           >
                             <Copy size={11} />
@@ -185,7 +185,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                                   deleteResume(res.meta.id)
                                 }
                               }}
-                              className="p-1 hover:bg-rose-950 rounded text-slate-400 hover:text-rose-400 transition-colors"
+                              className="p-1 hover:bg-rose-100 dark:hover:bg-rose-950 rounded text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                               title="Delete Document"
                             >
                               <Trash2 size={11} />
@@ -197,13 +197,13 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                   })}
                 </div>
 
-                <div className="border-t border-slate-800 my-1.5 pt-1.5 space-y-0.5">
+                <div className="border-t border-slate-200 dark:border-slate-800 my-1.5 pt-1.5 space-y-0.5">
                   <button
                     onClick={() => {
                       createNewResume("resume")
                       setIsOpen(false)
                     }}
-                    className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left text-xs font-bold text-emerald-400 hover:bg-emerald-500/10 transition-all active:scale-[0.98]"
+                    className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-all active:scale-[0.98]"
                   >
                     <Plus size={13} /> New Corporate Resume
                   </button>
@@ -212,7 +212,7 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
                       createNewResume("cv")
                       setIsOpen(false)
                     }}
-                    className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left text-xs font-bold text-blue-400 hover:bg-blue-500/10 transition-all active:scale-[0.98]"
+                    className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-500/10 transition-all active:scale-[0.98]"
                   >
                     <Plus size={13} /> New Academic CV
                   </button>
@@ -238,15 +238,15 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group text-left",
                 activeSection === id
-                  ? "bg-primary text-white shadow-lg shadow-primary/20"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                  ? "bg-primary text-white shadow-lg shadow-primary/20 font-bold"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/50"
               )}
             >
               <Icon 
                 size={18} 
                 className={cn(
                   "transition-transform duration-200 group-hover:scale-110 flex-shrink-0",
-                  activeSection === id ? "text-white" : "text-slate-500"
+                  activeSection === id ? "text-white" : "text-slate-400 dark:text-slate-500"
                 )} 
               />
               <span className="truncate">{label}</span>
@@ -257,4 +257,3 @@ export function SectionNav({ onNavClick }: { onNavClick?: () => void }) {
     </div>
   )
 }
-

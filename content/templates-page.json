@@ -1,0 +1,27 @@
+{
+  "badge_text": "Template Gallery",
+  "title": "Choose Your Perfect Template",
+  "subtitle": "10 professionally designed templates for resumes and academic CVs. All templates are ATS-friendly, print-ready, and completely free.",
+  "filter_tabs": [
+    {
+      "id": "all",
+      "label": "All Templates",
+      "order": 0
+    },
+    {
+      "id": "resume",
+      "label": "Resumes (Corporate)",
+      "order": 1
+    },
+    {
+      "id": "cv",
+      "label": "Academic CVs",
+      "order": 2
+    },
+    {
+      "id": "both",
+      "label": "Universal Formats",
+      "order": 3
+    }
+  ]
+}

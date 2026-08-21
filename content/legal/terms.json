@@ -1,0 +1,30 @@
+{
+  "badge": "Legal Agreement",
+  "title": "Terms of Service",
+  "subtitle": "Please review these terms before using ResumeForge. By accessing our platform, you agree to these fair and transparent terms.",
+  "last_updated": "August 16, 2026",
+  "tldr_headline": "Plain-English Summary",
+  "tldr_content": "ResumeForge is free to use for personal and professional resume building. You own 100% of the content you create. You cannot resell or redistribute our proprietary template source code as a competing commercial builder.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1. Acceptance of Terms",
+      "content": "By accessing and using ResumeForge (https://resumee.pro.bd), you accept and agree to be bound by the terms and provision of this agreement."
+    },
+    {
+      "id": "s2",
+      "title": "2. User Content Ownership",
+      "content": "You retain full and complete ownership of all resumes, CVs, text, and documents generated through ResumeForge. We claim zero rights or copyright over your career documents."
+    },
+    {
+      "id": "s3",
+      "title": "3. Service Availability & Disclaimers",
+      "content": "ResumeForge is provided on an 'as is' and 'as available' basis without warranties of any kind. While we strive for 100% uptime, we are not liable for any disruptions or lost unsaved browser data."
+    },
+    {
+      "id": "s4",
+      "title": "4. Permitted & Prohibited Uses",
+      "content": "You are free to build and export unlimited resumes for personal job seeking. You may not reverse engineer, scrape, or redistribute the source code for unauthorized commercial resale."
+    }
+  ]
+}

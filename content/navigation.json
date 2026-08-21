@@ -1,0 +1,109 @@
+{
+  "navbar": [
+    {
+      "id": "nav1",
+      "label": "Templates",
+      "url": "/templates",
+      "order": 0,
+      "enabled": true
+    },
+    {
+      "id": "nav2",
+      "label": "Articles",
+      "url": "/articles",
+      "order": 1,
+      "enabled": true
+    },
+    {
+      "id": "nav3",
+      "label": "About",
+      "url": "/about",
+      "order": 2,
+      "enabled": true
+    }
+  ],
+  "navbar_cta": {
+    "label": "Build Free Resume",
+    "url": "/builder?type=resume"
+  },
+  "footer": {
+    "product": [
+      {
+        "id": "fp1",
+        "label": "Resume Builder",
+        "url": "/builder?type=resume",
+        "order": 0
+      },
+      {
+        "id": "fp2",
+        "label": "Academic CV Builder",
+        "url": "/builder?type=cv",
+        "order": 1
+      },
+      {
+        "id": "fp3",
+        "label": "Templates Showcase",
+        "url": "/templates",
+        "order": 2
+      }
+    ],
+    "resources": [
+      {
+        "id": "fr1",
+        "label": "Career Articles",
+        "url": "/articles",
+        "order": 0
+      },
+      {
+        "id": "fr2",
+        "label": "ATS Optimization Guide",
+        "url": "/articles/ats-friendly-resume-tips",
+        "order": 1
+      },
+      {
+        "id": "fr3",
+        "label": "Resume vs CV Guide",
+        "url": "/articles/resume-vs-cv-difference",
+        "order": 2
+      }
+    ],
+    "company": [
+      {
+        "id": "fc1",
+        "label": "About Us",
+        "url": "/about",
+        "order": 0
+      },
+      {
+        "id": "fc2",
+        "label": "GitHub Repository",
+        "url": "https://github.com/abdussamadarefi/Resume-Builder",
+        "order": 1,
+        "is_external": true
+      }
+    ],
+    "legal": [
+      {
+        "id": "fl1",
+        "label": "Privacy Policy",
+        "url": "/privacy",
+        "order": 0
+      },
+      {
+        "id": "fl2",
+        "label": "Terms of Service",
+        "url": "/terms",
+        "order": 1
+      },
+      {
+        "id": "fl3",
+        "label": "Cookie Policy",
+        "url": "/cookies",
+        "order": 2
+      }
+    ]
+  },
+  "footer_copyright": "© 2026 ResumeForge. All rights reserved.",
+  "footer_credit": "Created by Abdus Samad Arefi",
+  "footer_github_url": "https://github.com/abdussamadarefi/Resume-Builder"
+}

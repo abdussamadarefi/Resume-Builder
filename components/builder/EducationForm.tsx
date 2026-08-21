@@ -31,11 +31,12 @@ export function EducationForm() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 relative group"
+            className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none relative group"
           >
             <button 
               onClick={() => removeEducation(entry.id)}
-              className="absolute top-4 right-4 p-2 text-slate-600 hover:text-red-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all"
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all rounded-lg hover:bg-red-500/10"
+              title="Delete Education"
             >
               <Trash2 size={16} />
             </button>
@@ -108,7 +109,7 @@ export function EducationForm() {
 
       <button
         onClick={handleAdd}
-        className="w-full h-14 border-2 border-dashed border-slate-800 rounded-2xl flex items-center justify-center gap-2 text-slate-500 hover:border-primary/50 hover:text-primary transition-all group"
+        className="w-full h-14 border-2 border-dashed border-slate-300 dark:border-slate-800 rounded-2xl flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:border-primary/50 hover:text-primary transition-all group font-semibold text-sm bg-white/40 dark:bg-slate-900/20"
       >
         <Plus size={20} className="group-hover:rotate-90 transition-transform" />
         Add Education

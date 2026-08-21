@@ -37,7 +37,7 @@ export default function ArticleLayout({
         >
           <Link
             href="/articles"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-white transition-colors font-medium"
+            className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors font-medium"
           >
             <ArrowLeft size={14} /> Back to Articles
           </Link>
@@ -57,19 +57,19 @@ export default function ArticleLayout({
             >
               {category}
             </span>
-            <span className="flex items-center gap-1.5 text-xs text-slate-500">
+            <span className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
               <Clock size={12} /> {readTime}
             </span>
-            <span className="flex items-center gap-1.5 text-xs text-slate-500">
+            <span className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
               <Calendar size={12} /> {date}
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-white tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-slate-900 dark:text-white tracking-tight leading-tight">
             {title}
           </h1>
 
-          <p className="text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl">
+          <p className="text-slate-700 dark:text-slate-300 text-base md:text-lg leading-relaxed max-w-2xl font-normal">
             {description}
           </p>
         </motion.header>
@@ -79,16 +79,16 @@ export default function ArticleLayout({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="prose prose-invert prose-slate max-w-none
-            [&_h2]:text-xl [&_h2]:md:text-2xl [&_h2]:font-heading [&_h2]:font-bold [&_h2]:text-white [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:tracking-tight
-            [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-white [&_h3]:mt-8 [&_h3]:mb-3
-            [&_p]:text-slate-400 [&_p]:text-sm [&_p]:md:text-base [&_p]:leading-relaxed [&_p]:mb-4
-            [&_ul]:text-slate-400 [&_ul]:text-sm [&_ul]:md:text-base [&_ul]:leading-relaxed [&_ul]:space-y-2 [&_ul]:mb-6 [&_ul]:pl-5
-            [&_ol]:text-slate-400 [&_ol]:text-sm [&_ol]:md:text-base [&_ol]:leading-relaxed [&_ol]:space-y-2 [&_ol]:mb-6 [&_ol]:pl-5
-            [&_li]:text-slate-400
-            [&_strong]:text-slate-200 [&_strong]:font-semibold
-            [&_blockquote]:border-l-2 [&_blockquote]:border-primary/40 [&_blockquote]:pl-5 [&_blockquote]:py-2 [&_blockquote]:my-6 [&_blockquote]:bg-slate-900/30 [&_blockquote]:rounded-r-xl [&_blockquote]:pr-5
-            [&_code]:bg-slate-800 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_code]:text-emerald-400 [&_code]:font-mono
+          className="max-w-none
+            [&_h2]:text-xl [&_h2]:md:text-2xl [&_h2]:font-heading [&_h2]:font-bold [&_h2]:text-slate-900 dark:[&_h2]:text-white [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:tracking-tight
+            [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-slate-900 dark:[&_h3]:text-white [&_h3]:mt-8 [&_h3]:mb-3
+            [&_p]:text-slate-700 dark:[&_p]:text-slate-300 [&_p]:text-sm [&_p]:md:text-base [&_p]:leading-relaxed [&_p]:mb-4
+            [&_ul]:text-slate-700 dark:[&_ul]:text-slate-300 [&_ul]:text-sm [&_ul]:md:text-base [&_ul]:leading-relaxed [&_ul]:space-y-2 [&_ul]:mb-6 [&_ul]:pl-5 [&_ul]:list-disc
+            [&_ol]:text-slate-700 dark:[&_ol]:text-slate-300 [&_ol]:text-sm [&_ol]:md:text-base [&_ol]:leading-relaxed [&_ol]:space-y-2 [&_ol]:mb-6 [&_ol]:pl-5 [&_ol]:list-decimal
+            [&_li]:text-slate-700 dark:[&_li]:text-slate-300
+            [&_strong]:text-slate-900 dark:[&_strong]:text-white [&_strong]:font-bold
+            [&_blockquote]:border-l-2 [&_blockquote]:border-primary/50 [&_blockquote]:pl-5 [&_blockquote]:py-2 [&_blockquote]:my-6 [&_blockquote]:bg-slate-100 dark:[&_blockquote]:bg-slate-900/60 [&_blockquote]:rounded-r-xl [&_blockquote]:pr-5
+            [&_code]:bg-slate-100 dark:[&_code]:bg-slate-800 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_code]:text-emerald-700 dark:[&_code]:text-emerald-400 [&_code]:font-mono
           "
         >
           {children}
@@ -100,12 +100,12 @@ export default function ArticleLayout({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mt-16 p-8 md:p-10 rounded-3xl bg-gradient-to-br from-indigo-600/10 via-transparent to-emerald-600/10 border border-slate-800/60 text-center"
+          className="mt-16 p-8 md:p-10 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 text-center shadow-sm dark:shadow-none"
         >
-          <h3 className="text-xl md:text-2xl font-heading font-bold text-white mb-3">
+          <h3 className="text-xl md:text-2xl font-heading font-bold text-slate-900 dark:text-white mb-3">
             Ready to Build Your Resume?
           </h3>
-          <p className="text-slate-400 text-sm mb-6 max-w-md mx-auto">
+          <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 max-w-md mx-auto">
             Put these tips into practice with ResumeForge. Free, private, and no signup required.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -117,7 +117,7 @@ export default function ArticleLayout({
             </Link>
             <Link
               href="/templates"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 border border-slate-800 text-white font-bold text-sm rounded-xl hover:border-slate-700 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white font-bold text-sm rounded-xl hover:border-slate-300 dark:hover:border-slate-700 transition-all"
             >
               Browse Templates
             </Link>
@@ -125,10 +125,10 @@ export default function ArticleLayout({
         </motion.div>
 
         {/* Back to Articles */}
-        <div className="mt-10 pt-8 border-t border-slate-800/60">
+        <div className="mt-10 pt-8 border-t border-slate-200 dark:border-slate-800/60">
           <Link
             href="/articles"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-white transition-colors font-medium"
+            className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors font-medium"
           >
             <ArrowLeft size={14} /> Back to All Articles
           </Link>

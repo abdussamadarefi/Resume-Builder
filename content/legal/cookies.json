@@ -1,0 +1,25 @@
+{
+  "badge": "Cookie Transparency",
+  "title": "Cookie Policy",
+  "subtitle": "We believe in radical transparency regarding cookies and browser storage technologies.",
+  "last_updated": "August 16, 2026",
+  "tldr_headline": "Cookie Summary",
+  "tldr_content": "We use zero advertising or invasive marketing tracking cookies. We only use functional browser localStorage for your resume drafts, and anonymous Google Analytics 4 cookies to monitor site uptime and performance.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1. What Are Cookies & Local Storage?",
+      "content": "Cookies and local storage are small text files placed on your device by websites you visit. They allow web applications to remember your preferences and session state across page reloads."
+    },
+    {
+      "id": "s2",
+      "title": "2. Cookies We Use",
+      "content": "Google Analytics 4 uses cookies (_ga and _ga_*) to distinguish unique visitors and measure overall website traffic trends. These cookies do not contain any resume data."
+    },
+    {
+      "id": "s3",
+      "title": "3. How to Disable Cookies",
+      "content": "You can control and disable cookies through your browser settings at any time without losing the ability to use the ResumeForge editor."
+    }
+  ]
+}

@@ -73,18 +73,19 @@ export function PersonalInfoForm() {
       className="space-y-6"
     >
       {/* Photo Upload */}
-      <div className="flex items-center gap-6 p-6 bg-slate-900/40 rounded-2xl border border-slate-800">
+      <div className="flex items-center gap-6 p-6 bg-white dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none">
         <div className="relative flex-shrink-0">
           {personal.photoUrl ? (
             <div className="relative">
               <img
                 src={personal.photoUrl}
                 alt="Profile photo"
-                className="w-24 h-24 rounded-full object-cover border-2 border-slate-700"
+                className="w-24 h-24 rounded-full object-cover border-2 border-slate-300 dark:border-slate-700"
               />
               <button
                 onClick={() => updatePersonal({ photoUrl: undefined })}
-                className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-400 transition-colors"
+                className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-400 transition-colors shadow-sm"
+                title="Remove photo"
               >
                 <X size={12} />
               </button>
@@ -92,7 +93,8 @@ export function PersonalInfoForm() {
           ) : (
             <button
               onClick={() => photoInputRef.current?.click()}
-              className="w-24 h-24 rounded-full border-2 border-dashed border-slate-700 flex flex-col items-center justify-center text-slate-500 hover:border-primary/50 hover:text-primary transition-all"
+              className="w-24 h-24 rounded-full border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:border-primary/50 hover:text-primary transition-all bg-slate-50 dark:bg-slate-950/30"
+              title="Upload photo"
             >
               <Camera size={24} />
               <span className="text-[9px] mt-1 font-bold uppercase tracking-wide">Photo</span>
@@ -107,14 +109,14 @@ export function PersonalInfoForm() {
           />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-bold text-slate-300 mb-1">Profile Photo</p>
-          <p className="text-xs text-slate-500 leading-relaxed mb-3">
+          <p className="text-sm font-bold text-slate-900 dark:text-slate-200 mb-1">Profile Photo</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-3">
             Optional. Used in Scholar and Prism templates. Stored locally in your browser.
           </p>
           {!personal.photoUrl && (
             <button
               onClick={() => photoInputRef.current?.click()}
-              className="text-xs text-primary font-medium hover:underline"
+              className="text-xs text-primary font-bold hover:underline"
             >
               Upload image →
             </button>
@@ -122,7 +124,7 @@ export function PersonalInfoForm() {
           {personal.photoUrl && (
             <button
               onClick={() => photoInputRef.current?.click()}
-              className="text-xs text-slate-400 font-medium hover:text-slate-200"
+              className="text-xs text-slate-600 dark:text-slate-400 font-medium hover:text-primary dark:hover:text-slate-200"
             >
               Change photo
             </button>

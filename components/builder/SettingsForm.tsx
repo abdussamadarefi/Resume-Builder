@@ -74,7 +74,7 @@ export function SettingsForm() {
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <section>
-        <h3 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
           <Layout className="text-primary" size={24} />
           Choose Layout
         </h3>
@@ -83,21 +83,21 @@ export function SettingsForm() {
             <button
               key={t.id}
               onClick={() => setTemplate(t.id as any)}
-              className={`p-6 rounded-2xl border-2 text-left transition-all ${
+              className={`p-6 rounded-2xl border-2 text-left transition-all shadow-sm dark:shadow-none ${
                 templateId === t.id 
                   ? "border-primary bg-primary/10" 
-                  : "border-slate-800 bg-slate-900/50 hover:border-slate-700"
+                  : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700"
               }`}
             >
-              <h4 className="font-bold text-white mb-1">{t.name}</h4>
-              <p className="text-xs text-slate-500">{t.desc}</p>
+              <h4 className="font-bold text-slate-900 dark:text-white mb-1">{t.name}</h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{t.desc}</p>
             </button>
           ))}
         </div>
       </section>
 
       <section>
-        <h3 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-6">
           <Palette className="text-primary" size={24} />
           Accent Color
         </h3>
@@ -107,7 +107,7 @@ export function SettingsForm() {
               key={c.value}
               onClick={() => setAccentColor(c.value)}
               className={`w-12 h-12 rounded-full border-4 transition-all ${
-                accentColor === c.value ? "border-white scale-110" : "border-transparent opacity-60 hover:opacity-100"
+                accentColor === c.value ? "border-slate-900 dark:border-white scale-110 shadow-md" : "border-transparent opacity-70 hover:opacity-100"
               }`}
               style={{ backgroundColor: c.value }}
               title={c.name}
@@ -118,7 +118,7 @@ export function SettingsForm() {
               type="color"
               value={accentColor}
               onChange={(e) => setAccentColor(e.target.value)}
-              className="w-12 h-12 rounded-full overflow-hidden cursor-pointer border-4 border-transparent opacity-60 hover:opacity-100"
+              className="w-12 h-12 rounded-full overflow-hidden cursor-pointer border-4 border-transparent opacity-70 hover:opacity-100"
               title="Custom color"
             />
           </div>
@@ -127,9 +127,9 @@ export function SettingsForm() {
 
       <section>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-          <h3 className="text-xl font-bold text-white flex items-center gap-2">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <Type className="text-primary" size={24} />
-            Typography & Spacing
+            Typography &amp; Spacing
           </h3>
           {activeData.meta.type === "resume" && (
             <button
@@ -149,9 +149,9 @@ export function SettingsForm() {
             </button>
           )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-8 rounded-3xl bg-slate-900/40 border border-slate-800">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none">
           <div className="space-y-4">
-            <Label className="text-slate-400">Font Size ({fontSize}px)</Label>
+            <Label className="text-slate-700 dark:text-slate-300 font-semibold">Font Size ({fontSize}px)</Label>
             <input 
               type="range" min="10" max="20" step="1"
               value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))}
@@ -159,7 +159,7 @@ export function SettingsForm() {
             />
           </div>
           <div className="space-y-4">
-            <Label className="text-slate-400">Line Height ({lineHeight})</Label>
+            <Label className="text-slate-700 dark:text-slate-300 font-semibold">Line Height ({lineHeight})</Label>
             <input 
               type="range" min="1" max="2" step="0.1"
               value={lineHeight} onChange={(e) => setLineHeight(Number(e.target.value))}
@@ -167,7 +167,7 @@ export function SettingsForm() {
             />
           </div>
           <div className="space-y-4">
-            <Label className="text-slate-400">Document Margin ({margin}px)</Label>
+            <Label className="text-slate-700 dark:text-slate-300 font-semibold">Document Margin ({margin}px)</Label>
             <input 
               type="range" min="20" max="80" step="5"
               value={margin} onChange={(e) => setMargin(Number(e.target.value))}
@@ -178,11 +178,11 @@ export function SettingsForm() {
       </section>
 
       <section>
-        <h3 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-2">
           <Eye className="text-primary" size={24} />
           Section Visibility
         </h3>
-        <p className="text-sm text-slate-500 mb-6">Toggle sections to show or hide them on your resume preview and export.</p>
+        <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">Toggle sections to show or hide them on your resume preview and export.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {Object.entries(SECTION_LABELS).map(([key, label]) => {
             const isVisible = visibility?.[key] !== false
@@ -190,16 +190,16 @@ export function SettingsForm() {
               <button
                 key={key}
                 onClick={() => toggleSection(key)}
-                className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all text-left ${
+                className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all text-left shadow-sm dark:shadow-none ${
                   isVisible
-                    ? "border-primary/30 bg-primary/5 text-white"
-                    : "border-slate-800 bg-slate-900/30 text-slate-500"
+                    ? "border-primary/40 bg-primary/5 text-slate-900 dark:text-white font-semibold"
+                    : "border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/30 text-slate-400 dark:text-slate-500"
                 }`}
               >
                 <span className="text-sm font-medium">{label}</span>
                 {isVisible
                   ? <Eye size={16} className="text-primary flex-shrink-0" />
-                  : <EyeOff size={16} className="text-slate-600 flex-shrink-0" />
+                  : <EyeOff size={16} className="text-slate-400 dark:text-slate-600 flex-shrink-0" />
                 }
               </button>
             )

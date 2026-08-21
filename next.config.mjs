@@ -2,14 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   outputFileTracing: false,
+  swcMinify: false,
   typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
-  },
-  experimental: {
-    webpackBuildWorker: false,
   },
 };
 

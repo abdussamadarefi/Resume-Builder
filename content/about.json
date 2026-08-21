@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "badge": "Our Story & Vision",
+    "title": "Building the Resume Tool We Wished Existed",
+    "subtitle": "ResumeForge started from a simple frustration: every resume builder either costs too much, collects too much data, or produces mediocre output. We built the alternative."
+  },
+  "mission": {
+    "title": "Our Mission",
+    "paragraphs": [
+      "We believe that creating a professional resume shouldn't require a subscription, a credit card, or handing over your personal career data to third-party advertisers.",
+      "Job hunting and academic applications are already stressful. Your resume tool should be fast, private, free, and produce beautiful documents that pass ATS filters and impress human recruiters."
+    ]
+  },
+  "values": [
+    {
+      "id": "v1",
+      "title": "Privacy First",
+      "description": "Zero user tracking, zero server-side storage of personal information. Your data lives in your browser's localStorage and never touches our servers.",
+      "icon_name": "Shield",
+      "gradient": "from-emerald-500 to-teal-600",
+      "order": 0
+    },
+    {
+      "id": "v2",
+      "title": "Free Forever",
+      "description": "No paywalls, no trial periods, no locked templates, no watermark on downloads. Everything is completely free for students, researchers, and professionals.",
+      "icon_name": "Heart",
+      "gradient": "from-rose-500 to-pink-600",
+      "order": 1
+    },
+    {
+      "id": "v3",
+      "title": "Open & Transparent",
+      "description": "Built with modern open web standards — Next.js, Tailwind CSS, TypeScript, and React PDF. Clean code with zero hidden telemetry or tracking bloat.",
+      "icon_name": "Code",
+      "gradient": "from-blue-500 to-indigo-600",
+      "order": 2
+    },
+    {
+      "id": "v4",
+      "title": "Professional Grade",
+      "description": "ATS-optimized layouts, pixel-accurate vector PDF rendering, and native Word DOCX generation that look stunning on screens and in print.",
+      "icon_name": "Sparkles",
+      "gradient": "from-amber-500 to-orange-600",
+      "order": 3
+    }
+  ],
+  "creator": {
+    "name": "Abdus Samad Arefi",
+    "title": "Creator & Lead Developer",
+    "bio": "A full-stack software engineer passionate about developer tools, privacy-preserving web architecture, and clean user experience design. Built ResumeForge to empower students and professionals worldwide.",
+    "avatar_url": "",
+    "github_url": "https://github.com/abdussamadarefi",
+    "email": "abdussamadarefi@gmail.com"
+  },
+  "cta_banner": {
+    "title": "Open Source & Community Driven",
+    "description": "ResumeForge is an independent open-source project. Contribute templates, suggest features, or star us on GitHub.",
+    "button_text": "View on GitHub",
+    "button_url": "https://github.com/abdussamadarefi/Resume-Builder"
+  }
+}

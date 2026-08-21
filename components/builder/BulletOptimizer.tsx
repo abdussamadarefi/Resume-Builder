@@ -47,19 +47,19 @@ export function BulletOptimizer({ initialText, onApply, onClose }: BulletOptimiz
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl max-w-2xl w-full"
+      className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl max-w-2xl w-full"
     >
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 bg-primary/20 rounded-lg text-primary">
           <Sparkles size={20} />
         </div>
-        <h4 className="text-xl font-bold text-white tracking-tight">AI Bullet Optimizer</h4>
+        <h4 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">AI Bullet Optimizer</h4>
       </div>
 
       <div className="space-y-6">
         <div>
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 block">Current Draft</label>
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-slate-400 text-sm italic">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-3 block">Current Draft</label>
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-300 text-sm italic">
             {initialText || "Type something in the form first..."}
           </div>
         </div>
@@ -71,8 +71,8 @@ export function BulletOptimizer({ initialText, onApply, onClose }: BulletOptimiz
               onClick={() => setTone(t)}
               className={`flex-1 py-2 px-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all ${
                 tone === t 
-                  ? "bg-primary text-white" 
-                  : "bg-slate-800 text-slate-400 hover:text-slate-200"
+                  ? "bg-primary text-white shadow-sm" 
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
               }`}
             >
               {t}
@@ -97,13 +97,13 @@ export function BulletOptimizer({ initialText, onApply, onClose }: BulletOptimiz
               className="space-y-4"
             >
               <div className="p-6 rounded-2xl bg-primary/5 border border-primary/20 relative group">
-                <p className="text-sm text-slate-200 leading-relaxed pr-8">
+                <p className="text-sm text-slate-900 dark:text-slate-200 leading-relaxed pr-8">
                   {suggestion}
                 </p>
-                <div className="absolute top-4 right-4 flex gap-2 overflow-hidden rounded-lg border border-slate-800 bg-slate-900 group-hover:opacity-100 opacity-0 transition-opacity">
+                <div className="absolute top-4 right-4 flex gap-2 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 group-hover:opacity-100 opacity-0 transition-opacity shadow-sm">
                    <button 
                     onClick={() => {navigator.clipboard.writeText(suggestion)}} 
-                    className="p-2 hover:bg-slate-800 text-slate-400"
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
                     title="Copy to clipboard"
                    >
                      <Copy size={14} />
@@ -111,10 +111,10 @@ export function BulletOptimizer({ initialText, onApply, onClose }: BulletOptimiz
                 </div>
               </div>
               <div className="flex gap-3">
-                <Button onClick={() => onApply(suggestion)} className="flex-1 gap-2 border-emerald-500/20 text-emerald-500 bg-emerald-500/5 hover:bg-emerald-500/10" variant="outline">
+                <Button onClick={() => onApply(suggestion)} className="flex-1 gap-2 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20" variant="outline">
                   <Check size={16} /> Use This Suggestion
                 </Button>
-                <Button onClick={onClose} variant="ghost" className="text-slate-500 hover:text-slate-300">
+                <Button onClick={onClose} variant="ghost" className="text-slate-500 hover:text-slate-800 dark:hover:text-slate-300">
                   Cancel
                 </Button>
               </div>

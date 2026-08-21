@@ -1,0 +1,13 @@
+{
+  "site_name": "ResumeForge",
+  "site_url": "https://resumee.pro.bd",
+  "ga_measurement_id": "G-RGT94HGV0Z",
+  "support_email": "abdussamadarefi@gmail.com",
+  "announcement": {
+    "enabled": false,
+    "message": "🚀 Welcome to ResumeForge! All 10 ATS-optimized templates are completely free forever.",
+    "type": "info",
+    "link_text": "Explore Templates",
+    "link_url": "/templates"
+  }
+}

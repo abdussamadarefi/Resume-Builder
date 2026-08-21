@@ -1,1256 +1,1060 @@
-# ResumeForge — Backend Admin Dashboard
+# ResumeForge — Custom CMS Admin Dashboard
+## Architecture & Implementation Blueprint
 
-> **Medium-grade admin panel** · Controls templates, analytics, feature flags, announcements, and feedback · Secured with JWT auth
+> **Production Control Plane for ResumeForge (https://resumee.pro.bd)**
+> GitHub-Powered CMS · JSON Content Files · Push-to-Deploy · Multi-Admin Support · $0/month
 
 ---
 
 ## Table of Contents
 
-1. [Overview](#1-overview)
-2. [Tech Stack](#2-tech-stack)
-3. [File Structure](#3-file-structure)
-4. [Database Schema](#4-database-schema)
-5. [Authentication](#5-authentication)
-6. [API Routes](#6-api-routes)
-7. [Dashboard Modules](#7-dashboard-modules)
-8. [Feature Flags](#8-feature-flags)
-9. [Analytics Tracking](#9-analytics-tracking)
-10. [Template Management](#10-template-management)
-11. [Announcement System](#11-announcement-system)
-12. [Feedback & Reports](#12-feedback--reports)
-13. [Frontend Integration](#13-frontend-integration)
-14. [Environment Variables](#14-environment-variables)
-15. [Deployment](#15-deployment)
-16. [Security](#16-security)
-17. [Dashboard UI Pages](#17-dashboard-ui-pages)
+1. How It Works - The Core Concept
+2. Architecture: GitHub as the Database
+3. Technology Stack & $0/mo Cost Model
+4. Content File Structure (content/ folder)
+5. Full Directory & File Structure
+6. Admin Authentication & User Management (Supabase)
+7. Edge Middleware Route Guard
+8. The Push to GitHub Engine
+9. Content Management Panels (All 6 Page Modules)
+10. Templates Registry Manager
+11. Feature Flags Panel
+12. Admin Dashboard UI - Layout
+13. API Routes - Admin & Publish
+14. Frontend Integration - Reading JSON Content
+15. Environment Variables
+16. Build & Deployment Flow
+17. Content JSON File Schemas (Complete Reference)
+18. Implementation Phases
 
 ---
 
-## 1. Overview
+## 1. How It Works — The Core Concept
 
-The backend dashboard gives the app owner full control over ResumeForge without touching code. It runs as a separate Next.js admin app, connects to a Supabase database, and exposes a set of internal APIs the main app calls at runtime.
-
-### What the Dashboard Controls
-
-| Module | What You Can Do |
-|--------|----------------|
-| **Analytics** | See daily active users, document type splits, export counts, template popularity |
-| **Templates** | Enable / disable templates, change display order, mark as featured or new |
-| **Feature Flags** | Turn features on/off without redeployment |
-| **Announcements** | Push a banner or notice to all users (maintenance, new template, etc.) |
-| **Feedback** | Read user-submitted feedback, bug reports, and star ratings |
-| **Export Stats** | Track PDF vs DOCX vs Print vs Share link usage |
-| **Error Logs** | View client-side errors reported by the main app |
-
-### Architecture
+### Your Current Flow (Manual Code Changes)
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    ResumeForge App                      │
-│              (Next.js — Vercel — client-side)           │
-│                                                         │
-│  On load: fetch /api/config  ──────────────────────┐   │
-│  On export: POST /api/event  ──────────────────────┤   │
-│  On error: POST /api/error   ──────────────────────┤   │
-│  On feedback: POST /api/feedback ──────────────────┤   │
-└────────────────────────────────────────────────────┼───┘
-                                                     │
-                                              ┌──────▼──────┐
-                                              │   Supabase   │
-                                              │  (Postgres)  │
-                                              └──────┬───────┘
-                                                     │
-┌────────────────────────────────────────────────────▼───┐
-│               Admin Dashboard                          │
-│         (Next.js — separate Vercel project)            │
-│                                                        │
-│   /dashboard         → Overview + KPIs                 │
-│   /dashboard/analytics  → Charts + trends              │
-│   /dashboard/templates  → Template control             │
-│   /dashboard/flags      → Feature flags                │
-│   /dashboard/announce   → Announcements                │
-│   /dashboard/feedback   → User feedback                │
-│   /dashboard/errors     → Error logs                   │
-└────────────────────────────────────────────────────────┘
+VS Code -> edit .tsx files -> git push -> GitHub -> Vercel -> resumee.pro.bd
 ```
+
+### New CMS Flow (No Code Needed)
+
+```
+resumee.pro.bd/admin -> edit content -> [🚀 Push to GitHub] -> GitHub -> Vercel -> resumee.pro.bd
+```
+
+**It is the exact same pipeline. The CMS replaces VS Code + git push for all content changes.**
+
+### What This Means in Practice
+
+| Before (required coding) | After (CMS handles it) |
+| :--- | :--- |
+| Edit `app/page.tsx` to change hero headline | Edit headline in `/admin/dashboard/pages/landing` |
+| Edit `.tsx` file to add a testimonial | Click "Add Testimonial" in admin panel |
+| Write code to publish a new article | Create article in `/admin/dashboard/pages/articles` |
+| Edit component file to change nav links | Edit links in `/admin/dashboard/pages/navigation` |
+| Redeploy to toggle AI optimizer | Flip switch in `/admin/dashboard/flags` |
 
 ---
 
-## 2. Tech Stack
+## 2. Architecture: GitHub as the Database
 
-### Backend / Data
+```
+resumee.pro.bd/admin  (Custom CMS Dashboard)
+  You edit hero text, toggle sections, write articles...
+  Changes held as DRAFT in admin UI
 
-| Package | Purpose |
-|---------|---------|
-| `@supabase/supabase-js` | Database client — Postgres via Supabase free tier |
-| `next` 14 | Admin app framework + API routes |
-| `typescript` | Type safety |
-| `jose` | JWT signing and verification |
-| `bcryptjs` | Password hashing |
-| `zod` | API request validation |
+  [ 3 unsaved changes pending ]
+    - content/landing.json  (hero text updated)
+    - content/faqs.json     (2 FAQs added)
+    - content/articles/     (1 new article)
 
-### Dashboard UI
+  [ Save Draft ]      [ 🚀 Push to GitHub ]
+         |
+         | POST /api/admin/publish
+         | (GitHub API commits JSON files)
+         v
+  GitHub Repository: abdussamadarefi/Resume-Builder
+  New commit: "cms: content update - 21 Aug 2026"
+  Files:
+    M  content/landing.json
+    M  content/faqs.json
+    A  content/articles/resume-tips-2026.md
+         |
+         | Vercel detects new commit -> auto-builds
+         v
+  resumee.pro.bd LIVE (~40 seconds later)
+```
 
-| Package | Purpose |
-|---------|---------|
-| `tailwindcss` | Styling |
-| `recharts` | Analytics charts (line, bar, pie) |
-| `@tanstack/react-table` | Data tables with sort, filter, pagination |
-| `lucide-react` | Icons |
-| `date-fns` | Date formatting and range calculations |
-| `react-hot-toast` | Action feedback toasts |
+### Why Git IS the Database
 
-### Infrastructure
-
-| Service | Tier | Cost |
-|---------|------|------|
-| Supabase | Free | 500 MB DB, 2 GB bandwidth |
-| Vercel | Free | Admin app hosting |
-| Upstash Redis | Free | Rate limiting (10K requests/day) |
-
-**Total infrastructure cost: $0/month** on free tiers.
+| Database Concern | Git Solution |
+| :--- | :--- |
+| **Revision history** | Every push creates a git commit — full history for free |
+| **Rollbacks** | `git revert` any change in seconds |
+| **Backups** | GitHub mirrors the entire content history |
+| **Zero cost** | Content files cost $0 forever in GitHub |
+| **No outages** | Content is static JSON files — nothing to go down |
 
 ---
 
-## 3. File Structure
+## 3. Technology Stack & $0/mo Cost Model
+
+| Component | Tool / Service | Cost | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Content Storage** | JSON files in GitHub repo | **$0 forever** | All CMS content (landing, articles, legal, nav) |
+| **Admin Users DB** | Supabase PostgreSQL (free tier) | **$0** | admin_users table only — create/revoke admins from dashboard |
+| **Hosting** | Vercel (existing project) | **$0 free tier** | Auto-deploys on every GitHub push |
+| **Authentication** | `jose` (Web Crypto JWT) | **$0** | Admin session cookie (7-day expiry) |
+| **GitHub Integration** | GitHub REST API v3 | **$0** | Commit content changes from admin UI |
+| **Password Hashing** | `bcryptjs` | **$0** | Salted admin password — hashed server-side |
+| **Rich Text Editing** | `@uiw/react-md-editor` | **$0 open source** | Markdown editor for articles & legal pages |
+| **Drag & Drop** | `@hello-pangea/dnd` | **$0 open source** | Reorder sections, templates, FAQ items |
+| **Form Validation** | `zod` | **$0 open source** | Schema validation on all admin API inputs |
+| **Analytics** | Google Analytics 4 (existing) | **$0** | Visitor tracking already live |
+
+**Total monthly cost: $0.00**
+
+> Supabase free tier: 500MB storage, unlimited admin_users rows. More than enough forever.
+
+---
+
+## 4. Content File Structure (content/ folder)
+
+All CMS-managed content lives in a `content/` folder at the repository root.
+Pages read from these JSON/Markdown files instead of hardcoded text in `.tsx` files.
 
 ```
-resumeforge-admin/
-├── app/
-│   ├── layout.tsx                    # Admin shell layout
-│   ├── login/
-│   │   └── page.tsx                  # Admin login page
-│   ├── dashboard/
-│   │   ├── layout.tsx                # Sidebar + top bar
-│   │   ├── page.tsx                  # Overview / KPI page
-│   │   ├── analytics/
-│   │   │   └── page.tsx              # Charts, trends, breakdown
-│   │   ├── templates/
-│   │   │   └── page.tsx              # Template management table
-│   │   ├── flags/
-│   │   │   └── page.tsx              # Feature flags toggles
-│   │   ├── announce/
-│   │   │   └── page.tsx              # Announcement composer
-│   │   ├── feedback/
-│   │   │   └── page.tsx              # Feedback inbox
-│   │   └── errors/
-│   │       └── page.tsx              # Error log viewer
-│   └── api/
-│       ├── auth/
-│       │   ├── login/route.ts        # POST /api/auth/login
-│       │   └── logout/route.ts       # POST /api/auth/logout
-│       ├── config/route.ts           # GET  /api/config  (public — called by main app)
-│       ├── event/route.ts            # POST /api/event   (public — analytics)
-│       ├── error/route.ts            # POST /api/error   (public — error reporting)
-│       ├── feedback/route.ts         # POST /api/feedback (public — user feedback)
-│       ├── templates/route.ts        # GET/PUT /api/templates (admin)
-│       ├── flags/route.ts            # GET/PUT /api/flags     (admin)
-│       ├── announce/route.ts         # GET/POST/DELETE        (admin)
-│       └── stats/route.ts            # GET /api/stats         (admin)
-│
-├── components/
-│   ├── layout/
-│   │   ├── Sidebar.tsx
-│   │   ├── TopBar.tsx
-│   │   └── NavItem.tsx
-│   ├── charts/
-│   │   ├── DailyUsersChart.tsx
-│   │   ├── ExportBreakdownChart.tsx
-│   │   ├── TemplatePopularityChart.tsx
-│   │   └── DocumentTypePieChart.tsx
-│   ├── tables/
-│   │   ├── FeedbackTable.tsx
-│   │   └── ErrorLogTable.tsx
-│   └── ui/
-│       ├── KPICard.tsx
-│       ├── Badge.tsx
-│       ├── Toggle.tsx
-│       └── Modal.tsx
-│
-├── lib/
-│   ├── supabase.ts                   # Supabase client
-│   ├── auth.ts                       # JWT helpers
-│   ├── rateLimit.ts                  # Upstash rate limiting
-│   └── middleware.ts                 # Route protection
-│
-├── middleware.ts                     # Protects /dashboard/* routes
-├── .env.local
-└── package.json
+Resume-Builder/
++-- content/
+    +-- landing.json          <- Hero, stats, sections config
+    +-- testimonials.json     <- Review cards array
+    +-- faqs.json             <- FAQ accordion array
+    +-- templates.json        <- 10 templates registry
+    +-- templates-page.json   <- Templates gallery page header
+    +-- about.json            <- Mission, values, creator profile
+    +-- navigation.json       <- Navbar & footer links
+    +-- feature-flags.json    <- AI on/off, export toggles
+    +-- site-settings.json    <- Site name, GA ID, announcement
+    +-- legal/
+    |   +-- privacy.json      <- Privacy policy clauses & TL;DR
+    |   +-- terms.json        <- Terms of service clauses
+    |   +-- cookies.json      <- Cookie policy content
+    +-- articles/
+        +-- index.json        <- Article list metadata
+        +-- how-to-write-ats-resume.md
+        +-- resume-vs-cv-difference.md
+        +-- best-resume-templates-2025.md
+        +-- how-to-write-academic-cv.md
+        +-- career-change-resume-tips.md
 ```
 
 ---
 
-## 4. Database Schema
+## 5. Full Directory & File Structure
 
-All tables live in Supabase (Postgres). Run these in the Supabase SQL editor.
-
-### `events` — Analytics events from the main app
-
-```sql
-CREATE TABLE events (
-  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  type        TEXT NOT NULL,         -- 'page_view' | 'export_pdf' | 'export_docx' | 'export_print' | 'doc_created' | 'template_switch'
-  doc_type    TEXT,                  -- 'resume' | 'cv' | null
-  template_id TEXT,                  -- 'r-nexus' | 'c-academia' | null
-  meta        JSONB DEFAULT '{}',    -- extra data (export format, section name, etc.)
-  session_id  TEXT,                  -- anonymous session identifier
-  country     TEXT,                  -- from Vercel headers (X-Vercel-IP-Country)
-  created_at  TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Indexes for common queries
-CREATE INDEX idx_events_type       ON events(type);
-CREATE INDEX idx_events_created_at ON events(created_at);
-CREATE INDEX idx_events_doc_type   ON events(doc_type);
-CREATE INDEX idx_events_template   ON events(template_id);
+```
+Resume-Builder/
++-- content/                         <- ALL CMS CONTENT LIVES HERE
+|   +-- landing.json
+|   +-- testimonials.json
+|   +-- faqs.json
+|   +-- templates.json
+|   +-- templates-page.json
+|   +-- about.json
+|   +-- navigation.json
+|   +-- feature-flags.json
+|   +-- site-settings.json
+|   +-- legal/
+|   |   +-- privacy.json
+|   |   +-- terms.json
+|   |   +-- cookies.json
+|   +-- articles/
+|       +-- index.json
+|       +-- *.md
+|
++-- app/
+|   +-- (admin)/                     <- Admin Route Group (not indexed by search engines)
+|   |   +-- admin/
+|   |       +-- login/
+|   |       |   +-- page.tsx         <- Admin login page
+|   |       +-- dashboard/
+|   |           +-- layout.tsx       <- Admin shell (sidebar, topbar, publish button)
+|   |           +-- page.tsx         <- Dashboard overview
+|   |           +-- pages/
+|   |           |   +-- landing/page.tsx     <- Module 1: Landing CMS
+|   |           |   +-- templates/page.tsx   <- Module 2: Templates Gallery CMS
+|   |           |   +-- articles/page.tsx    <- Module 3: Articles CMS
+|   |           |   +-- about/page.tsx       <- Module 4: About CMS
+|   |           |   +-- legal/page.tsx       <- Module 5: Legal Pages CMS
+|   |           |   +-- navigation/page.tsx  <- Module 6: Nav & Footer CMS
+|   |           +-- templates/page.tsx       <- Templates registry manager
+|   |           +-- flags/page.tsx           <- Feature flags panel
+|   |           +-- settings/
+|   |               +-- page.tsx             <- Site-wide settings
+|   |               +-- admins/page.tsx      <- Admin Users panel (create/revoke)
+|   |
+|   +-- api/admin/
+|   |   +-- auth/login/route.ts      <- POST: verify username+password -> set JWT cookie
+|   |   +-- auth/logout/route.ts     <- POST: clear JWT cookie
+|   |   +-- content/route.ts         <- GET: read content | PATCH: update draft
+|   |   +-- publish/route.ts         <- POST: commit all drafts to GitHub
+|   |   +-- users/route.ts           <- GET: list admins | POST: create admin
+|   |   +-- users/[username]/route.ts <- DELETE: revoke admin
+|   |
+|   +-- page.tsx                     <- Landing page reads from content/landing.json
+|   +-- templates/page.tsx           <- Reads from content/templates.json
+|   +-- articles/page.tsx            <- Reads from content/articles/index.json
+|   +-- articles/[slug]/page.tsx     <- Reads from content/articles/[slug].md
+|   +-- about/page.tsx               <- Reads from content/about.json
+|   +-- privacy/page.tsx             <- Reads from content/legal/privacy.json
+|   +-- terms/page.tsx               <- Reads from content/legal/terms.json
+|   +-- cookies/page.tsx             <- Reads from content/legal/cookies.json
+|
++-- lib/
+|   +-- admin-auth.ts                <- JWT sign/verify helpers
+|   +-- content.ts                   <- Helper functions to read content JSON files
+|   +-- github-api.ts                <- GitHub REST API integration (commit files)
+|   +-- supabase-admin.ts            <- Supabase client (admin_users table only)
+|
++-- components/admin/
+|   +-- Sidebar.tsx
+|   +-- TopBar.tsx
+|   +-- PublishButton.tsx            <- The [Push to GitHub] button
+|   +-- SectionToggler.tsx           <- Drag-to-reorder + enable/disable sections
+|   +-- HeroEditor.tsx
+|   +-- MarkdownEditor.tsx
+|   +-- TestimonialsEditor.tsx
+|   +-- FaqEditor.tsx
+|   +-- FeatureFlagToggle.tsx
+|
++-- middleware.ts                    <- Edge guard: blocks /admin/dashboard without JWT
 ```
 
-### `templates` — Template registry and control
+---
 
-```sql
-CREATE TABLE templates (
-  id           TEXT PRIMARY KEY,      -- 'r-nexus' | 'c-academia'
-  name         TEXT NOT NULL,
-  doc_type     TEXT NOT NULL,         -- 'resume' | 'cv'
-  enabled      BOOLEAN DEFAULT TRUE,
-  featured     BOOLEAN DEFAULT FALSE,
-  is_new       BOOLEAN DEFAULT FALSE,
-  display_order INT DEFAULT 0,
-  thumbnail    TEXT,                  -- public URL
-  description  TEXT,
-  ats_score    INT,                   -- 0-100
-  created_at   TIMESTAMPTZ DEFAULT NOW(),
-  updated_at   TIMESTAMPTZ DEFAULT NOW()
-);
-```
+## 6. Admin Authentication & User Management (Supabase)
 
-### `feature_flags` — Feature toggles
+Admins are stored in a **Supabase `admin_users` table**.
+Create, list, and revoke admins directly from the dashboard — no terminal, no Vercel, no redeploy.
 
-```sql
-CREATE TABLE feature_flags (
-  key          TEXT PRIMARY KEY,      -- 'share_link' | 'docx_export' | 'cv_mode'
-  enabled      BOOLEAN DEFAULT TRUE,
-  description  TEXT,
-  updated_at   TIMESTAMPTZ DEFAULT NOW(),
-  updated_by   TEXT                   -- admin username
-);
-```
-
-### `announcements` — Banners shown to users
-
-```sql
-CREATE TABLE announcements (
-  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  message     TEXT NOT NULL,
-  type        TEXT DEFAULT 'info',    -- 'info' | 'warning' | 'success'
-  link_text   TEXT,                   -- optional CTA label
-  link_url    TEXT,                   -- optional CTA URL
-  active      BOOLEAN DEFAULT TRUE,
-  starts_at   TIMESTAMPTZ DEFAULT NOW(),
-  ends_at     TIMESTAMPTZ,            -- null = no expiry
-  created_at  TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-### `feedback` — User-submitted feedback
-
-```sql
-CREATE TABLE feedback (
-  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  type        TEXT NOT NULL,          -- 'bug' | 'feature' | 'general' | 'rating'
-  rating      INT,                    -- 1-5 stars (nullable)
-  message     TEXT NOT NULL,
-  email       TEXT,                   -- optional contact email
-  doc_type    TEXT,                   -- 'resume' | 'cv'
-  template_id TEXT,
-  status      TEXT DEFAULT 'new',     -- 'new' | 'read' | 'resolved'
-  created_at  TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-### `error_logs` — Client-side errors
-
-```sql
-CREATE TABLE error_logs (
-  id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  message     TEXT NOT NULL,
-  stack       TEXT,
-  context     JSONB DEFAULT '{}',     -- { page, action, browser, os }
-  session_id  TEXT,
-  created_at  TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Auto-delete logs older than 30 days (keep DB lean)
-CREATE INDEX idx_error_logs_created ON error_logs(created_at);
-```
-
-### `admin_users` — Dashboard login
+### Supabase Table (run once in Supabase SQL Editor)
 
 ```sql
 CREATE TABLE admin_users (
-  id            UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   username      TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
-  created_at    TIMESTAMPTZ DEFAULT NOW(),
-  last_login    TIMESTAMPTZ
+  created_at    TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Insert your first admin (run once to bootstrap)
+-- Replace 'your_bcrypt_hash' with output of:
+-- node -e "const b=require('bcryptjs'); console.log(b.hashSync('YourPass', 12));"
+INSERT INTO admin_users (username, password_hash)
+VALUES ('arefi', 'your_bcrypt_hash');
 ```
 
----
+### Login Page
 
-## 5. Authentication
-
-The admin dashboard uses simple **JWT-based auth** — no OAuth, no third-party service, no cost.
+```
+┌─────────────────────────────────┐
+│       ResumeForge Admin         │
+│                                 │
+│   Username  [arefi           ]  │
+│   Password  [••••••••••••••• ]  │
+│                                 │
+│         [ Login ]               │
+└─────────────────────────────────┘
+```
 
 ### Login Flow
 
 ```
-POST /api/auth/login
-  { username, password }
-      ↓
-  bcrypt.compare(password, hash)
-      ↓
-  jose.SignJWT({ sub: username, role: 'admin' })
-      ↓
-  Set HttpOnly cookie: rf_admin_token (7 day expiry)
-      ↓
-  Redirect to /dashboard
+Admin visits resumee.pro.bd/admin/login
+  -> Enters username + password
+  -> POST /api/admin/auth/login
+  -> Server queries Supabase: SELECT * FROM admin_users WHERE username = ?
+  -> bcrypt.compare(password, row.password_hash)
+     |
+     Not found      -> 401 Unauthorized
+     Wrong password -> 401 Unauthorized
+     Match          -> Signs JWT { username, role: 'admin' } (7-day expiry)
+                    -> Sets HttpOnly cookie: rf_admin_token
+                    -> Redirects to /admin/dashboard
 ```
 
-### JWT Helper
+### lib/supabase-admin.ts
 
 ```typescript
-// lib/auth.ts
+import { createClient } from '@supabase/supabase-js';
+
+export const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // server-side only, never exposed to client
+);
+```
+
+### lib/admin-auth.ts
+
+```typescript
 import { SignJWT, jwtVerify } from 'jose';
 
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
+const JWT_SECRET = new TextEncoder().encode(process.env.ADMIN_JWT_SECRET!);
 
-export async function signToken(payload: object) {
-  return new SignJWT(payload as Record<string, unknown>)
+export async function createAdminSession(username: string) {
+  return await new SignJWT({ username, role: 'admin' })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('7d')
-    .sign(SECRET);
+    .sign(JWT_SECRET);
 }
 
-export async function verifyToken(token: string) {
-  const { payload } = await jwtVerify(token, SECRET);
-  return payload;
-}
-```
-
-### Route Protection Middleware
-
-```typescript
-// middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { verifyToken } from '@/lib/auth';
-
-export async function middleware(req: NextRequest) {
-  const isDashboard = req.nextUrl.pathname.startsWith('/dashboard');
-  const isAdminApi = req.nextUrl.pathname.startsWith('/api/') &&
-    !['config', 'event', 'error', 'feedback'].some(p =>
-      req.nextUrl.pathname.includes(`/api/${p}`)
-    );
-
-  if (isDashboard || isAdminApi) {
-    const token = req.cookies.get('rf_admin_token')?.value;
-    if (!token) {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
-    try {
-      await verifyToken(token);
-    } catch {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
+export async function verifyAdminSession(token: string) {
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    return payload;
+  } catch {
+    return null;
   }
-  return NextResponse.next();
 }
-
-export const config = {
-  matcher: ['/dashboard/:path*', '/api/templates/:path*', '/api/flags/:path*',
-            '/api/announce/:path*', '/api/stats/:path*'],
-};
 ```
 
-### Login API
+### app/api/admin/auth/login/route.ts
 
 ```typescript
-// app/api/auth/login/route.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { supabase } from '@/lib/supabase';
-import { signToken } from '@/lib/auth';
+import { createAdminSession } from '@/lib/admin-auth';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const { username, password } = await req.json();
+  if (!username || !password) {
+    return NextResponse.json({ error: 'Username and password required' }, { status: 400 });
+  }
 
-  const { data: user } = await supabase
+  const { data: admin } = await supabaseAdmin
     .from('admin_users')
-    .select('*')
+    .select('password_hash')
     .eq('username', username)
     .single();
 
-  if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-  }
+  if (!admin) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
 
-  const token = await signToken({ sub: username, role: 'admin' });
+  const isValid = await bcrypt.compare(password, admin.password_hash);
+  if (!isValid) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
 
-  await supabase.from('admin_users')
-    .update({ last_login: new Date().toISOString() })
-    .eq('username', username);
-
-  const res = NextResponse.json({ ok: true });
+  const token = await createAdminSession(username);
+  const res = NextResponse.json({ success: true, username });
   res.cookies.set('rf_admin_token', token, {
     httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
-    maxAge: 60 * 60 * 24 * 7,  // 7 days
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 7,
     path: '/',
   });
   return res;
 }
 ```
 
----
+### Admin Users Panel — /admin/dashboard/settings/admins
 
-## 6. API Routes
+Manage all admins from inside your own dashboard. No Supabase UI needed after initial setup.
 
-### Public Routes — Called by the Main App
-
-These require no auth. They are rate-limited via Upstash Redis.
-
----
-
-#### `GET /api/config`
-
-The main app calls this once on load to get the current runtime configuration — feature flags, active announcements, and enabled templates. The response is cached for 60 seconds.
-
-**Response:**
-
-```json
-{
-  "flags": {
-    "share_link": true,
-    "docx_export": true,
-    "cv_mode": true,
-    "print_export": true,
-    "plain_text_export": true
-  },
-  "announcement": {
-    "id": "abc123",
-    "message": "New CV templates just added!",
-    "type": "success",
-    "link_text": "See templates",
-    "link_url": "/templates"
-  },
-  "templates": {
-    "resume": ["r-nexus", "r-meridian", "r-atlas"],
-    "cv": ["c-academia", "c-scholar", "c-modern-ac"]
-  }
-}
+```
+┌──────────────────────────────────────────────────────┐
+│  Admin Users                    /settings/admins      │
+│                                                       │
+│  Username        Created           Action             │
+│  ──────────────────────────────────────────────────   │
+│  arefi           21 Aug 2026       [You] [Superadmin] │
+│  colleague       21 Aug 2026       [Active] [Revoke]  │
+│                                                       │
+│  ┌──────────────────────────────────────────────────┐ │
+│  │  Add New Admin                                   │ │
+│  │  Username  [                                   ] │ │
+│  │  Password  [                                   ] │ │
+│  │                             [ Create Admin ]    │ │
+│  └──────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────┘
 ```
 
+### app/api/admin/users/route.ts
+
 ```typescript
-// app/api/config/route.ts
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import bcrypt from 'bcryptjs';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
-export const revalidate = 60; // Cache for 60 seconds
-
+// GET: list all admin users
 export async function GET() {
-  const [flags, announcement, templates] = await Promise.all([
-    supabase.from('feature_flags').select('key, enabled'),
-    supabase.from('announcements')
-      .select('*')
-      .eq('active', true)
-      .lte('starts_at', new Date().toISOString())
-      .or('ends_at.is.null,ends_at.gte.' + new Date().toISOString())
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single(),
-    supabase.from('templates')
-      .select('id, doc_type')
-      .eq('enabled', true)
-      .order('display_order'),
-  ]);
-
-  const flagMap = Object.fromEntries(
-    (flags.data ?? []).map(f => [f.key, f.enabled])
-  );
-
-  const templateMap = {
-    resume: (templates.data ?? []).filter(t => t.doc_type === 'resume').map(t => t.id),
-    cv: (templates.data ?? []).filter(t => t.doc_type === 'cv').map(t => t.id),
-  };
-
-  return NextResponse.json({
-    flags: flagMap,
-    announcement: announcement.data ?? null,
-    templates: templateMap,
-  });
+  const { data } = await supabaseAdmin
+    .from('admin_users')
+    .select('id, username, created_at')
+    .order('created_at', { ascending: true });
+  return NextResponse.json({ admins: data || [] });
 }
+
+// POST: create new admin (server hashes password — no terminal needed)
+export async function POST(req: Request) {
+  const { username, password } = await req.json();
+  if (!username || !password || password.length < 8) {
+    return NextResponse.json({ error: 'Username and password (min 8 chars) required' }, { status: 400 });
+  }
+
+  const password_hash = await bcrypt.hash(password, 12); // hashed server-side
+  const { error } = await supabaseAdmin
+    .from('admin_users')
+    .insert({ username, password_hash });
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  return NextResponse.json({ success: true, username });
+}
+```
+
+### app/api/admin/users/[username]/route.ts
+
+```typescript
+import { NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+
+// DELETE: revoke an admin
+export async function DELETE(
+  req: Request,
+  { params }: { params: { username: string } }
+) {
+  await supabaseAdmin
+    .from('admin_users')
+    .delete()
+    .eq('username', params.username);
+  return NextResponse.json({ success: true });
+}
+```
+
+### Admin Lifecycle (Everything From Dashboard)
+
+| Action | How | Redeploy? |
+| :--- | :--- | :--- |
+| **Create admin** | Fill form in `/settings/admins` -> Click Create | No |
+| **Revoke admin** | Click [Revoke] in `/settings/admins` | No |
+| **Change password** | Revoke + recreate with new password | No |
+| **First admin** | Insert via Supabase SQL Editor (one-time only) | No |
+
+---
+
+## 7. Edge Middleware Route Guard
+
+Protects all `/admin/dashboard` routes and `/api/admin` routes automatically.
+Unauthenticated requests are redirected to `/admin/login`.
+
+### middleware.ts
+
+```typescript
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { verifyAdminSession } from '@/lib/admin-auth';
+
+export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  const isAdminDashboard = pathname.startsWith('/admin/dashboard');
+  const isAdminApi =
+    pathname.startsWith('/api/admin') &&
+    !pathname.startsWith('/api/admin/auth');
+
+  if (isAdminDashboard || isAdminApi) {
+    const token = req.cookies.get('rf_admin_token')?.value;
+    const session = token ? await verifyAdminSession(token) : null;
+
+    if (!session) {
+      if (isAdminApi) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      const loginUrl = new URL('/admin/login', req.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/admin/dashboard/:path*', '/api/admin/:path*'],
+};
 ```
 
 ---
 
-#### `POST /api/event`
+## 8. The Push to GitHub Engine
 
-Receives anonymous analytics events from the main app. No personal data is stored.
+This is the core of the CMS. One API route that takes all pending draft changes and commits them to GitHub as real git commits.
 
-**Request:**
+### How the GitHub API Commit Works
 
-```json
-{
-  "type": "export_pdf",
-  "doc_type": "resume",
-  "template_id": "r-nexus",
-  "session_id": "anon_abc123",
-  "meta": {}
+```
+POST /api/admin/publish
+  1. Verify admin JWT cookie
+  2. Receive: { files: [{ path, content }], message }
+  3. For each file:
+     a. GET current file SHA from GitHub API (required for updates)
+     b. PUT updated file content (base64 encoded)
+  4. GitHub creates new commit on 'main' branch
+  5. Vercel webhook detects push -> triggers rebuild
+  6. Return: { commitUrl, success }
+```
+
+### lib/github-api.ts
+
+```typescript
+const GITHUB_API = 'https://api.github.com';
+const OWNER = process.env.GITHUB_OWNER!;
+const REPO = process.env.GITHUB_REPO!;
+const BRANCH = process.env.GITHUB_BRANCH || 'main';
+const TOKEN = process.env.GITHUB_TOKEN!;
+
+const headers = {
+  Authorization: `Bearer ${TOKEN}`,
+  Accept: 'application/vnd.github+json',
+  'X-GitHub-Api-Version': '2022-11-28',
+  'Content-Type': 'application/json',
+};
+
+export async function getFileSha(filePath: string): Promise<string | null> {
+  const res = await fetch(
+    `${GITHUB_API}/repos/${OWNER}/${REPO}/contents/${filePath}?ref=${BRANCH}`,
+    { headers }
+  );
+  if (!res.ok) return null; // New file — no SHA needed
+  const data = await res.json();
+  return data.sha;
+}
+
+export async function commitFile(
+  filePath: string,
+  content: string,
+  message: string
+): Promise<{ sha: string; html_url: string }> {
+  const sha = await getFileSha(filePath);
+  const encoded = Buffer.from(content).toString('base64');
+  const body: Record<string, unknown> = { message, content: encoded, branch: BRANCH };
+  if (sha) body.sha = sha; // SHA required for existing files
+
+  const res = await fetch(
+    `${GITHUB_API}/repos/${OWNER}/${REPO}/contents/${filePath}`,
+    { method: 'PUT', headers, body: JSON.stringify(body) }
+  );
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(`GitHub API error: ${err.message}`);
+  }
+  const data = await res.json();
+  return { sha: data.content.sha, html_url: data.commit.html_url };
+}
+
+export async function commitMultipleFiles(
+  files: Array<{ path: string; content: string }>,
+  message: string
+) {
+  const commits = [];
+  for (const file of files) {
+    const result = await commitFile(file.path, file.content, message);
+    commits.push({ path: file.path, url: result.html_url });
+  }
+  return { commits };
 }
 ```
 
+### app/api/admin/publish/route.ts
+
 ```typescript
-// app/api/event/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
-import { rateLimit } from '@/lib/rateLimit';
+import { NextResponse } from 'next/server';
+import { commitMultipleFiles } from '@/lib/github-api';
 import { z } from 'zod';
 
-const EventSchema = z.object({
-  type: z.enum(['page_view', 'doc_created', 'export_pdf', 'export_docx',
-                 'export_print', 'export_text', 'share_link', 'template_switch']),
-  doc_type: z.enum(['resume', 'cv']).optional(),
-  template_id: z.string().optional(),
-  session_id: z.string().max(64),
-  meta: z.record(z.unknown()).optional(),
+const Schema = z.object({
+  files: z.array(z.object({ path: z.string(), content: z.string() })),
+  message: z.string().optional(),
 });
 
-export async function POST(req: NextRequest) {
-  const limited = await rateLimit(req, 30); // 30 events per minute per IP
-  if (limited) return NextResponse.json({ error: 'Rate limited' }, { status: 429 });
-
-  const body = EventSchema.safeParse(await req.json());
-  if (!body.success) return NextResponse.json({ error: 'Invalid' }, { status: 400 });
-
-  const country = req.headers.get('x-vercel-ip-country') ?? 'unknown';
-
-  await supabase.from('events').insert({
-    ...body.data,
-    country,
-    created_at: new Date().toISOString(),
-  });
-
-  return NextResponse.json({ ok: true });
-}
-```
-
----
-
-#### `POST /api/error`
-
-Receives client-side error reports from the main app.
-
-```typescript
-// app/api/error/route.ts
-const ErrorSchema = z.object({
-  message: z.string().max(500),
-  stack: z.string().max(2000).optional(),
-  context: z.object({
-    page: z.string().optional(),
-    action: z.string().optional(),
-    browser: z.string().optional(),
-    os: z.string().optional(),
-  }).optional(),
-  session_id: z.string().max(64),
-});
-```
-
----
-
-#### `POST /api/feedback`
-
-Receives user-submitted feedback.
-
-```typescript
-// app/api/feedback/route.ts
-const FeedbackSchema = z.object({
-  type: z.enum(['bug', 'feature', 'general', 'rating']),
-  rating: z.number().int().min(1).max(5).optional(),
-  message: z.string().min(5).max(1000),
-  email: z.string().email().optional(),
-  doc_type: z.enum(['resume', 'cv']).optional(),
-  template_id: z.string().optional(),
-});
-```
-
----
-
-### Admin Routes — Dashboard Only
-
-All require valid `rf_admin_token` cookie (enforced by middleware).
-
-| Method | Route | Description |
-|--------|-------|-------------|
-| `GET` | `/api/stats` | KPIs, daily counts, breakdowns |
-| `GET` | `/api/templates` | All templates with status |
-| `PUT` | `/api/templates/[id]` | Update template (enabled, order, featured) |
-| `GET` | `/api/flags` | All feature flags |
-| `PUT` | `/api/flags/[key]` | Toggle a feature flag |
-| `GET` | `/api/announce` | All announcements |
-| `POST` | `/api/announce` | Create new announcement |
-| `DELETE` | `/api/announce/[id]` | Delete announcement |
-| `GET` | `/api/feedback` | Paginated feedback list |
-| `PUT` | `/api/feedback/[id]` | Update feedback status |
-| `GET` | `/api/errors` | Paginated error log |
-| `DELETE` | `/api/errors` | Clear error logs older than N days |
-
----
-
-## 7. Dashboard Modules
-
-### Overview Page — `/dashboard`
-
-Key metrics at a glance. Updates every 5 minutes.
-
-```
-┌────────────────────────────────────────────────────────────────┐
-│  ResumeForge Admin                          Thu 20 Aug 2026    │
-├───────────┬───────────┬───────────┬────────────────────────────┤
-│  Today    │  This     │  Total    │  Feedback                  │
-│  Users    │  Week     │  Exports  │  Unread                    │
-│           │           │           │                            │
-│   247     │  1,842    │  34,291   │   12                       │
-│  ▲ 18%    │  ▲ 6%     │           │   🔴 3 bugs                │
-├───────────┴───────────┴───────────┴────────────────────────────┤
-│  Daily Active Users (last 30 days)                             │
-│  [Line chart]                                                  │
-├───────────────────────────┬────────────────────────────────────┤
-│  Export Breakdown         │  Document Type Split               │
-│  [Bar chart]              │  [Pie chart]                       │
-│  PDF  ████████████ 68%   │  Resume  ███████ 71%              │
-│  DOCX ████ 18%           │  CV      ███ 29%                  │
-│  Print██ 10%             │                                    │
-│  Text █ 4%               │                                    │
-├───────────────────────────┴────────────────────────────────────┤
-│  Top Templates This Week                                       │
-│  1. r-nexus      ████████████  892 uses                       │
-│  2. r-meridian   ████████      634 uses                       │
-│  3. c-academia   ████          312 uses                       │
-└────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 8. Feature Flags
-
-Feature flags let you turn app features on or off without redeployment. The main app fetches flags on load from `/api/config` and gates features accordingly.
-
-### Default Flags
-
-| Key | Default | Description |
-|-----|---------|-------------|
-| `cv_mode` | `true` | Show CV option on first screen |
-| `share_link` | `true` | Enable share-via-URL feature |
-| `docx_export` | `true` | Enable DOCX download |
-| `print_export` | `true` | Enable print option |
-| `plain_text_export` | `true` | Enable plain text copy |
-| `feedback_widget` | `true` | Show feedback button in app |
-| `announcement_bar` | `true` | Show announcements banner |
-| `template_nexus` | `true` | Enable Nexus resume template |
-| `template_academia` | `true` | Enable Academia CV template |
-
-### Flag API
-
-```typescript
-// PUT /api/flags/[key]
-// Body: { enabled: boolean }
-
-export async function PUT(req: NextRequest, { params }: { params: { key: string } }) {
-  const { enabled } = await req.json();
-
-  const { error } = await supabase
-    .from('feature_flags')
-    .update({ enabled, updated_at: new Date().toISOString() })
-    .eq('key', params.key);
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true });
-}
-```
-
-### How the Main App Uses Flags
-
-```typescript
-// lib/config.ts  (in the main ResumeForge app)
-
-interface AppConfig {
-  flags: Record<string, boolean>;
-  announcement: Announcement | null;
-  templates: { resume: string[]; cv: string[] };
-}
-
-let cachedConfig: AppConfig | null = null;
-
-export async function getConfig(): Promise<AppConfig> {
-  if (cachedConfig) return cachedConfig;
-
+export async function POST(req: Request) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API}/api/config`);
-    cachedConfig = await res.json();
-  } catch {
-    // Fallback — all features enabled if admin API is unreachable
-    cachedConfig = { flags: {}, announcement: null, templates: { resume: [], cv: [] } };
-  }
-
-  // Re-fetch after 60 seconds
-  setTimeout(() => { cachedConfig = null; }, 60_000);
-  return cachedConfig!;
-}
-
-// Usage in components
-const config = await getConfig();
-if (!config.flags.docx_export) {
-  // Hide DOCX button
-}
-```
-
----
-
-## 9. Analytics Tracking
-
-### Event Types
-
-The main app sends these events silently in the background. All are anonymous — no IP address, no email, no fingerprint stored.
-
-| Event Type | When Fired | Extra Data |
-|-----------|------------|-----------|
-| `page_view` | Every page load | `{ page }` |
-| `doc_created` | User picks Resume or CV on first screen | `{ doc_type }` |
-| `template_switch` | User changes template | `{ from, to, doc_type }` |
-| `export_pdf` | PDF downloaded | `{ doc_type, template_id, quality }` |
-| `export_docx` | DOCX downloaded | `{ doc_type }` |
-| `export_print` | Print triggered | `{ doc_type }` |
-| `export_text` | Plain text copied | `{ doc_type }` |
-| `share_link` | Share link generated | `{ doc_type }` |
-
-### Session ID
-
-A random anonymous ID is generated per browser session — not tied to any user identity. Used only to deduplicate page views.
-
-```typescript
-// lib/analytics.ts (in main app)
-
-function getSessionId(): string {
-  let id = sessionStorage.getItem('rf_sid');
-  if (!id) {
-    id = 'anon_' + Math.random().toString(36).slice(2, 12);
-    sessionStorage.setItem('rf_sid', id);
-  }
-  return id;
-}
-
-export async function track(
-  type: string,
-  meta: Record<string, unknown> = {}
-) {
-  try {
-    await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API}/api/event`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type,
-        session_id: getSessionId(),
-        doc_type: meta.doc_type,
-        template_id: meta.template_id,
-        meta,
-      }),
+    const { files, message } = Schema.parse(await req.json());
+    const timestamp = new Date().toLocaleString('en-GB', {
+      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
     });
-  } catch {
-    // Silently fail — analytics must never break the app
+    const result = await commitMultipleFiles(files, message || `cms: update — ${timestamp}`);
+    return NextResponse.json({ success: true, commits: result.commits });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
-
-// Usage
-track('export_pdf', { doc_type: 'resume', template_id: 'r-nexus' });
 ```
 
-### Stats API
+### The Publish Button — 4 States
 
-```typescript
-// GET /api/stats?range=30d
-
-export async function GET(req: NextRequest) {
-  const range = req.nextUrl.searchParams.get('range') ?? '30d';
-  const days = range === '7d' ? 7 : range === '90d' ? 90 : 30;
-  const since = new Date(Date.now() - days * 86400000).toISOString();
-
-  const [daily, exports, docSplit, topTemplates, totalExports] = await Promise.all([
-
-    // Daily unique sessions
-    supabase.rpc('daily_sessions', { since_date: since }),
-
-    // Export breakdown
-    supabase.from('events')
-      .select('type')
-      .in('type', ['export_pdf', 'export_docx', 'export_print', 'export_text'])
-      .gte('created_at', since),
-
-    // Resume vs CV split
-    supabase.from('events')
-      .select('doc_type')
-      .eq('type', 'doc_created')
-      .gte('created_at', since),
-
-    // Top templates
-    supabase.from('events')
-      .select('template_id')
-      .eq('type', 'template_switch')
-      .gte('created_at', since)
-      .not('template_id', 'is', null),
-
-    // Total exports
-    supabase.from('events')
-      .select('id', { count: 'exact', head: true })
-      .like('type', 'export_%')
-      .gte('created_at', since),
-  ]);
-
-  return NextResponse.json({ daily, exports, docSplit, topTemplates, totalExports });
-}
+```
+[ 🚀 Push to GitHub ]       <- idle (N changes pending, blue)
+[ ⏳ Committing... ]         <- GitHub API in progress (~3-5 sec, disabled)
+[ ✅ Pushed! View commit ]   <- success (green, links to GitHub commit)
+[ ❌ Push failed — Retry ]   <- error (red, clickable)
 ```
 
 ---
 
-## 10. Template Management
+## 9. Content Management Panels (All 6 Page Modules)
 
-### Template Table UI
+### 9.1 Landing Page CMS
+
+**Route:** `/admin/dashboard/pages/landing`
+**Content files:** `content/landing.json`, `content/testimonials.json`, `content/faqs.json`
+
+| Control | What It Edits |
+| :--- | :--- |
+| **Section Toggles & Reorder** | Enable/disable and drag-to-reorder all 10 landing sections: hero, stats, how_it_works, features, template_showcase, student_vs_pro, resume_vs_cv, testimonials, faq, cta |
+| **Hero Editor** | Badge text, headline line 1, gradient highlight text, subheadline, primary CTA label & URL, secondary CTA label & URL |
+| **Stats Bar** | Template count, cost label, privacy percentage, export format count + sub-labels |
+| **Testimonials Manager** | Add / edit / delete / reorder review cards (name, role, company, quote, star rating, tag) |
+| **FAQ Manager** | Add / edit / delete / reorder FAQ items (question, answer, category) |
+
+---
+
+### 9.2 Templates Gallery CMS
+
+**Route:** `/admin/dashboard/pages/templates`
+**Content file:** `content/templates-page.json`
+
+| Control | What It Edits |
+| :--- | :--- |
+| Page header badge text | e.g. "Template Gallery" |
+| Page title & subtitle | Main heading and description paragraph |
+| Category filter order | Display order of filter tabs (All, Resume, CV, Both) |
+
+---
+
+### 9.3 Articles & Blog CMS
+
+**Route:** `/admin/dashboard/pages/articles`
+**Content files:** `content/articles/index.json`, `content/articles/[slug].md`
+
+| Control | What It Edits |
+| :--- | :--- |
+| **Article List** | View all articles with publish status, edit, delete |
+| **New Article** | Create new career guide with full Markdown editor |
+| **Article Metadata** | Title, slug, description, category, color, read time, publish date, featured toggle |
+| **Article Body** | Full Markdown / Rich Text editor with live preview |
+| **Publish / Draft** | Toggle between draft and published status |
+
+---
+
+### 9.4 About Page CMS
+
+**Route:** `/admin/dashboard/pages/about`
+**Content file:** `content/about.json`
+
+| Control | What It Edits |
+| :--- | :--- |
+| Hero story section | Badge, title, subtitle |
+| Mission statement | Title + mission paragraphs |
+| Core values cards | Icon, title, description, gradient (4 value cards) |
+| Creator profile | Name, title, bio, avatar URL, GitHub URL, email |
+| Contribution CTA | Banner headline and button text |
+
+---
+
+### 9.5 Legal Pages CMS
+
+**Route:** `/admin/dashboard/pages/legal`
+**Content files:** `content/legal/privacy.json`, `content/legal/terms.json`, `content/legal/cookies.json`
+
+| Control | What It Edits |
+| :--- | :--- |
+| **Privacy Policy** | TL;DR box, 7 policy sections, last updated date |
+| **Terms of Service** | Plain-English summary, 8 terms sections, last updated date |
+| **Cookie Policy** | GA4 cookie disclosures, summary counters, last updated date |
+
+---
+
+### 9.6 Navigation & Footer CMS
+
+**Route:** `/admin/dashboard/pages/navigation`
+**Content file:** `content/navigation.json`
+
+| Control | What It Edits |
+| :--- | :--- |
+| Navbar links | Label, URL, display order for header nav items |
+| Navbar CTA button | Label and destination URL |
+| Footer columns | Links in each of 4 columns (Product, Resources, Company, Legal) |
+| Footer bottom bar | Copyright text, author credit, GitHub link |
+
+---
+
+## 10. Templates Registry Manager
+
+**Route:** `/admin/dashboard/templates`
+**Content file:** `content/templates.json`
+
+| ID | Name | Category | ATS Score | Mode |
+| :--- | :--- | :--- | :--- | :--- |
+| `nexus` | Nexus | Modern | 96% | Resume & CV |
+| `scholar` | Scholar | Academic | 98% | CV Focus |
+| `arya` | Arya | Creative | 88% | Resume |
+| `atlas` | Atlas | Professional | 94% | Resume & CV |
+| `cascade` | Cascade | Elegant | 92% | Resume |
+| `compact` | Compact | Minimal | 95% | Resume (Students) |
+| `executive` | Executive | Premium | 94% | Resume |
+| `meridian` | Meridian | Modern | 93% | Resume & CV |
+| `minimo` | Minimo | Clean | 99% | Resume |
+| `prism` | Prism | Bold | 90% | Resume |
+
+**Admin can control per template:**
+- Enable / Disable (hide from public gallery)
+- Mark as "New" badge or "Featured"
+- Edit description, highlight bullets, feature tags
+- Reorder display position (drag-and-drop)
+
+---
+
+## 11. Feature Flags Panel
+
+**Route:** `/admin/dashboard/flags`
+**Content file:** `content/feature-flags.json`
+
+Toggle features on/off without code. Changes take effect after next push.
+
+| Flag Key | Default | What It Controls |
+| :--- | :--- | :--- |
+| `ai_optimizer` | `true` | Gemini AI bullet optimizer |
+| `docx_export` | `true` | Word (.docx) export |
+| `pdf_export` | `true` | PDF export |
+| `cv_mode` | `true` | Academic CV mode |
+| `announcement_banner` | `false` | Global site-wide announcement bar |
+| `ats_score_badge` | `true` | ATS score pills on template cards |
+
+---
+
+## 12. Admin Dashboard UI — Layout
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│  Templates                                    [+ Sync from code]   │
-├──────────┬──────────┬─────────┬────────┬──────────┬───────────────┤
-│  ID      │  Name    │  Type   │ Order  │ Status   │  Actions      │
-├──────────┼──────────┼─────────┼────────┼──────────┼───────────────┤
-│ r-nexus  │ Nexus    │ Resume  │  1     │ ✅ ON    │ [↑][↓][Edit] │
-│ r-merid  │ Meridian │ Resume  │  2     │ ✅ ON    │ [↑][↓][Edit] │
-│ r-atlas  │ Atlas    │ Resume  │  3     │ ✅ ON    │ [↑][↓][Edit] │
-│ r-prism  │ Prism    │ Resume  │  4     │ ❌ OFF   │ [↑][↓][Edit] │
-│ c-acad   │ Academia │  CV     │  1     │ ✅ ON    │ [↑][↓][Edit] │
-│ c-schol  │ Scholar  │  CV     │  2     │ ✅ ON    │ [↑][↓][Edit] │
-└──────────┴──────────┴─────────┴────────┴──────────┴───────────────┘
-```
-
-### Template Update API
-
-```typescript
-// PUT /api/templates/[id]
-// Body: { enabled?, featured?, is_new?, display_order? }
-
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
-  const body = await req.json();
-
-  const allowed = ['enabled', 'featured', 'is_new', 'display_order'];
-  const update = Object.fromEntries(
-    Object.entries(body).filter(([k]) => allowed.includes(k))
-  );
-  update.updated_at = new Date().toISOString();
-
-  const { error } = await supabase
-    .from('templates')
-    .update(update)
-    .eq('id', params.id);
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true });
-}
+resumee.pro.bd/admin/dashboard
++--------------------------------------------------------------------+
+| TOPBAR                                                              |
+| ResumeForge CMS    Current Page: Landing    [arefi]  [Logout]       |
+|                                                                     |
+| [ 3 unpublished changes: landing.json, faqs.json, articles/ ]       |
+|                                              [ 🚀 Push to GitHub ]  |
++-------------------+------------------------------------------------+
+| SIDEBAR           | MAIN CONTENT AREA                              |
+|                   |                                                |
+| 📊 Overview       | [Active CMS panel renders here]                |
+|                   |                                                |
+| 📄 Pages          |                                                |
+|   |- Landing      |                                                |
+|   |- Templates    |                                                |
+|   |- Articles     |                                                |
+|   |- About        |                                                |
+|   |- Legal        |                                                |
+|   +- Navigation   |                                                |
+|                   |                                                |
+| 🎨 Templates      |                                                |
+| 🚩 Feature Flags  |                                                |
+| ⚙️  Settings       |                                                |
+|   |- Site         |                                                |
+|   +- Admin Users  | <- Create / Revoke admins (Supabase, instant)  |
++-------------------+------------------------------------------------+
 ```
 
 ---
 
-## 11. Announcement System
+## 13. API Routes — Admin & Publish
 
-Push a banner to all app users instantly — no redeployment needed.
-
-### Announcement Composer UI
-
-```
-┌────────────────────────────────────────────────────────┐
-│  New Announcement                                      │
-│                                                        │
-│  Message ─────────────────────────────────────────     │
-│  [ New CV templates just launched! Check them out ]   │
-│                                                        │
-│  Type      [ info ▾ ]    (info / warning / success)   │
-│                                                        │
-│  CTA Label  [ See templates ]                          │
-│  CTA URL    [ /templates    ]                          │
-│                                                        │
-│  Expires    [ 2026-08-27 ] (leave blank = no expiry)  │
-│                                                        │
-│            [Cancel]  [Publish Announcement]            │
-└────────────────────────────────────────────────────────┘
-```
-
-### Announcement API
-
-```typescript
-// POST /api/announce
-export async function POST(req: NextRequest) {
-  const body = await req.json();
-
-  const AnnouncementSchema = z.object({
-    message:   z.string().min(1).max(200),
-    type:      z.enum(['info', 'warning', 'success']),
-    link_text: z.string().max(50).optional(),
-    link_url:  z.string().url().optional(),
-    ends_at:   z.string().datetime().optional(),
-  });
-
-  const parsed = AnnouncementSchema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ error: 'Invalid' }, { status: 400 });
-
-  // Deactivate any currently active announcements first
-  await supabase.from('announcements').update({ active: false }).eq('active', true);
-
-  const { data, error } = await supabase
-    .from('announcements')
-    .insert({ ...parsed.data, active: true })
-    .select()
-    .single();
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data, { status: 201 });
-}
-```
-
-### How It Appears in the Main App
-
-```tsx
-// components/AnnouncementBar.tsx (in main app)
-
-export function AnnouncementBar() {
-  const [announcement, setAnnouncement] = useState<Announcement | null>(null);
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    getConfig().then(c => setAnnouncement(c.announcement));
-  }, []);
-
-  if (!announcement || dismissed) return null;
-
-  const colors = {
-    info:    'bg-blue-50 border-blue-200 text-blue-800',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-    success: 'bg-green-50 border-green-200 text-green-800',
-  };
-
-  return (
-    <div className={`border-b px-4 py-2 flex items-center justify-between text-sm ${colors[announcement.type]}`}>
-      <span>
-        {announcement.message}
-        {announcement.link_url && (
-          <a href={announcement.link_url} className="ml-2 underline font-medium">
-            {announcement.link_text}
-          </a>
-        )}
-      </span>
-      <button onClick={() => setDismissed(true)} className="ml-4 opacity-60 hover:opacity-100">✕</button>
-    </div>
-  );
-}
-```
+| Method | Route | Auth | Purpose |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/admin/auth/login` | Public | Verify username+password -> set JWT cookie |
+| `POST` | `/api/admin/auth/logout` | JWT | Clear admin cookie |
+| `GET` | `/api/admin/content?file=landing.json` | JWT | Read any content file |
+| `PATCH` | `/api/admin/content` | JWT | Update draft content |
+| `POST` | `/api/admin/publish` | JWT | **Commit all pending files to GitHub** |
+| `GET` | `/api/admin/users` | JWT | List all admin users |
+| `POST` | `/api/admin/users` | JWT | Create new admin (server hashes password) |
+| `DELETE` | `/api/admin/users/[username]` | JWT | Revoke an admin instantly |
 
 ---
 
-## 12. Feedback & Reports
+## 14. Frontend Integration — Reading JSON Content
 
-### Feedback Inbox UI
+Pages read from JSON files at **build time** (static generation).
+No runtime database calls. Pure Next.js static rendering.
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│  Feedback Inbox                Filter: [All ▾]  [New ▾]          │
-├────────┬─────────┬─────────────────────────────┬────────┬────────┤
-│  Type  │  Stars  │  Message                    │  Date  │ Status │
-├────────┼─────────┼─────────────────────────────┼────────┼────────┤
-│ 🐛 Bug │  —      │ PDF export cuts off the ... │ 2h ago │ 🔴 New │
-│ ⭐ Rate│ ★★★★★  │ Love the Nexus template!    │ 5h ago │ ✅ Read│
-│ 💡 Feat│  —      │ Please add LinkedIn import  │ 1d ago │ ✅ Read│
-│ 🐛 Bug │  —      │ DOCX download not working.. │ 2d ago │ 🟡 Wip │
-└────────┴─────────┴─────────────────────────────┴────────┴────────┘
-```
+### Example: Landing Page reads from content/landing.json
 
-### Feedback Widget in Main App
+```typescript
+// app/page.tsx
+import landingData from '@/content/landing.json';
+import testimonials from '@/content/testimonials.json';
+import faqs from '@/content/faqs.json';
 
-```tsx
-// components/FeedbackWidget.tsx (in main app)
-
-export function FeedbackWidget() {
-  const [open, setOpen] = useState(false);
-  const [type, setType] = useState<'bug' | 'feature' | 'rating'>('general');
-  const [rating, setRating] = useState(0);
-  const [message, setMessage] = useState('');
-
-  async function submit() {
-    await fetch(`${process.env.NEXT_PUBLIC_ADMIN_API}/api/feedback`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, rating: rating || undefined, message }),
-    });
-    setOpen(false);
-    toast.success('Thanks for your feedback!');
-  }
-
+export default function LandingPage() {
+  const { hero, stats, sections } = landingData;
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed bottom-6 left-6 text-xs text-gray-400 hover:text-gray-600 bg-white border rounded-full px-3 py-1.5 shadow"
-      >
-        Feedback
-      </button>
-      {open && <FeedbackModal onSubmit={submit} onClose={() => setOpen(false)} />}
+      {sections.find(s => s.id === 'hero')?.enabled && (
+        <HeroSection
+          headline1={hero.headline_line1}
+          gradientText={hero.headline_gradient}
+          subheadline={hero.subheadline}
+          ctaPrimaryText={hero.cta_primary_text}
+          ctaPrimaryUrl={hero.cta_primary_url}
+        />
+      )}
+      {/* other sections... */}
     </>
   );
 }
 ```
 
----
-
-## 13. Frontend Integration
-
-### What Changes in the Main ResumeForge App
-
-Only three additions are needed in the main app to connect to the dashboard:
-
-**1. Fetch config on app startup**
+### lib/content.ts
 
 ```typescript
-// app/layout.tsx (main app)
-const config = await getConfig();
-// Pass to providers
-```
+import fs from 'fs';
+import path from 'path';
 
-**2. Track events**
+const CONTENT_DIR = path.join(process.cwd(), 'content');
 
-```typescript
-// Add track() calls at key moments
-track('doc_created', { doc_type: 'resume' });
-track('export_pdf',  { doc_type, template_id });
-track('template_switch', { from: oldId, to: newId, doc_type });
-```
+export function readContent<T>(filePath: string): T {
+  const raw = fs.readFileSync(path.join(CONTENT_DIR, filePath), 'utf-8');
+  return JSON.parse(raw) as T;
+}
 
-**3. Gate features with flags**
-
-```typescript
-const { flags } = useConfig();
-
-{flags.docx_export && <DocxButton />}
-{flags.share_link  && <ShareButton />}
-{flags.cv_mode     && <CVOption />}
-```
-
-### Environment Variable Needed in Main App
-
-```bash
-# .env.local (in main ResumeForge app)
-NEXT_PUBLIC_ADMIN_API=https://resumeforge-admin.vercel.app
-```
-
----
-
-## 14. Environment Variables
-
-```bash
-# resumeforge-admin/.env.local
-
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-SUPABASE_SERVICE_ROLE_KEY=eyJ...       # server-side only
-
-# JWT
-JWT_SECRET=your-32-char-random-secret  # openssl rand -base64 32
-
-# Upstash Redis (rate limiting)
-UPSTASH_REDIS_REST_URL=https://...
-UPSTASH_REDIS_REST_TOKEN=...
-
-# CORS — allow requests from the main app
-ALLOWED_ORIGIN=https://resumeforge.vercel.app
-```
-
----
-
-## 15. Deployment
-
-Both apps deploy to Vercel — the main app and the admin dashboard are **separate Vercel projects** pointing to different directories or repos.
-
-```bash
-# Deploy admin dashboard
-cd resumeforge-admin
-vercel --prod
-
-# Set env vars in Vercel dashboard or via CLI
-vercel env add JWT_SECRET production
-vercel env add SUPABASE_SERVICE_ROLE_KEY production
-```
-
-### CORS Middleware
-
-The public API routes (`/api/config`, `/api/event`, `/api/error`, `/api/feedback`) must allow requests from the main app's domain.
-
-```typescript
-// lib/cors.ts
-export function corsHeaders(origin: string) {
-  const allowed = process.env.ALLOWED_ORIGIN ?? '';
-  if (origin === allowed) {
-    return {
-      'Access-Control-Allow-Origin': origin,
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    };
-  }
-  return {};
+export function readMarkdown(filePath: string): string {
+  return fs.readFileSync(path.join(CONTENT_DIR, filePath), 'utf-8');
 }
 ```
 
 ---
 
-## 16. Security
+## 15. Environment Variables
 
-| Concern | Mitigation |
-|---------|------------|
-| Admin access | HttpOnly JWT cookie, 7-day expiry, bcrypt passwords |
-| Public API abuse | Upstash rate limiting — 30 req/min per IP |
-| SQL injection | Supabase client uses parameterized queries |
-| XSS | No user content rendered as HTML in dashboard |
-| CORS | Only main app origin allowed on public routes |
-| Secrets exposure | Service role key server-side only, never in client bundle |
-| Error data | Stack traces stored but never returned to client |
-| Analytics privacy | No IP stored, no fingerprinting, anonymous session IDs only |
+Add to **Vercel -> Project Settings -> Environment Variables**:
 
-### Rate Limiting Helper
+```env
+# Supabase (admin_users table only)
+SUPABASE_URL=https://xxxxxxxxxxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6...  <- server-side only, never public
 
-```typescript
-// lib/rateLimit.ts
-import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
+# JWT Signing Secret
+ADMIN_JWT_SECRET=random_64_character_string_here
 
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(30, '1m'),
-});
+# GitHub Integration (for Push to GitHub button)
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GITHUB_OWNER=abdussamadarefi
+GITHUB_REPO=Resume-Builder
+GITHUB_BRANCH=main
 
-export async function rateLimit(req: NextRequest, limit = 30) {
-  const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
-  const { success } = await ratelimit.limit(`${ip}:${limit}`);
-  return !success;
-}
+# Existing (already configured)
+NEXT_PUBLIC_GA_ID=G-RGT94HGV0Z
+NEXT_PUBLIC_APP_URL=https://resumee.pro.bd
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
----
+### One-Time Bootstrap: Create Your First Admin
 
-## 17. Dashboard UI Pages
-
-### `/dashboard` — Overview
-
-- 4 KPI cards: Today's users, Weekly users, Total exports, Unread feedback
-- Line chart: Daily active users (30 days)
-- Bar chart: Export type breakdown
-- Pie chart: Resume vs CV split
-- Bar chart: Top 5 templates this week
-
-### `/dashboard/analytics` — Deep Analytics
-
-- Date range picker (7d / 30d / 90d / custom)
-- Daily/weekly/monthly toggle
-- Country breakdown table
-- Export trend over time
-- Template adoption over time
-
-### `/dashboard/templates` — Template Control
-
-- Table of all templates with enable/disable toggle
-- Drag-to-reorder display order
-- Mark as Featured or New (shows badge in main app)
-- Filter by Resume / CV
-
-### `/dashboard/flags` — Feature Flags
-
-- Simple list of all flags with toggle switch
-- Last updated time and who updated
-- Description of what each flag controls
-
-### `/dashboard/announce` — Announcements
-
-- Active announcement card (with dismiss/deactivate button)
-- Announcement composer form
-- History of past announcements
-
-### `/dashboard/feedback` — Feedback Inbox
-
-- Table with type, rating, message, date, status
-- Click row to read full message
-- Mark as read / resolved / bug
-- Filter by type, status, date range
-- Star rating average display
-
-### `/dashboard/errors` — Error Logs
-
-- Table with message, page, browser, date
-- Expandable stack trace per row
-- Filter by date
-- Bulk delete old logs button
-
----
-
-## Seed the Database
-
-Run this once to set up default flags and templates:
+```bash
+# Step 1: Generate bcrypt hash for your password (run locally, one time only)
+node -e "const b=require('bcryptjs'); console.log(b.hashSync('YourPassword', 12));"
+```
 
 ```sql
--- Feature flags
-INSERT INTO feature_flags (key, enabled, description) VALUES
-  ('cv_mode',             TRUE, 'Show CV option on first screen'),
-  ('share_link',          TRUE, 'Share resume via encoded URL'),
-  ('docx_export',         TRUE, 'Download as Word document'),
-  ('print_export',        TRUE, 'Print via browser dialog'),
-  ('plain_text_export',   TRUE, 'Copy as plain text'),
-  ('feedback_widget',     TRUE, 'Show feedback button in app'),
-  ('announcement_bar',    TRUE, 'Show announcement banner');
+-- Step 2: Paste hash into Supabase SQL Editor (one time only)
+INSERT INTO admin_users (username, password_hash)
+VALUES ('arefi', '$2b$12$your_hash_here');
+```
 
--- Resume templates
-INSERT INTO templates (id, name, doc_type, enabled, display_order, ats_score) VALUES
-  ('r-nexus',     'Nexus',    'resume', TRUE, 1, 78),
-  ('r-meridian',  'Meridian', 'resume', TRUE, 2, 95),
-  ('r-atlas',     'Atlas',    'resume', TRUE, 3, 82),
-  ('r-prism',     'Prism',    'resume', TRUE, 4, 70),
-  ('r-compact',   'Compact',  'resume', TRUE, 5, 90),
-  ('r-executive', 'Executive','resume', TRUE, 6, 88);
+After this, all future admins are created from `/admin/dashboard/settings/admins` — no SQL, no terminal, no Vercel.
 
--- CV templates
-INSERT INTO templates (id, name, doc_type, enabled, display_order, ats_score) VALUES
-  ('c-academia',  'Academia',       'cv', TRUE, 1, 85),
-  ('c-scholar',   'Scholar',        'cv', TRUE, 2, 95),
-  ('c-modern-ac', 'Modern Academic','cv', TRUE, 3, 80),
-  ('c-medical',   'Medical',        'cv', TRUE, 4, 88),
-  ('c-research',  'Research',       'cv', TRUE, 5, 82),
-  ('c-europass',  'Europass',       'cv', TRUE, 6, 90);
+> `SUPABASE_SERVICE_ROLE_KEY` is server-side only. Never use `NEXT_PUBLIC_` prefix for it.
 
--- Create admin user (password: change_this_immediately)
-INSERT INTO admin_users (username, password_hash) VALUES
-  ('admin', '$2b$10$...');  -- generate with bcrypt.hash('your_password', 10)
+---
+
+## 16. Build & Deployment Flow
+
+```
+Developer code push:
+git push -> GitHub -> Vercel builds -> resumee.pro.bd live
+
+CMS content push (no coding needed):
+/admin -> edit -> [Push to GitHub] -> GitHub commit -> Vercel builds -> resumee.pro.bd live
+```
+
+Both flows use the **exact same Vercel build pipeline**.
+Vercel typically builds in **30-60 seconds** after a commit is detected.
+
+### Does Every Action Require a Push?
+
+| Action | Needs push? |
+| :--- | :--- |
+| Edit hero text | Yes (content file changes) |
+| Publish a new article | Yes (new .md file added) |
+| Toggle a feature flag | Yes (JSON file changes) |
+| View GA4 analytics | No |
+| Save a draft without publishing | No |
+
+---
+
+## 17. Content JSON File Schemas (Complete Reference)
+
+### content/landing.json
+
+```json
+{
+  "sections": [
+    { "id": "hero", "title": "Hero", "enabled": true, "order": 0 },
+    { "id": "stats", "title": "Stats Bar", "enabled": true, "order": 1 },
+    { "id": "how_it_works", "title": "How It Works", "enabled": true, "order": 2 },
+    { "id": "features", "title": "Features", "enabled": true, "order": 3 },
+    { "id": "template_showcase", "title": "Template Showcase", "enabled": true, "order": 4 },
+    { "id": "student_vs_pro", "title": "Student vs Pro", "enabled": true, "order": 5 },
+    { "id": "resume_vs_cv", "title": "Resume vs CV", "enabled": true, "order": 6 },
+    { "id": "testimonials", "title": "Testimonials", "enabled": true, "order": 7 },
+    { "id": "faq", "title": "FAQ", "enabled": true, "order": 8 },
+    { "id": "cta", "title": "CTA Banner", "enabled": true, "order": 9 }
+  ],
+  "hero": {
+    "badge_text": "Zero Auth - Zero Backend - 100% Client-Side",
+    "headline_line1": "Craft Resumes & CVs",
+    "headline_gradient": "Without The Tracking",
+    "subheadline": "The privacy-first resume and CV builder. No account required.",
+    "cta_primary_text": "Build Free Resume",
+    "cta_primary_url": "/builder?type=resume",
+    "cta_secondary_text": "Build Academic CV",
+    "cta_secondary_url": "/builder?type=cv"
+  },
+  "stats": [
+    { "id": "templates", "value": "10+", "label": "ATS-Ready Templates", "sublabel": "Industry & Academic", "order": 0 },
+    { "id": "cost", "value": "$0", "label": "Free Forever", "sublabel": "No paywalls ever", "order": 1 },
+    { "id": "privacy", "value": "100%", "label": "Private by Design", "sublabel": "Zero data collection", "order": 2 },
+    { "id": "formats", "value": "3", "label": "Export Formats", "sublabel": "PDF, DOCX, Print", "order": 3 }
+  ]
+}
+```
+
+### content/testimonials.json
+
+```json
+[
+  {
+    "id": "t1",
+    "author_name": "Sarah Chen",
+    "role": "CS Graduate",
+    "company_or_school": "MIT",
+    "quote": "Got my first job offer using the Nexus template. Incredibly helpful.",
+    "rating": 5,
+    "tag": "Student",
+    "enabled": true,
+    "order": 0
+  }
+]
+```
+
+### content/faqs.json
+
+```json
+[
+  {
+    "id": "faq1",
+    "question": "Is ResumeForge really free?",
+    "answer": "Yes, completely free. No subscriptions, no hidden fees, no premium tiers.",
+    "category": "General",
+    "enabled": true,
+    "order": 0
+  }
+]
+```
+
+### content/feature-flags.json
+
+```json
+{
+  "ai_optimizer": true,
+  "docx_export": true,
+  "pdf_export": true,
+  "cv_mode": true,
+  "announcement_banner": false,
+  "ats_score_badge": true
+}
+```
+
+### content/articles/index.json
+
+```json
+[
+  {
+    "slug": "how-to-write-ats-resume",
+    "title": "How to Write an ATS-Friendly Resume in 2025",
+    "description": "Learn the exact strategies to beat Applicant Tracking Systems.",
+    "category": "ATS Optimization",
+    "category_color": "#3b82f6",
+    "read_time": "8 min read",
+    "target_audience": "Job Seekers",
+    "published_at": "2026-08-16",
+    "is_published": true,
+    "featured": true,
+    "order": 0
+  }
+]
+```
+
+### content/navigation.json
+
+```json
+{
+  "navbar": [
+    { "id": "n1", "label": "Templates", "url": "/templates", "order": 0, "enabled": true },
+    { "id": "n2", "label": "Articles", "url": "/articles", "order": 1, "enabled": true },
+    { "id": "n3", "label": "About", "url": "/about", "order": 2, "enabled": true }
+  ],
+  "navbar_cta": { "label": "Build Free Resume", "url": "/builder" },
+  "footer": {
+    "product": [
+      { "id": "fp1", "label": "Resume Builder", "url": "/builder?type=resume", "order": 0 },
+      { "id": "fp2", "label": "CV Builder", "url": "/builder?type=cv", "order": 1 },
+      { "id": "fp3", "label": "Templates", "url": "/templates", "order": 2 }
+    ],
+    "resources": [{ "id": "fr1", "label": "Career Articles", "url": "/articles", "order": 0 }],
+    "company": [{ "id": "fc1", "label": "About", "url": "/about", "order": 0 }],
+    "legal": [
+      { "id": "fl1", "label": "Privacy Policy", "url": "/privacy", "order": 0 },
+      { "id": "fl2", "label": "Terms of Service", "url": "/terms", "order": 1 },
+      { "id": "fl3", "label": "Cookie Policy", "url": "/cookies", "order": 2 }
+    ]
+  },
+  "footer_copyright": "2026 ResumeForge. Built with care.",
+  "footer_credit": "Made by Abdus Samad Arefi",
+  "footer_github_url": "https://github.com/abdussamadarefi/Resume-Builder"
+}
 ```
 
 ---
 
-## License
+## 18. Implementation Phases
 
-MIT © ResumeForge Contributors
+### Phase 1 — Foundation (Week 1)
+- [ ] Create all `content/*.json` files with current default values
+- [ ] Refactor all public pages to read from JSON files instead of hardcoded text
+- [ ] Set up admin login (`/admin/login`) with password + JWT cookie
+- [ ] Implement `lib/github-api.ts` (GitHub REST API commit logic)
+- [ ] Implement `POST /api/admin/publish` route
 
----
+### Phase 2 — Core CMS Panels (Week 2)
+- [ ] Admin dashboard layout (sidebar, topbar)
+- [ ] [Push to GitHub] button with all 4 states
+- [ ] Landing Page CMS panel (hero editor, section toggles)
+- [ ] Feature Flags panel
 
-*Backend Dashboard v1.0 · Supabase + Next.js + Vercel · $0/month on free tiers*
+### Phase 3 — Full Content Management (Week 3)
+- [ ] Articles CMS with Markdown editor
+- [ ] Templates Registry manager (enable/disable/reorder)
+- [ ] About, Legal, Navigation CMS panels
+
+### Phase 4 — Polish (Week 4)
+- [ ] Testimonials & FAQ managers with drag-to-reorder
+- [ ] Site Settings panel
+- [ ] Final security review and testing

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "t1",
+    "author_name": "Sarah Chen",
+    "role": "Computer Science Graduate",
+    "company_or_school": "UC Berkeley",
+    "quote": "ResumeForge helped me land my first Software Engineer role at a top tech company. The Nexus template formatted my technical projects cleanly and passed every ATS screening.",
+    "rating": 5,
+    "tag": "Student",
+    "avatar_url": "",
+    "enabled": true,
+    "order": 0
+  },
+  {
+    "id": "t2",
+    "author_name": "Dr. Marcus Vance",
+    "role": "Postdoctoral Researcher",
+    "company_or_school": "Stanford University",
+    "quote": "Finding a free CV builder with dedicated publication, grant, and teaching sections seemed impossible until ResumeForge. The Scholar template is academic perfection.",
+    "rating": 5,
+    "tag": "Academic",
+    "avatar_url": "",
+    "enabled": true,
+    "order": 1
+  },
+  {
+    "id": "t3",
+    "author_name": "Elena Rostova",
+    "role": "Senior Product Marketing Manager",
+    "company_or_school": "Fintech Leader",
+    "quote": "I needed to pivot my corporate resume into an executive 1-page summary. The AI bullet point rewriter combined with the Executive template saved me days of agonizing edits.",
+    "rating": 5,
+    "tag": "Professional",
+    "avatar_url": "",
+    "enabled": true,
+    "order": 2
+  },
+  {
+    "id": "t4",
+    "author_name": "Tariq Al-Mansoor",
+    "role": "Career Changer & Data Analyst",
+    "company_or_school": "Healthcare Analytics",
+    "quote": "Privacy was my biggest concern. Every other site wanted my phone number or a subscription credit card. ResumeForge let me build, edit, and export in 10 minutes flat.",
+    "rating": 5,
+    "tag": "Career Changer",
+    "avatar_url": "",
+    "enabled": true,
+    "order": 3
+  }
+]

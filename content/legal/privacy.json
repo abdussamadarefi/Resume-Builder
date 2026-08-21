@@ -1,0 +1,35 @@
+{
+  "badge": "Your Privacy Matters",
+  "title": "Privacy Policy",
+  "subtitle": "At ResumeForge, your privacy is not an afterthought — it is our core architecture. We collect zero personal resume data.",
+  "last_updated": "August 16, 2026",
+  "tldr_headline": "The Plain-English TL;DR",
+  "tldr_content": "Your resume text, personal contacts, education, work history, and uploaded details NEVER leave your browser. Everything is processed locally in your browser's memory and saved exclusively to your own localStorage.",
+  "sections": [
+    {
+      "id": "s1",
+      "title": "1. Information We Do NOT Collect",
+      "content": "We do NOT collect, store, transmit, or monetize any data you enter into the resume editor. This includes your name, email, phone number, address, work history, education, publications, or uploaded photos. All resume processing occurs entirely on the client side."
+    },
+    {
+      "id": "s2",
+      "title": "2. Local Storage Usage",
+      "content": "ResumeForge saves your resume drafts to your browser's localStorage so you don't lose work when refreshing the page. This data remains on your physical device and is never uploaded to any remote server."
+    },
+    {
+      "id": "s3",
+      "title": "3. AI Resume Assistant Telemetry",
+      "content": "When you explicitly click 'AI Optimize' on a bullet point, only the single isolated sentence is securely transmitted to Google Gemini for rewriting. No identifying metadata, full resume context, or personal info is included in this API call."
+    },
+    {
+      "id": "s4",
+      "title": "4. Web Analytics (Google Analytics 4)",
+      "content": "We use privacy-friendly Google Analytics 4 (Measurement ID: G-RGT94HGV0Z) to measure anonymous aggregated page visit counts, device categories, and error rates to improve site performance. No personal resume content is ever logged."
+    },
+    {
+      "id": "s5",
+      "title": "5. Your Rights & Data Deletion",
+      "content": "You have complete control over your data. To permanently delete all stored resume drafts, simply click 'Reset / Clear Resume' in the editor or clear your browser's local storage cache."
+    }
+  ]
+}

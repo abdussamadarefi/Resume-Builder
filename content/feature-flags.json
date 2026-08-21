@@ -1,0 +1,8 @@
+{
+  "ai_optimizer": true,
+  "docx_export": true,
+  "pdf_export": true,
+  "cv_mode": true,
+  "announcement_banner": false,
+  "ats_score_badge": true
+}

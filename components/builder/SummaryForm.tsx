@@ -41,7 +41,7 @@ export function SummaryForm() {
           <button
             type="button"
             onClick={() => setShowSuggestions(!showSuggestions)}
-            className="flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1.5 rounded-full"
+            className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-1.5 rounded-full border border-emerald-500/20"
           >
             <Lightbulb className="w-3.5 h-3.5" />
             {showSuggestions ? "Hide Suggestions" : "Need Inspiration?"}
@@ -56,18 +56,18 @@ export function SummaryForm() {
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden mb-4"
             >
-              <div className="bg-slate-900/40 border border-slate-700/50 rounded-xl mt-2 overflow-hidden flex flex-col max-h-[320px]">
+              <div className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl mt-2 overflow-hidden flex flex-col max-h-[320px] shadow-lg dark:shadow-none">
                 {/* Category Tabs */}
-                <div className="flex items-center border-b border-slate-800 bg-slate-900/60 p-1">
+                <div className="flex items-center border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 p-1.5 gap-1">
                   {(Object.keys(SUGGESTED_SUMMARIES) as Array<keyof typeof SUGGESTED_SUMMARIES>).map((category) => (
                     <button
                       key={category}
                       type="button"
                       onClick={() => setActiveCategory(category)}
-                      className={`flex-1 text-xs py-2 px-3 rounded-md transition-all ${
+                      className={`flex-1 text-xs py-2 px-3 rounded-lg font-medium transition-all ${
                         activeCategory === category 
-                          ? "bg-slate-800 text-slate-200 font-medium shadow-sm" 
-                          : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+                          ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold shadow-sm border border-slate-200 dark:border-transparent" 
+                          : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50"
                       }`}
                     >
                       {category}
@@ -76,7 +76,7 @@ export function SummaryForm() {
                 </div>
                 
                 {/* Scrollable Summary List */}
-                <div className="p-2 overflow-y-auto custom-scrollbar">
+                <div className="p-2 overflow-y-auto custom-scrollbar divide-y divide-slate-100 dark:divide-slate-800/40">
                   {SUGGESTED_SUMMARIES[activeCategory].map((suggestion, idx) => (
                     <button
                       key={idx}
@@ -85,10 +85,10 @@ export function SummaryForm() {
                         updateSummary(suggestion);
                         setShowSuggestions(false);
                       }}
-                      className="flex w-full text-left gap-3 p-3 rounded-lg hover:bg-slate-800 transition-colors group border border-transparent hover:border-slate-700"
+                      className="flex w-full text-left gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                     >
                       <Plus className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <span className="text-xs text-slate-300 leading-relaxed">
+                      <span className="text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-normal">
                         {suggestion}
                       </span>
                     </button>
@@ -105,9 +105,9 @@ export function SummaryForm() {
           value={activeData.summary}
           onChange={(e) => updateSummary(e.target.value)}
           placeholder="Briefly describe your career goals and key achievements..."
-          className="flex w-full rounded-xl border border-slate-800 bg-slate-900/50 px-4 py-3 text-sm text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all duration-200 min-h-[150px] resize-none"
+          className="flex w-full rounded-xl border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900/50 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 transition-all duration-200 min-h-[150px] resize-none shadow-sm dark:shadow-none leading-relaxed"
         />
-        <p className="text-xs text-slate-500 text-right">
+        <p className="text-xs text-slate-500 dark:text-slate-400 text-right">
           {activeData.summary.length} characters
         </p>
       </div>

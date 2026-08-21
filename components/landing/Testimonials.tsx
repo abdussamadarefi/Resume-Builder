@@ -3,114 +3,100 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { Quote } from "lucide-react"
-
-const testimonials = [
-  {
-    name: "Sarah Chen",
-    role: "Computer Science Student, Stanford",
-    quote: "ResumeForge helped me land my first internship at a Fortune 500. The ATS-friendly templates made all the difference — I got callbacks from 4 out of 5 applications.",
-    avatar: "SC",
-    accentColor: "#3b82f6",
-  },
-  {
-    name: "Marcus Williams",
-    role: "Senior Software Engineer",
-    quote: "I've used paid resume builders before, but ResumeForge's privacy-first approach won me over. No account needed, no data stored anywhere — just clean, professional output.",
-    avatar: "MW",
-    accentColor: "#10b981",
-  },
-  {
-    name: "Dr. Priya Patel",
-    role: "Postdoctoral Researcher, MIT",
-    quote: "The academic CV templates are a game-changer for researchers. Publications, grants, teaching — everything is properly formatted for academic hiring committees.",
-    avatar: "PP",
-    accentColor: "#8b5cf6",
-  },
-  {
-    name: "James Rodriguez",
-    role: "Career Changer, Ex-Marketing → UX",
-    quote: "Switching careers was daunting, but ResumeForge's templates let me highlight transferable skills beautifully. The real-time preview saved me hours of formatting.",
-    avatar: "JR",
-    accentColor: "#e11d48",
-  },
-  {
-    name: "Amina Hassan",
-    role: "MBA Graduate, Wharton",
-    quote: "The Executive template perfectly captured my consulting and leadership experience. PDF export quality is exceptional — truly print-ready documents.",
-    avatar: "AH",
-    accentColor: "#f59e0b",
-  },
-  {
-    name: "David Kim",
-    role: "Fresh Graduate, UC Berkeley",
-    quote: "As a student with limited experience, the Compact template helped me present what I had in the best light. Being completely free made it even better.",
-    avatar: "DK",
-    accentColor: "#06b6d4",
-  },
-]
+import defaultTestimonials from "@/content/testimonials.json"
 
 export default function Testimonials() {
+  const testimonials = defaultTestimonials.filter((t: any) => t.enabled);
+
+  const getAccentColor = (tag: string) => {
+    switch (tag) {
+      case "Student": return "#3b82f6";
+      case "Academic": return "#8b5cf6";
+      case "Professional": return "#10b981";
+      case "Career Changer": return "#e11d48";
+      default: return "#3b82f6";
+    }
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+  };
+
   return (
-    <section className="relative z-10 w-full py-20 md:py-32 border-t border-slate-900/60" id="testimonials">
+    <section className="relative z-10 w-full py-20 md:py-32 border-t border-slate-200 dark:border-slate-900/60" id="testimonials">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-16 space-y-4"
+          className="text-center mb-16 space-y-3"
         >
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
-            Success Stories
-          </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-white tracking-tight">
-            Trusted by Students &{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400">
-              Professionals
-            </span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
+            User Stories
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
+            Loved by Job Seekers &amp; Academics
           </h2>
-          <p className="text-slate-400 text-sm md:text-base leading-relaxed">
-            From first resumes to career pivots — see how ResumeForge helps people tell their professional story.
+          <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+            From first-year students to senior engineers and PhD researchers — here&apos;s how ResumeForge helped them land opportunities.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="group relative"
-            >
-              <div className="relative p-6 rounded-3xl bg-slate-900/30 border border-slate-800/60 hover:border-slate-700/60 transition-all hover:bg-slate-900/50 h-full flex flex-col">
-                {/* Quote icon */}
-                <div className="mb-4">
-                  <Quote size={20} style={{ color: testimonial.accentColor }} className="opacity-40" />
+          {testimonials.map((t: any, index: number) => {
+            const accentColor = getAccentColor(t.tag);
+            const initials = getInitials(t.author_name);
+
+            return (
+              <motion.div
+                key={t.id || t.author_name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.4, delay: index * 0.08 }}
+                className="group relative rounded-3xl bg-white/80 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700/80 p-8 transition-all duration-300 flex flex-col justify-between hover:bg-white dark:hover:bg-slate-900/60 shadow-sm dark:shadow-none"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <Quote size={24} className="text-slate-300 dark:text-slate-700 group-hover:text-primary transition-colors" />
+                    <span
+                      className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
+                      style={{ backgroundColor: accentColor + "15", color: accentColor }}
+                    >
+                      {t.tag}
+                    </span>
+                  </div>
+
+                  <p className="text-slate-700 dark:text-slate-300 text-xs leading-relaxed mb-6 font-medium">
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
                 </div>
 
-                {/* Quote text */}
-                <p className="text-slate-300 text-sm leading-relaxed flex-1 mb-6">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </p>
-
-                {/* Author */}
-                <div className="flex items-center gap-3 pt-4 border-t border-slate-800/60">
+                <div className="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-800/60">
                   <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                    style={{ backgroundColor: testimonial.accentColor + "30", color: testimonial.accentColor }}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs text-white shadow-md flex-shrink-0"
+                    style={{ backgroundColor: accentColor }}
                   >
-                    {testimonial.avatar}
+                    {initials}
                   </div>
                   <div>
-                    <div className="text-sm font-bold text-white">{testimonial.name}</div>
-                    <div className="text-[11px] text-slate-500">{testimonial.role}</div>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                      {t.author_name}
+                    </h4>
+                    <p className="text-[10px] text-slate-500">
+                      {t.role} • {t.company_or_school}
+                    </p>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

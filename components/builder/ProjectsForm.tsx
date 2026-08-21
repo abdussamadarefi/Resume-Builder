@@ -47,9 +47,6 @@ export function ProjectsForm() {
       const newArray = [...projects]
       const [moved] = newArray.splice(oldIndex, 1)
       newArray.splice(newIndex, 0, moved)
-      // Since reorderProject doesn't exist yet, we'll map updates or add a reorder later.
-      // For now, let's omit drag-drop reordering implementation inside the store to keep it simple, 
-      // or we can just update the whole array if we had a reorderProject action.
     }
   }
 
@@ -74,7 +71,7 @@ export function ProjectsForm() {
         </SortableContext>
       </DndContext>
 
-      <Button onClick={handleAdd} variant="outline" className="w-full border-dashed border-2 bg-transparent hover:bg-slate-800 h-14">
+      <Button onClick={handleAdd} variant="outline" className="w-full border-dashed border-2 border-slate-300 dark:border-slate-800 bg-white/40 dark:bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 h-14 text-slate-700 dark:text-slate-300 font-semibold">
         <Plus size={18} className="mr-2" /> Add Project
       </Button>
     </div>
@@ -96,17 +93,17 @@ function ProjectItem({ item, isExpanded, onToggle, onUpdate, onRemove }: any) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden"
+      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-none"
     >
-      <div className="flex items-center p-4 cursor-pointer hover:bg-slate-800/50 transition-colors" onClick={onToggle}>
-        <div {...attributes} {...listeners} className="p-2 mr-2 cursor-grab active:cursor-grabbing text-slate-500 hover:text-white" onClick={(e) => e.stopPropagation()}>
+      <div className="flex items-center p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors" onClick={onToggle}>
+        <div {...attributes} {...listeners} className="p-2 mr-2 cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-800 dark:hover:text-white" onClick={(e) => e.stopPropagation()}>
           <GripVertical size={18} />
         </div>
         <div className="flex-1">
-          <h4 className="font-bold text-white">{item.name || "(Not specified)"}</h4>
-          <p className="text-sm text-slate-400">{item.url || "No link"}</p>
+          <h4 className="font-bold text-slate-900 dark:text-white">{item.name || "(Not specified)"}</h4>
+          <p className="text-sm text-slate-500 dark:text-slate-400">{item.url || "No link"}</p>
         </div>
-        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); onRemove(); }} className="text-red-400 hover:text-red-300 hover:bg-red-400/10 h-8 w-8 ml-2">
+        <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); onRemove(); }} className="text-slate-400 hover:text-red-500 hover:bg-red-500/10 h-8 w-8 ml-2" title="Delete Project">
           <Trash2 size={16} />
         </Button>
       </div>
@@ -114,7 +111,7 @@ function ProjectItem({ item, isExpanded, onToggle, onUpdate, onRemove }: any) {
       <AnimatePresence>
         {isExpanded && (
           <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
-            <div className="p-6 pt-0 space-y-4 border-t border-slate-800 mt-2">
+            <div className="p-6 pt-0 space-y-4 border-t border-slate-200 dark:border-slate-800 mt-2">
               <div className="space-y-2"><Label>Project Name</Label><Input placeholder="e.g. ResumeForge" value={item.name} onChange={(e) => onUpdate({ name: e.target.value })} /></div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

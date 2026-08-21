@@ -1,0 +1,108 @@
+{
+  "sections": [
+    {
+      "id": "hero",
+      "title": "Hero Header",
+      "enabled": true,
+      "order": 0
+    },
+    {
+      "id": "stats",
+      "title": "Stats Counter Bar",
+      "enabled": true,
+      "order": 1
+    },
+    {
+      "id": "how_it_works",
+      "title": "How It Works (3 Steps)",
+      "enabled": true,
+      "order": 2
+    },
+    {
+      "id": "features",
+      "title": "Core Features Grid",
+      "enabled": true,
+      "order": 3
+    },
+    {
+      "id": "template_showcase",
+      "title": "Template Showcase Gallery",
+      "enabled": true,
+      "order": 4
+    },
+    {
+      "id": "student_vs_pro",
+      "title": "Students vs Professionals",
+      "enabled": true,
+      "order": 5
+    },
+    {
+      "id": "resume_vs_cv",
+      "title": "Resume vs CV Comparison",
+      "enabled": true,
+      "order": 6
+    },
+    {
+      "id": "testimonials",
+      "title": "User Testimonials",
+      "enabled": true,
+      "order": 7
+    },
+    {
+      "id": "faq",
+      "title": "Frequently Asked Questions",
+      "enabled": true,
+      "order": 8
+    },
+    {
+      "id": "cta",
+      "title": "Bottom CTA Banner",
+      "enabled": true,
+      "order": 9
+    }
+  ],
+  "hero": {
+    "badge_text": "Zero Auth • Zero Backend • 100% Client-Side",
+    "headline_line1": "Craft Resumes & CVs",
+    "headline_gradient": "Without The Tracking",
+    "subheadline": "The privacy-first resume and academic CV builder. No account required, zero subscriptions, and your data never leaves your device. Designed for students, researchers, and professionals.",
+    "cta_primary_text": "Build Free Resume",
+    "cta_primary_url": "/builder?type=resume",
+    "cta_secondary_text": "Build Academic CV",
+    "cta_secondary_url": "/builder?type=cv"
+  },
+  "stats": [
+    {
+      "id": "templates",
+      "value": "10+",
+      "label": "ATS-Ready Templates",
+      "sublabel": "Industry & Academic",
+      "order": 0,
+      "enabled": true
+    },
+    {
+      "id": "cost",
+      "value": "$0",
+      "label": "Free Forever",
+      "sublabel": "No paywalls or limits",
+      "order": 1,
+      "enabled": true
+    },
+    {
+      "id": "privacy",
+      "value": "100%",
+      "label": "Private by Design",
+      "sublabel": "Data stays on device",
+      "order": 2,
+      "enabled": true
+    },
+    {
+      "id": "formats",
+      "value": "3",
+      "label": "Export Formats",
+      "sublabel": "PDF, Word DOCX, Print",
+      "order": 3,
+      "enabled": true
+    }
+  ]
+}

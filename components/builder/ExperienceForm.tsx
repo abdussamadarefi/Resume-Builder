@@ -4,7 +4,7 @@ import { useResumeStore } from "@/store/resumeStore"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Button } from "@/components/ui/Button"
-import { Plus, Trash2, GripVertical, ChevronDown, Sparkles } from "lucide-react"
+import { Plus, Trash2, GripVertical, Sparkles } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { WorkEntry } from "@/types/resume"
 import React from "react"
@@ -36,17 +36,18 @@ export function ExperienceForm() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="p-6 rounded-2xl bg-slate-900/40 border border-slate-800 relative group"
+            className="p-6 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none relative group"
           >
             <div className="absolute left-[-12px] top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <div className="p-1 cursor-grab active:cursor-grabbing text-slate-600">
+              <div className="p-1 cursor-grab active:cursor-grabbing text-slate-400 dark:text-slate-600">
                 <GripVertical size={18} />
               </div>
             </div>
 
             <button 
               onClick={() => removeWork(entry.id)}
-              className="absolute top-4 right-4 p-2 text-slate-600 hover:text-red-400 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all rounded-lg hover:bg-red-500/10"
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-red-500 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all rounded-lg hover:bg-red-500/10"
+              title="Delete Position"
             >
               <Trash2 size={16} />
             </button>
@@ -85,9 +86,9 @@ export function ExperienceForm() {
                 />
               </div>
 
-              <div className="md:col-span-2 space-y-4 pt-4 border-t border-slate-800">
+              <div className="md:col-span-2 space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <div className="flex justify-between items-center mb-2">
-                  <Label className="text-primary font-bold tracking-widest uppercase text-[10px]">Responsibilities & Achievements</Label>
+                  <Label className="text-primary font-bold tracking-widest uppercase text-[10px]">Responsibilities &amp; Achievements</Label>
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -95,7 +96,7 @@ export function ExperienceForm() {
                       const updated = [...entry.bullets, ""]
                       updateWork(entry.id, { bullets: updated })
                     }}
-                    className="h-8 text-[10px] uppercase font-bold text-slate-500 hover:text-primary"
+                    className="h-8 text-[10px] uppercase font-bold text-slate-600 dark:text-slate-400 hover:text-primary"
                   >
                     <Plus size={14} className="mr-1" /> Add Bullet
                   </Button>
@@ -114,25 +115,15 @@ export function ExperienceForm() {
                         placeholder="e.g. Led a team of 4 to deliver X..."
                         className="flex-1"
                       />
-                      {/* AI Button disabled for now */}
-                      {false && (
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="text-primary hover:bg-primary/10 h-10 w-10 shrink-0"
-                          onClick={() => setOptimizingBullet({ expId: entry.id, index: bulletIndex, text: bullet })}
-                        >
-                          <Sparkles size={16} />
-                        </Button>
-                      )}
                       <Button
                         size="icon"
                         variant="ghost"
-                        className="text-slate-600 hover:text-red-400 h-10 w-10 shrink-0"
+                        className="text-slate-400 hover:text-red-500 hover:bg-red-500/10 h-10 w-10 shrink-0"
                         onClick={() => {
                           const updated = entry.bullets.filter((_, i) => i !== bulletIndex)
                           updateWork(entry.id, { bullets: updated })
                         }}
+                        title="Remove Bullet"
                       >
                         <Trash2 size={16} />
                       </Button>
@@ -168,7 +159,7 @@ export function ExperienceForm() {
 
       <button
         onClick={handleAdd}
-        className="w-full h-14 border-2 border-dashed border-slate-800 rounded-2xl flex items-center justify-center gap-2 text-slate-500 hover:border-primary/50 hover:text-primary transition-all group"
+        className="w-full h-14 border-2 border-dashed border-slate-300 dark:border-slate-800 rounded-2xl flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:border-primary/50 hover:text-primary transition-all group font-semibold text-sm bg-white/40 dark:bg-slate-900/20"
       >
         <Plus size={20} className="group-hover:rotate-90 transition-transform" />
         Add Work Experience

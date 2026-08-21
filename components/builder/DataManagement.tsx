@@ -55,13 +55,13 @@ export function DataManagement() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="p-6 sm:p-8 rounded-3xl bg-blue-500/5 border border-blue-500/10 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-start text-center sm:text-left">
-        <div className="p-3 bg-blue-500/10 rounded-2xl text-blue-500">
+      <div className="p-6 sm:p-8 rounded-3xl bg-blue-500/10 border border-blue-500/20 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-start text-center sm:text-left shadow-sm dark:shadow-none">
+        <div className="p-3 bg-blue-500/20 rounded-2xl text-blue-600 dark:text-blue-400">
           <ShieldCheck size={28} />
         </div>
         <div>
-          <h4 className="text-xl font-bold text-white mb-2">Privacy & Portability</h4>
-          <p className="text-sm text-slate-400 leading-relaxed max-w-xl">
+          <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Privacy &amp; Portability</h4>
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed max-w-xl">
             ResumeForge is a zero-backend platform. Your data never leaves your browser. 
             Use these tools to backup your resumes or move them to another device.
           </p>
@@ -69,12 +69,12 @@ export function DataManagement() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-8 rounded-3xl bg-slate-900/40 border border-slate-800 flex flex-col items-center text-center">
-          <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-6">
+        <div className="p-8 rounded-3xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 flex flex-col items-center text-center shadow-sm dark:shadow-none">
+          <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
             <Download className="text-primary" size={32} />
           </div>
-          <h5 className="text-lg font-bold text-white mb-2">Export Backup</h5>
-          <p className="text-xs text-slate-500 mb-8 leading-relaxed">
+          <h5 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Export Backup</h5>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
             Download your data as a JSON file. Keep it safe as a backup.
           </p>
           <Button onClick={handleExport} className="w-full gap-2">
@@ -82,12 +82,12 @@ export function DataManagement() {
           </Button>
         </div>
 
-        <div className="p-8 rounded-3xl bg-slate-900/40 border border-slate-800 flex flex-col items-center text-center">
-          <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mb-6">
+        <div className="p-8 rounded-3xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 flex flex-col items-center text-center shadow-sm dark:shadow-none">
+          <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
             <Upload className="text-emerald-500" size={32} />
           </div>
-          <h5 className="text-lg font-bold text-white mb-2">Import Data</h5>
-          <p className="text-xs text-slate-500 mb-8 leading-relaxed">
+          <h5 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Import Data</h5>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
             Restore your resumes from a previously exported JSON backup.
           </p>
           <input 
@@ -97,7 +97,7 @@ export function DataManagement() {
             className="hidden" 
             accept=".json"
           />
-          <Button onClick={() => fileInputRef.current?.click()} variant="outline" className="w-full gap-2 border-emerald-500/20 text-emerald-500 hover:bg-emerald-500/10">
+          <Button onClick={() => fileInputRef.current?.click()} variant="outline" className="w-full gap-2 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10">
             Select Backup File
           </Button>
         </div>
@@ -107,11 +107,11 @@ export function DataManagement() {
         <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center mb-4">
           <AlertCircle className="text-red-500" size={24} />
         </div>
-        <h5 className="text-lg font-bold text-white mb-2">Danger Zone</h5>
-        <p className="text-xs text-red-500/60 mb-6">
+        <h5 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Danger Zone</h5>
+        <p className="text-xs text-red-600 dark:text-red-400/80 mb-6">
           Wiping all data is permanent. Make sure you have a backup first.
         </p>
-        <Button onClick={handleReset} variant="outline" className="gap-2 border-red-500/20 text-red-500 hover:bg-red-500/10">
+        <Button onClick={handleReset} variant="outline" className="gap-2 border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-500/10">
           <RefreshCcw size={16} /> Reset All Data
         </Button>
       </div>

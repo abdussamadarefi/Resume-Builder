@@ -1,0 +1,192 @@
+[
+  {
+    "id": "nexus",
+    "name": "Nexus",
+    "category": "Modern",
+    "doc_type": "both",
+    "enabled": true,
+    "featured": true,
+    "is_new": false,
+    "ats_score": 96,
+    "accent_color": "#3b82f6",
+    "description": "Balanced 3-column modern layout with a bold accent bar and clean typography. Excellent for tech, engineering, and modern corporate roles.",
+    "best_for": "Tech & Corporate",
+    "tags": [
+      "ATS Top Pick",
+      "Clean Spacing",
+      "Dual Column"
+    ],
+    "order": 0
+  },
+  {
+    "id": "scholar",
+    "name": "Scholar",
+    "category": "Academic",
+    "doc_type": "cv",
+    "enabled": true,
+    "featured": true,
+    "is_new": false,
+    "ats_score": 98,
+    "accent_color": "#8b5cf6",
+    "description": "Designed specifically for researchers, professors, and graduate students. Structured for extensive publication lists, grants, and teaching portfolios.",
+    "best_for": "Academia & Research",
+    "tags": [
+      "Formal Serif",
+      "Publications Grid",
+      "Multi-Page Ready"
+    ],
+    "order": 1
+  },
+  {
+    "id": "arya",
+    "name": "Arya",
+    "category": "Creative",
+    "doc_type": "resume",
+    "enabled": true,
+    "featured": false,
+    "is_new": false,
+    "ats_score": 88,
+    "accent_color": "#e11d48",
+    "description": "Distinctive sidebar layout with photo support and visual skill indicators. Great for UI/UX designers, marketers, and creative roles.",
+    "best_for": "Design & Marketing",
+    "tags": [
+      "Sidebar Layout",
+      "Photo Avatar",
+      "Visual Flair"
+    ],
+    "order": 2
+  },
+  {
+    "id": "atlas",
+    "name": "Atlas",
+    "category": "Professional",
+    "doc_type": "both",
+    "enabled": true,
+    "featured": true,
+    "is_new": false,
+    "ats_score": 94,
+    "accent_color": "#10b981",
+    "description": "Two-column grid with a structured left rail for metadata and expansive right panel for detailed experience narratives.",
+    "best_for": "Mid & Senior Roles",
+    "tags": [
+      "Balanced Grid",
+      "Skills Matrix",
+      "ATS Optimized"
+    ],
+    "order": 3
+  },
+  {
+    "id": "cascade",
+    "name": "Cascade",
+    "category": "Elegant",
+    "doc_type": "resume",
+    "enabled": true,
+    "featured": false,
+    "is_new": false,
+    "ats_score": 92,
+    "accent_color": "#f59e0b",
+    "description": "Refined linear flow with delicate divider accents and spacious line height. Gives a calm, premium executive aesthetic.",
+    "best_for": "Consulting & Finance",
+    "tags": [
+      "Refined Typography",
+      "Subtle Dividers",
+      "Executive Feel"
+    ],
+    "order": 4
+  },
+  {
+    "id": "compact",
+    "name": "Compact",
+    "category": "Minimal",
+    "doc_type": "resume",
+    "enabled": true,
+    "featured": false,
+    "is_new": false,
+    "ats_score": 95,
+    "accent_color": "#06b6d4",
+    "description": "Space-optimized, dense single-page layout engineered to pack comprehensive projects and internships into a clean 1-page format.",
+    "best_for": "Students & Entry-Level",
+    "tags": [
+      "High Density",
+      "1-Page Fit",
+      "Student Favorite"
+    ],
+    "order": 5
+  },
+  {
+    "id": "executive",
+    "name": "Executive",
+    "category": "Premium",
+    "doc_type": "resume",
+    "enabled": true,
+    "featured": false,
+    "is_new": false,
+    "ats_score": 94,
+    "accent_color": "#1e40af",
+    "description": "Authoritative classic layout designed for Directors, VPs, and C-Suite leaders emphasizing leadership outcomes and financial impact.",
+    "best_for": "Leadership & Directors",
+    "tags": [
+      "Authoritative",
+      "Classic Navy",
+      "Outcome Driven"
+    ],
+    "order": 6
+  },
+  {
+    "id": "meridian",
+    "name": "Meridian",
+    "category": "Modern",
+    "doc_type": "both",
+    "enabled": true,
+    "featured": false,
+    "is_new": false,
+    "ats_score": 93,
+    "accent_color": "#7c3aed",
+    "description": "Contemporary split format with prominent role headers and organized skill tags. Very readable and modern.",
+    "best_for": "Product & Engineering",
+    "tags": [
+      "Tag Chips",
+      "Section Badges",
+      "High Readability"
+    ],
+    "order": 7
+  },
+  {
+    "id": "minimo",
+    "name": "Minimo",
+    "category": "Clean",
+    "doc_type": "resume",
+    "enabled": true,
+    "featured": false,
+    "is_new": true,
+    "ats_score": 99,
+    "accent_color": "#64748b",
+    "description": "Pure content-first minimalism with zero distracting elements. The highest possible ATS parsing reliability across all screening engines.",
+    "best_for": "Strict ATS Systems",
+    "tags": [
+      "99% ATS Score",
+      "Ultra Clean",
+      "Zero Clutter"
+    ],
+    "order": 8
+  },
+  {
+    "id": "prism",
+    "name": "Prism",
+    "category": "Bold",
+    "doc_type": "resume",
+    "enabled": true,
+    "featured": false,
+    "is_new": true,
+    "ats_score": 90,
+    "accent_color": "#ec4899",
+    "description": "Modern geometric header with high visual energy and contrasting category titles. Ideal for startups and digital media roles.",
+    "best_for": "Startups & Creative",
+    "tags": [
+      "Bold Header",
+      "Vibrant Accent",
+      "Modern Vibe"
+    ],
+    "order": 9
+  }
+]

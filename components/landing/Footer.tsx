@@ -2,7 +2,8 @@
 
 import React from "react"
 import Link from "next/link"
-import { Mail, Heart } from "lucide-react"
+import { Mail } from "lucide-react"
+import navData from "@/content/navigation.json"
 
 const GithubIcon = ({ size = 24, ...props }: { size?: number } & React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -11,38 +12,35 @@ const GithubIcon = ({ size = 24, ...props }: { size?: number } & React.SVGProps<
   </svg>
 )
 
-const footerSections = [
-  {
-    title: "Product",
-    links: [
-      { label: "Resume Builder", href: "/builder?type=resume" },
-      { label: "CV Builder", href: "/builder?type=cv" },
-      { label: "Templates", href: "/templates" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Articles", href: "/articles" },
-      { label: "Resume Writing Guide", href: "/articles/how-to-write-resume-2025" },
-      { label: "ATS Tips", href: "/articles/ats-friendly-resume-tips" },
-      { label: "Student Guide", href: "/articles/first-resume-guide-students" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "/about" },
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Service", href: "/terms" },
-      { label: "Cookie Policy", href: "/cookies" },
-    ],
-  },
-]
-
 export default function Footer() {
+  const footerData = navData.footer || {
+    product: [
+      { label: "Resume Builder", url: "/builder?type=resume" },
+      { label: "CV Builder", url: "/builder?type=cv" },
+      { label: "Templates", url: "/templates" },
+    ],
+    resources: [
+      { label: "Articles", url: "/articles" },
+    ],
+    company: [
+      { label: "About", url: "/about" },
+    ],
+    legal: [
+      { label: "Privacy Policy", url: "/privacy" },
+      { label: "Terms of Service", url: "/terms" },
+      { label: "Cookie Policy", url: "/cookies" },
+    ],
+  }
+
+  const footerSections = [
+    { title: "Product", links: footerData.product || [] },
+    { title: "Resources", links: footerData.resources || [] },
+    { title: "Company", links: footerData.company || [] },
+    { title: "Legal", links: footerData.legal || [] },
+  ]
+
   return (
-    <footer className="relative z-10 w-full border-t border-slate-800/60 mt-auto">
+    <footer className="relative z-10 w-full border-t border-slate-200 dark:border-slate-800/60 bg-white/40 dark:bg-transparent mt-auto transition-colors duration-200">
       {/* Animated gradient border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 
@@ -55,47 +53,45 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary to-indigo-600 flex items-center justify-center text-white font-bold text-xs tracking-tighter shadow-lg shadow-primary/20">
                 RF
               </div>
-              <span className="font-heading font-extrabold text-lg tracking-tight text-white">
-                Resume<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-400">Forge</span>
+              <span className="font-heading font-extrabold text-lg tracking-tight text-slate-900 dark:text-white">
+                Resume<span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500">Forge</span>
               </span>
             </Link>
-            <p className="text-slate-500 text-xs leading-relaxed mb-6 max-w-[220px]">
-              A privacy-first, zero-cost resume & CV builder. All data stays in your browser. Free and open source.
+            <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-6 max-w-xs">
+              The privacy-first resume and academic CV builder. Zero trackers, 100% free forever.
             </p>
             <div className="flex items-center gap-3">
               <a
-                href="https://github.com/abdussamadarefi/Resume-Builder"
+                href={navData.footer_github_url || "https://github.com/abdussamadarefi/Resume-Builder"}
                 target="_blank"
                 rel="noopener noreferrer"
-                id="footer-github-icon"
-                className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 transition-all"
-                aria-label="GitHub"
+                aria-label="GitHub Repository"
+                className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
               >
-                <GithubIcon size={16} />
+                <GithubIcon size={14} />
               </a>
               <a
                 href="mailto:abdussamadarefi@gmail.com"
-                id="footer-email-icon"
-                className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-700 transition-all"
-                aria-label="Email"
+                aria-label="Contact Email"
+                className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
               >
-                <Mail size={16} />
+                <Mail size={14} />
               </a>
             </div>
           </div>
 
-          {/* Link Columns */}
+          {/* Dynamic Link Columns */}
           {footerSections.map((section) => (
-            <div key={section.title}>
-              <h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-4">
+            <div key={section.title} className="space-y-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-300">
                 {section.title}
-              </h3>
+              </h4>
               <ul className="space-y-2.5">
-                {section.links.map((link) => (
-                  <li key={link.href}>
+                {section.links.map((link: any) => (
+                  <li key={link.label || link.url}>
                     <Link
-                      href={link.href}
-                      className="text-xs text-slate-500 hover:text-white transition-colors font-medium"
+                      href={link.url || link.href}
+                      className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -106,22 +102,14 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Copyright Bar */}
-        <div className="border-t border-slate-900 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[11px] text-slate-600 font-medium">
-            © {new Date().getFullYear()} ResumeForge. Zero auth. Zero cost. All rights reserved.
-          </p>
-          <p className="text-[11px] text-slate-600 font-medium flex items-center gap-1">
-            Made with <Heart size={10} className="text-rose-500 fill-rose-500" /> by{" "}
-            <a
-              href="https://github.com/abdussamadarefi"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-400 hover:text-white transition-colors"
-            >
-              Abdus Samad Arefi
-            </a>
-          </p>
+        {/* Bottom Bar */}
+        <div className="py-6 border-t border-slate-200 dark:border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div className="flex items-center gap-1">
+            <span>{navData.footer_copyright || "© 2026 ResumeForge. All rights reserved."}</span>
+          </div>
+          <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400">
+            <span>{navData.footer_credit || "Created by Abdus Samad Arefi"}</span>
+          </div>
         </div>
       </div>
     </footer>

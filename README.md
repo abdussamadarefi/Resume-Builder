@@ -10,7 +10,7 @@
 
 **A next-generation, zero-backend, privacy-first Resume & Academic CV workspace.**
 
-[Live Demo](https://resumeforge.vercel.app) • [View Templates](https://resumeforge.vercel.app/templates) • [Read Guides](https://resumeforge.vercel.app/articles) • [Report Bug](https://github.com/abdussamadarefi/Resume-Builder/issues)
+[Live Demo](resumee.pro.bd) • [View Templates](https://resumee.pro.bd/templates) • [Read Guides](https://resumee.pro.bd/articles) • [Report Bug](https://github.com/abdussamadarefi/Resume-Builder/issues)
 
 </div>
 

@@ -54,7 +54,8 @@ resumeforge/
 ## Helping with Development
 
 When helping with ResumeForge:
-1. **Maintain Type Safety**: Use the shared interfaces in `types/`.
-2. **Component Reusability**: Add new styling tokens to `settingsStore` rather than hardcoding values.
-3. **Template Consistency**: Ensure new templates support both web (Tailwind) and PDF (@react-pdf/renderer) renderers.
-4. **Performance**: Avoid unnecessary re-renders in the real-time preview.
+1. **Strict User Intent**: When the user asks a question or shares an error/screenshot, ONLY answer with explanation in text. DO NOT touch or modify any code files unless explicitly instructed to code or fix in code.
+2. **Maintain Type Safety**: Use the shared interfaces in `types/`.
+3. **Component Reusability**: Add new styling tokens to `settingsStore` rather than hardcoding values.
+4. **Template Consistency**: Ensure new templates support both web (Tailwind) and PDF (@react-pdf/renderer) renderers.
+5. **Performance**: Avoid unnecessary re-renders in the real-time preview.

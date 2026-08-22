@@ -11,9 +11,11 @@ export interface PageHeaderProps {
   onStage?: () => void;
   saved?: boolean;
   stageLabel?: string;
+  stageButtonText?: string;
   savedLabel?: string;
   disabled?: boolean;
   actions?: React.ReactNode;
+  headerRight?: React.ReactNode;
 }
 
 export function PageHeader({
@@ -24,10 +26,15 @@ export function PageHeader({
   onStage,
   saved = false,
   stageLabel = 'Stage Changes',
+  stageButtonText,
   savedLabel = 'Staged in Draft!',
   disabled = false,
   actions,
+  headerRight,
 }: PageHeaderProps) {
+  const currentStageLabel = stageButtonText || stageLabel;
+  const rightContent = headerRight || actions;
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800/80 pb-5">
       <div>
@@ -39,7 +46,7 @@ export function PageHeader({
       </div>
 
       <div className="flex items-center gap-3">
-        {actions}
+        {rightContent}
 
         {onStage && (
           <button
@@ -56,7 +63,7 @@ export function PageHeader({
             ) : (
               <>
                 <Save size={14} />
-                <span>{stageLabel}</span>
+                <span>{currentStageLabel}</span>
               </>
             )}
           </button>

@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAdminDraftStore } from '@/store/adminDraftStore';
-import { ShieldAlert, Save, CheckCircle2, FileText, Plus, Trash2 } from 'lucide-react';
+import { PageHeader, Card, FormField, TabBar } from '@/components/admin/ui';
+import { ShieldAlert, FileText, Plus, Trash2 } from 'lucide-react';
 import privacyDefault from '@/content/legal/privacy.json';
 import termsDefault from '@/content/legal/terms.json';
 import cookiesDefault from '@/content/legal/cookies.json';
@@ -83,121 +84,80 @@ export default function LegalPagesCMS() {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
-        <div>
-          <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <ShieldAlert className="text-blue-400" size={20} />
-            <span>Legal Policies CMS (/privacy, /terms, /cookies)</span>
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Edit the plain-English summaries, last updated dates, and individual legal clauses.
-          </p>
-        </div>
+      <PageHeader
+        icon={ShieldAlert}
+        iconColor="text-blue-600 dark:text-blue-400"
+        title="Legal Policies CMS (/privacy, /terms, /cookies)"
+        description="Edit the plain-English summaries, last updated dates, and individual legal clauses."
+        onStage={handleStageAll}
+        saved={saved}
+      />
 
-        <button
-          onClick={handleStageAll}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20"
-        >
-          {saved ? (
-            <>
-              <CheckCircle2 size={14} className="text-emerald-300" />
-              <span>Staged in Draft!</span>
-            </>
-          ) : (
-            <>
-              <Save size={14} />
-              <span>Stage All 3 Policies</span>
-            </>
-          )}
-        </button>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-2 border-b border-slate-800/80 pb-3">
-        {[
+      <TabBar
+        tabs={[
           { id: 'privacy', label: 'Privacy Policy' },
           { id: 'terms', label: 'Terms of Service' },
           { id: 'cookies', label: 'Cookie Policy' },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActivePolicy(tab.id as any)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${activePolicy === tab.id
-                ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                : 'text-slate-400 hover:bg-slate-900 hover:text-white'
-              }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+        ]}
+        activeTab={activePolicy}
+        onChange={(id) => setActivePolicy(id as any)}
+      />
 
       {/* Policy Details */}
-      <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-5">
+      <Card title="Policy Header & Highlights" icon={FileText}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-[11px] text-slate-400 mb-1">Badge Text</label>
-            <input
-              type="text"
-              value={current.badge}
-              onChange={(e) => updateCurrentData({ ...current, badge: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs"
-            />
-          </div>
+          <FormField
+            label="Badge Text"
+            value={current.badge}
+            onChange={(e) => updateCurrentData({ ...current, badge: e.target.value })}
+          />
 
-          <div>
-            <label className="block text-[11px] text-slate-400 mb-1">Last Updated Date</label>
-            <input
-              type="text"
-              value={current.last_updated}
-              onChange={(e) => updateCurrentData({ ...current, last_updated: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-[11px] text-slate-400 mb-1">Page Title</label>
-          <input
-            type="text"
-            value={current.title}
-            onChange={(e) => updateCurrentData({ ...current, title: e.target.value })}
-            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs font-bold"
+          <FormField
+            label="Last Updated Date"
+            value={current.last_updated}
+            onChange={(e) => updateCurrentData({ ...current, last_updated: e.target.value })}
           />
         </div>
 
-        <div>
-          <label className="block text-[11px] text-slate-400 mb-1">Subtitle</label>
-          <textarea
-            rows={2}
-            value={current.subtitle}
-            onChange={(e) => updateCurrentData({ ...current, subtitle: e.target.value })}
-            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs leading-relaxed"
-          />
-        </div>
+        <FormField
+          label="Page Title"
+          bold
+          value={current.title}
+          onChange={(e) => updateCurrentData({ ...current, title: e.target.value })}
+        />
+
+        <FormField
+          label="Subtitle"
+          multiline
+          rows={2}
+          value={current.subtitle}
+          onChange={(e) => updateCurrentData({ ...current, subtitle: e.target.value })}
+        />
 
         {/* TL;DR Summary Box */}
-        <div className="p-4 rounded-xl bg-blue-950/30 border border-blue-500/20 space-y-2">
-          <label className="block text-xs font-bold text-blue-300">TL;DR Highlight Summary</label>
-          <textarea
+        <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-500/20 space-y-2">
+          <FormField
+            label="TL;DR Highlight Summary"
+            labelSub="Plain English overview at top of page"
+            multiline
             rows={2}
             value={current.tldr_content}
             onChange={(e) => updateCurrentData({ ...current, tldr_content: e.target.value })}
-            className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-white text-xs leading-relaxed"
           />
         </div>
 
         {/* Clauses Repeater */}
-        <div className="space-y-3 pt-3 border-t border-slate-800/80">
+        <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-slate-800/80">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-              <FileText size={14} className="text-purple-400" />
+            <h3 className="text-xs font-bold text-slate-900 dark:text-slate-200 flex items-center gap-1.5">
+              <FileText size={14} className="text-purple-600 dark:text-purple-400" />
               <span>Policy Clauses ({current.sections.length})</span>
             </h3>
 
             <button
+              type="button"
               onClick={addClause}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors shadow-sm"
             >
               <Plus size={12} />
               <span>Add Clause</span>
@@ -206,12 +166,14 @@ export default function LegalPagesCMS() {
 
           <div className="space-y-3">
             {current.sections.map((sec: any, idx: number) => (
-              <div key={sec.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+              <div key={sec.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 space-y-2 shadow-sm dark:shadow-none">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-slate-400">Clause #{idx + 1}</span>
+                  <span className="text-[11px] font-bold text-slate-500">Clause #{idx + 1}</span>
                   <button
+                    type="button"
                     onClick={() => removeClause(sec.id)}
-                    className="p-1 text-slate-500 hover:text-rose-400"
+                    className="p-1 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                    title="Delete clause"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -225,7 +187,7 @@ export default function LegalPagesCMS() {
                     next[idx].title = e.target.value;
                     updateCurrentData({ ...current, sections: next });
                   }}
-                  className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs font-bold"
+                  className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-blue-500"
                 />
 
                 <textarea
@@ -236,13 +198,13 @@ export default function LegalPagesCMS() {
                     next[idx].content = e.target.value;
                     updateCurrentData({ ...current, sections: next });
                   }}
-                  className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-slate-300 text-xs leading-relaxed"
+                  className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-lg text-slate-700 dark:text-slate-300 text-xs leading-relaxed focus:outline-none focus:border-blue-500"
                 />
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

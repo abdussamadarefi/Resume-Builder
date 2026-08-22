@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAdminDraftStore } from '@/store/adminDraftStore';
-import { Flag, Save, CheckCircle2, Bot, FileText, Download, GraduationCap, Bell, Sparkles } from 'lucide-react';
+import { PageHeader } from '@/components/admin/ui';
+import { Flag, Bot, FileText, Download, GraduationCap, Bell, Sparkles } from 'lucide-react';
 import flagsDefault from '@/content/feature-flags.json';
 
 const flagDescriptions: Record<string, { label: string; desc: string; icon: React.ComponentType<any> }> = {
@@ -64,34 +65,14 @@ export default function FeatureFlagsCMS() {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
-        <div>
-          <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <Flag className="text-amber-400" size={20} />
-            <span>Feature Flags & Remote Switches</span>
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Toggle platform capabilities on or off with zero code modifications. Changes deploy on next push.
-          </p>
-        </div>
-
-        <button
-          onClick={handleStage}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20"
-        >
-          {saved ? (
-            <>
-              <CheckCircle2 size={14} className="text-emerald-300" />
-              <span>Staged in Draft!</span>
-            </>
-          ) : (
-            <>
-              <Save size={14} />
-              <span>Stage Changes</span>
-            </>
-          )}
-        </button>
-      </div>
+      <PageHeader
+        icon={Flag}
+        iconColor="text-amber-500"
+        title="Feature Flags & Remote Switches"
+        description="Toggle platform capabilities on or off with zero code modifications. Changes deploy on next push."
+        onStage={handleStage}
+        saved={saved}
+      />
 
       <div className="space-y-3">
         {Object.entries(flags).map(([key, enabled]) => {
@@ -105,35 +86,39 @@ export default function FeatureFlagsCMS() {
           return (
             <div
               key={key}
-              className="p-5 rounded-2xl bg-slate-900/40 border border-slate-800/80 flex items-center justify-between gap-4"
+              className="p-5 rounded-2xl bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 flex items-center justify-between gap-4 shadow-sm dark:shadow-none transition-colors"
             >
               <div className="flex items-start gap-3.5">
                 <div
-                  className={`p-2.5 rounded-xl border mt-0.5 ${enabled
-                      ? 'bg-blue-500/10 border-blue-500/20 text-blue-400'
-                      : 'bg-slate-950 border-slate-800 text-slate-500'
-                    }`}
+                  className={`p-2.5 rounded-xl border mt-0.5 ${
+                    enabled
+                      ? 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400'
+                      : 'bg-slate-100 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500'
+                  }`}
                 >
                   <Icon size={18} />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-white">{meta.label}</span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">{meta.label}</span>
                     <span className="text-[10px] font-mono text-slate-500">({key})</span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">{meta.desc}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">{meta.desc}</p>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={() => handleToggle(key)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${enabled ? 'bg-blue-600' : 'bg-slate-800'
-                  }`}
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  enabled ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-800'
+                }`}
+                aria-label={`Toggle ${meta.label}`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${enabled ? 'translate-x-5' : 'translate-x-0'
-                    }`}
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    enabled ? 'translate-x-5' : 'translate-x-0'
+                  }`}
                 />
               </button>
             </div>

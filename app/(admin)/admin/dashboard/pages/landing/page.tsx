@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAdminDraftStore } from '@/store/adminDraftStore';
+import { PageHeader, Card, FormField, TabBar } from '@/components/admin/ui';
 import {
   Layers,
-  Save,
-  CheckCircle2,
   Plus,
   Trash2,
   Eye,
@@ -15,6 +14,7 @@ import {
   Sparkles,
   HelpCircle,
   MessageSquare,
+  BarChart3,
 } from 'lucide-react';
 import landingDefault from '@/content/landing.json';
 import testimonialsDefault from '@/content/testimonials.json';
@@ -23,7 +23,6 @@ import faqsDefault from '@/content/faqs.json';
 export default function LandingPageCMS() {
   const { stageFile, stagedFiles } = useAdminDraftStore();
 
-  // Load from draft if staged, otherwise default
   const [landing, setLanding] = useState(() => {
     if (stagedFiles['content/landing.json']) {
       try {
@@ -63,7 +62,6 @@ export default function LandingPageCMS() {
     setTimeout(() => setSavedStatus(false), 2500);
   };
 
-  // Section toggle helper
   const toggleSection = (id: string) => {
     setLanding((prev: any) => ({
       ...prev,
@@ -73,7 +71,6 @@ export default function LandingPageCMS() {
     }));
   };
 
-  // Section move helper
   const moveSection = (index: number, direction: 'up' | 'down') => {
     setLanding((prev: any) => {
       const newSections = [...prev.sections];
@@ -91,19 +88,14 @@ export default function LandingPageCMS() {
     });
   };
 
-  // Testimonial helpers
   const addTestimonial = () => {
     const newT = {
       id: `t_${Date.now()}`,
       author_name: 'New Reviewer',
       role: 'Student / Professional',
       company_or_school: 'University or Company',
-      quote: 'Great experience using ResumeForge!',
-      rating: 5,
-      tag: 'Student',
-      avatar_url: '',
-      enabled: true,
-      order: testimonials.length,
+      quote: 'Great platform! Created my resume in minutes.',
+      tag: 'Professional',
     };
     setTestimonials([...testimonials, newT]);
   };
@@ -112,15 +104,12 @@ export default function LandingPageCMS() {
     setTestimonials(testimonials.filter((t: any) => t.id !== id));
   };
 
-  // FAQ helpers
   const addFaq = () => {
     const newF = {
       id: `faq_${Date.now()}`,
-      question: 'New Question?',
-      answer: 'Answer text goes here...',
       category: 'General',
-      enabled: true,
-      order: faqs.length,
+      question: 'New Question Title',
+      answer: 'Detailed explanation answer goes here.',
     };
     setFaqs([...faqs, newF]);
   };
@@ -131,258 +120,184 @@ export default function LandingPageCMS() {
 
   return (
     <div className="space-y-6">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
-        <div>
-          <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <Layers className="text-blue-400" size={20} />
-            <span>Landing Page CMS Controller</span>
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Edit hero copy, toggle & reorder 10 sections, update stats, reviews, and FAQs.
-          </p>
-        </div>
+      <PageHeader
+        icon={Layers}
+        iconColor="text-blue-600 dark:text-blue-400"
+        title="Landing Page CMS Controller"
+        description="Edit hero copy, toggle & reorder 10 sections, update stats, reviews, and FAQs."
+        onStage={handleStageAll}
+        saved={savedStatus}
+      />
 
-        <button
-          onClick={handleStageAll}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20"
-        >
-          {savedStatus ? (
-            <>
-              <CheckCircle2 size={14} className="text-emerald-300" />
-              <span>Staged in Draft!</span>
-            </>
-          ) : (
-            <>
-              <Save size={14} />
-              <span>Stage Changes</span>
-            </>
-          )}
-        </button>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-2 border-b border-slate-800/80 pb-3">
-        {[
+      <TabBar
+        tabs={[
           { id: 'hero', label: 'Hero Copy & CTAs' },
           { id: 'sections', label: '10-Section Toggles & Order' },
           { id: 'stats', label: 'Stats Counter Bar' },
           { id: 'testimonials', label: `Testimonials (${testimonials.length})` },
           { id: 'faqs', label: `FAQs (${faqs.length})` },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === tab.id
-                ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                : 'text-slate-400 hover:bg-slate-900 hover:text-white'
-              }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+        ]}
+        activeTab={activeTab}
+        onChange={(id) => setActiveTab(id as any)}
+      />
 
       {/* TAB 1: HERO */}
       {activeTab === 'hero' && (
-        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-5">
-          <h2 className="text-sm font-bold text-white flex items-center gap-2">
-            <Sparkles size={16} className="text-blue-400" />
-            <span>Hero Header & Call-to-Actions</span>
-          </h2>
-
+        <Card title="Hero Header & Call-to-Actions" icon={Sparkles}>
           <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Top Badge Text
-              </label>
-              <input
-                type="text"
-                value={landing.hero.badge_text}
-                onChange={(e) =>
-                  setLanding({
-                    ...landing,
-                    hero: { ...landing.hero, badge_text: e.target.value },
-                  })
-                }
-                className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-slate-800 focus:border-blue-500 rounded-xl text-white text-xs"
-              />
-            </div>
+            <FormField
+              label="Top Badge Text"
+              value={landing.hero.badge_text}
+              onChange={(e) =>
+                setLanding({
+                  ...landing,
+                  hero: { ...landing.hero, badge_text: e.target.value },
+                })
+              }
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Headline (Line 1)
-                </label>
-                <input
-                  type="text"
-                  value={landing.hero.headline_line1}
-                  onChange={(e) =>
-                    setLanding({
-                      ...landing,
-                      hero: { ...landing.hero, headline_line1: e.target.value },
-                    })
-                  }
-                  className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-slate-800 focus:border-blue-500 rounded-xl text-white text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Headline (Gradient Highlight Text)
-                </label>
-                <input
-                  type="text"
-                  value={landing.hero.headline_gradient}
-                  onChange={(e) =>
-                    setLanding({
-                      ...landing,
-                      hero: { ...landing.hero, headline_gradient: e.target.value },
-                    })
-                  }
-                  className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-slate-800 focus:border-blue-500 rounded-xl text-white text-xs"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Subheadline Paragraph
-              </label>
-              <textarea
-                rows={3}
-                value={landing.hero.subheadline}
+              <FormField
+                label="Headline (Line 1)"
+                value={landing.hero.headline_line1}
                 onChange={(e) =>
                   setLanding({
                     ...landing,
-                    hero: { ...landing.hero, subheadline: e.target.value },
+                    hero: { ...landing.hero, headline_line1: e.target.value },
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-slate-800 focus:border-blue-500 rounded-xl text-white text-xs leading-relaxed"
+              />
+
+              <FormField
+                label="Headline (Gradient Highlight Text)"
+                value={landing.hero.headline_gradient}
+                onChange={(e) =>
+                  setLanding({
+                    ...landing,
+                    hero: { ...landing.hero, headline_gradient: e.target.value },
+                  })
+                }
               />
             </div>
 
+            <FormField
+              label="Subheadline Paragraph"
+              multiline
+              rows={3}
+              value={landing.hero.subheadline}
+              onChange={(e) =>
+                setLanding({
+                  ...landing,
+                  hero: { ...landing.hero, subheadline: e.target.value },
+                })
+              }
+            />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-3">
-                <span className="text-xs font-bold text-blue-400">Primary CTA Button</span>
-                <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">Button Text</label>
-                  <input
-                    type="text"
-                    value={landing.hero.cta_primary_text}
-                    onChange={(e) =>
-                      setLanding({
-                        ...landing,
-                        hero: { ...landing.hero, cta_primary_text: e.target.value },
-                      })
-                    }
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-white text-xs"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">Target URL</label>
-                  <input
-                    type="text"
-                    value={landing.hero.cta_primary_url}
-                    onChange={(e) =>
-                      setLanding({
-                        ...landing,
-                        hero: { ...landing.hero, cta_primary_url: e.target.value },
-                      })
-                    }
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-white text-xs"
-                  />
-                </div>
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-3 shadow-sm dark:shadow-none">
+                <span className="text-xs font-bold text-blue-600 dark:text-blue-400">Primary CTA Button</span>
+                <FormField
+                  label="Button Text"
+                  value={landing.hero.cta_primary_text}
+                  onChange={(e) =>
+                    setLanding({
+                      ...landing,
+                      hero: { ...landing.hero, cta_primary_text: e.target.value },
+                    })
+                  }
+                />
+                <FormField
+                  label="Target URL"
+                  value={landing.hero.cta_primary_url}
+                  onChange={(e) =>
+                    setLanding({
+                      ...landing,
+                      hero: { ...landing.hero, cta_primary_url: e.target.value },
+                    })
+                  }
+                />
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-3">
-                <span className="text-xs font-bold text-purple-400">Secondary CTA Button</span>
-                <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">Button Text</label>
-                  <input
-                    type="text"
-                    value={landing.hero.cta_secondary_text}
-                    onChange={(e) =>
-                      setLanding({
-                        ...landing,
-                        hero: { ...landing.hero, cta_secondary_text: e.target.value },
-                      })
-                    }
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-white text-xs"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">Target URL</label>
-                  <input
-                    type="text"
-                    value={landing.hero.cta_secondary_url}
-                    onChange={(e) =>
-                      setLanding({
-                        ...landing,
-                        hero: { ...landing.hero, cta_secondary_url: e.target.value },
-                      })
-                    }
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-white text-xs"
-                  />
-                </div>
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-3 shadow-sm dark:shadow-none">
+                <span className="text-xs font-bold text-purple-600 dark:text-purple-400">Secondary CTA Button</span>
+                <FormField
+                  label="Button Text"
+                  value={landing.hero.cta_secondary_text}
+                  onChange={(e) =>
+                    setLanding({
+                      ...landing,
+                      hero: { ...landing.hero, cta_secondary_text: e.target.value },
+                    })
+                  }
+                />
+                <FormField
+                  label="Target URL"
+                  value={landing.hero.cta_secondary_url}
+                  onChange={(e) =>
+                    setLanding({
+                      ...landing,
+                      hero: { ...landing.hero, cta_secondary_url: e.target.value },
+                    })
+                  }
+                />
               </div>
             </div>
           </div>
-        </div>
+        </Card>
       )}
 
       {/* TAB 2: SECTIONS TOGGLES & ORDER */}
       {activeTab === 'sections' && (
-        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-white">
-              Landing Page Sections (Enable / Disable & Reorder)
-            </h2>
-            <span className="text-[11px] text-slate-500">10 Sections Total</span>
-          </div>
-
+        <Card title="Landing Page Sections (Enable / Disable & Reorder)" headerRight={<span className="text-[11px] text-slate-500">10 Sections Total</span>}>
           <div className="space-y-2">
             {landing.sections.map((sec: any, index: number) => (
               <div
                 key={sec.id}
-                className={`p-3.5 rounded-xl border flex items-center justify-between transition-all ${sec.enabled
-                    ? 'bg-slate-950/80 border-slate-800/80'
-                    : 'bg-slate-950/30 border-slate-800/40 opacity-60'
-                  }`}
+                className={`p-3.5 rounded-xl border flex items-center justify-between transition-all shadow-sm dark:shadow-none ${
+                  sec.enabled
+                    ? 'bg-slate-50 dark:bg-slate-950/80 border-slate-200 dark:border-slate-800/80'
+                    : 'bg-slate-100/50 dark:bg-slate-950/30 border-slate-200 dark:border-slate-800/40 opacity-60'
+                }`}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-[10px] font-mono text-slate-500 w-5">
                     {index + 1}.
                   </span>
                   <div>
-                    <span className="text-xs font-bold text-white">{sec.title}</span>
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">{sec.title}</span>
                     <span className="text-[10px] text-slate-500 ml-2 font-mono">id: {sec.id}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     onClick={() => moveSection(index, 'up')}
                     disabled={index === 0}
-                    className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white disabled:opacity-30"
+                    className="p-1.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 disabled:opacity-30 transition-colors"
+                    title="Move up"
                   >
                     <MoveUp size={14} />
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => moveSection(index, 'down')}
                     disabled={index === landing.sections.length - 1}
-                    className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white disabled:opacity-30"
+                    className="p-1.5 rounded-lg bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 disabled:opacity-30 transition-colors"
+                    title="Move down"
                   >
                     <MoveDown size={14} />
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => toggleSection(sec.id)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${sec.enabled
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                        : 'bg-slate-800 text-slate-400'
-                      }`}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                      sec.enabled
+                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                        : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                    }`}
                   >
                     {sec.enabled ? <Eye size={12} /> : <EyeOff size={12} />}
                     <span>{sec.enabled ? 'Visible' : 'Hidden'}</span>
@@ -391,24 +306,22 @@ export default function LandingPageCMS() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* TAB 3: STATS */}
       {activeTab === 'stats' && (
-        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
-          <h2 className="text-sm font-bold text-white">Stats Counter Cards (4 Metrics)</h2>
-
+        <Card title="Stats Counter Cards (4 Metrics)" icon={BarChart3}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {landing.stats.map((st: any, idx: number) => (
-              <div key={st.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-3">
+              <div key={st.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 space-y-3 shadow-sm dark:shadow-none">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-blue-400">Stat #{idx + 1} ({st.id})</span>
+                  <span className="text-xs font-bold text-blue-600 dark:text-blue-400">Stat #{idx + 1} ({st.id})</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-[10px] text-slate-400 mb-1">Value Display</label>
+                    <label className="block text-[10px] font-bold text-slate-700 dark:text-slate-400 mb-1">Value Display</label>
                     <input
                       type="text"
                       value={st.value}
@@ -417,12 +330,12 @@ export default function LandingPageCMS() {
                         newStats[idx].value = e.target.value;
                         setLanding({ ...landing, stats: newStats });
                       }}
-                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
+                      className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] text-slate-400 mb-1">Main Label</label>
+                    <label className="block text-[10px] font-bold text-slate-700 dark:text-slate-400 mb-1">Main Label</label>
                     <input
                       type="text"
                       value={st.label}
@@ -431,13 +344,13 @@ export default function LandingPageCMS() {
                         newStats[idx].label = e.target.value;
                         setLanding({ ...landing, stats: newStats });
                       }}
-                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
+                      className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[10px] text-slate-400 mb-1">Sublabel Description</label>
+                  <label className="block text-[10px] font-bold text-slate-700 dark:text-slate-400 mb-1">Sublabel Description</label>
                   <input
                     type="text"
                     value={st.sublabel}
@@ -446,38 +359,37 @@ export default function LandingPageCMS() {
                       newStats[idx].sublabel = e.target.value;
                       setLanding({ ...landing, stats: newStats });
                     }}
-                    className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
+                    className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* TAB 4: TESTIMONIALS */}
       {activeTab === 'testimonials' && (
-        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <MessageSquare size={16} className="text-purple-400" />
-              <span>User Testimonials & Reviews</span>
-            </h2>
+        <Card
+          title="User Testimonials & Reviews"
+          icon={MessageSquare}
+          headerRight={
             <button
+              type="button"
               onClick={addTestimonial}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 text-xs font-bold hover:bg-blue-600/30"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 transition-colors shadow-sm"
             >
               <Plus size={13} />
               <span>Add Review Card</span>
             </button>
-          </div>
-
+          }
+        >
           <div className="space-y-3">
             {testimonials.map((t: any, idx: number) => (
-              <div key={t.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-3">
+              <div key={t.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 space-y-3 shadow-sm dark:shadow-none">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-white">#{idx + 1}</span>
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">#{idx + 1}</span>
                     <input
                       type="text"
                       value={t.author_name}
@@ -487,7 +399,7 @@ export default function LandingPageCMS() {
                         setTestimonials(next);
                       }}
                       placeholder="Author Name"
-                      className="px-2 py-1 bg-slate-900 border border-slate-800 rounded text-white text-xs font-bold"
+                      className="px-2 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-900 dark:text-white text-xs font-bold focus:outline-none focus:border-blue-500"
                     />
                   </div>
 
@@ -499,7 +411,7 @@ export default function LandingPageCMS() {
                         next[idx].tag = e.target.value;
                         setTestimonials(next);
                       }}
-                      className="px-2 py-1 bg-slate-900 border border-slate-800 rounded text-xs text-slate-300"
+                      className="px-2 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-xs text-slate-700 dark:text-slate-300 focus:outline-none"
                     >
                       <option value="Student">Student</option>
                       <option value="Academic">Academic</option>
@@ -508,8 +420,10 @@ export default function LandingPageCMS() {
                     </select>
 
                     <button
+                      type="button"
                       onClick={() => removeTestimonial(t.id)}
-                      className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
+                      className="p-1 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                      title="Delete review"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -526,7 +440,7 @@ export default function LandingPageCMS() {
                       setTestimonials(next);
                     }}
                     placeholder="Role / Title"
-                    className="px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
+                    className="px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                   />
                   <input
                     type="text"
@@ -537,7 +451,7 @@ export default function LandingPageCMS() {
                       setTestimonials(next);
                     }}
                     placeholder="School or Company"
-                    className="px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
+                    className="px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-900 dark:text-white text-xs focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
@@ -550,36 +464,35 @@ export default function LandingPageCMS() {
                     setTestimonials(next);
                   }}
                   placeholder="Review quote..."
-                  className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs leading-relaxed"
+                  className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-800 dark:text-white text-xs leading-relaxed focus:outline-none focus:border-blue-500"
                 />
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* TAB 5: FAQS */}
       {activeTab === 'faqs' && (
-        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <HelpCircle size={16} className="text-amber-400" />
-              <span>FAQ Accordion Q&A</span>
-            </h2>
+        <Card
+          title="FAQ Accordion Q&A"
+          icon={HelpCircle}
+          headerRight={
             <button
+              type="button"
               onClick={addFaq}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 text-xs font-bold hover:bg-blue-600/30"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 transition-colors shadow-sm"
             >
               <Plus size={13} />
               <span>Add Question</span>
             </button>
-          </div>
-
+          }
+        >
           <div className="space-y-3">
             {faqs.map((f: any, idx: number) => (
-              <div key={f.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5">
+              <div key={f.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 space-y-2.5 shadow-sm dark:shadow-none">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-400">Q#{idx + 1}</span>
+                  <span className="text-xs font-bold text-amber-600 dark:text-amber-400">Q#{idx + 1}</span>
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
@@ -590,11 +503,13 @@ export default function LandingPageCMS() {
                         setFaqs(next);
                       }}
                       placeholder="Category"
-                      className="px-2 py-0.5 bg-slate-900 border border-slate-800 rounded text-[11px] text-slate-400"
+                      className="px-2 py-0.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-[11px] text-slate-700 dark:text-slate-300 focus:outline-none focus:border-blue-500"
                     />
                     <button
+                      type="button"
                       onClick={() => removeFaq(f.id)}
-                      className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
+                      className="p-1 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                      title="Delete FAQ"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -610,7 +525,7 @@ export default function LandingPageCMS() {
                     setFaqs(next);
                   }}
                   placeholder="Question text"
-                  className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs font-semibold"
+                  className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:border-blue-500"
                 />
 
                 <textarea
@@ -622,12 +537,12 @@ export default function LandingPageCMS() {
                     setFaqs(next);
                   }}
                   placeholder="Answer text..."
-                  className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-slate-300 text-xs leading-relaxed"
+                  className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-800 dark:text-slate-300 text-xs leading-relaxed focus:outline-none focus:border-blue-500"
                 />
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );

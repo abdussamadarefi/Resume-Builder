@@ -10,6 +10,7 @@ export interface CardProps {
   iconColor?: string;
   badge?: string | React.ReactNode;
   action?: React.ReactNode;
+  headerRight?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 }
@@ -21,10 +22,12 @@ export function Card({
   iconColor = 'text-blue-600 dark:text-blue-400',
   badge,
   action,
+  headerRight,
   children,
   className,
 }: CardProps) {
-  const hasHeader = title || Icon || badge || action;
+  const rightAction = action || headerRight;
+  const hasHeader = title || Icon || badge || rightAction;
 
   return (
     <div
@@ -47,7 +50,7 @@ export function Card({
             )}
           </div>
 
-          {action && <div className="flex items-center gap-2">{action}</div>}
+          {rightAction && <div className="flex items-center gap-2">{rightAction}</div>}
         </div>
       )}
 

@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAdminDraftStore } from '@/store/adminDraftStore';
-import { Navigation, Save, CheckCircle2, Plus, Trash2, Globe } from 'lucide-react';
+import { PageHeader, Card, FormField } from '@/components/admin/ui';
+import { Navigation, Plus, Trash2 } from 'lucide-react';
 import navigationDefault from '@/content/navigation.json';
 
 export default function NavigationPageCMS() {
@@ -42,51 +43,32 @@ export default function NavigationPageCMS() {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
-        <div>
-          <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <Navigation className="text-blue-400" size={20} />
-            <span>Navigation & Footer Controller</span>
-          </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Configure header navigation links, navbar CTA button, footer link columns, and copyright statement.
-          </p>
-        </div>
-
-        <button
-          onClick={handleStage}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20"
-        >
-          {saved ? (
-            <>
-              <CheckCircle2 size={14} className="text-emerald-300" />
-              <span>Staged in Draft!</span>
-            </>
-          ) : (
-            <>
-              <Save size={14} />
-              <span>Stage Changes</span>
-            </>
-          )}
-        </button>
-      </div>
+      <PageHeader
+        icon={Navigation}
+        iconColor="text-blue-600 dark:text-blue-400"
+        title="Navigation & Footer Controller"
+        description="Configure header navigation links, navbar CTA button, footer link columns, and copyright statement."
+        onStage={handleStage}
+        saved={saved}
+      />
 
       {/* Navbar Links */}
-      <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-white">Header Navbar Links</h2>
+      <Card
+        title="Header Navbar Links"
+        headerRight={
           <button
+            type="button"
             onClick={addNavbarLink}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 text-xs font-semibold"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors shadow-sm"
           >
             <Plus size={13} />
             <span>Add Link</span>
           </button>
-        </div>
-
+        }
+      >
         <div className="space-y-2.5">
           {nav.navbar.map((link: any, idx: number) => (
-            <div key={link.id} className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-3">
+            <div key={link.id} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 shadow-sm dark:shadow-none">
               <div className="flex items-center gap-3 flex-1">
                 <input
                   type="text"
@@ -97,7 +79,7 @@ export default function NavigationPageCMS() {
                     setNav({ ...nav, navbar: next });
                   }}
                   placeholder="Label"
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs font-medium w-1/3"
+                  className="px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-900 dark:text-white text-xs font-medium w-1/3 focus:outline-none focus:border-blue-500"
                 />
                 <input
                   type="text"
@@ -108,13 +90,15 @@ export default function NavigationPageCMS() {
                     setNav({ ...nav, navbar: next });
                   }}
                   placeholder="URL (e.g. /templates)"
-                  className="px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-slate-300 text-xs font-mono flex-1"
+                  className="px-2.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded text-slate-700 dark:text-slate-300 text-xs font-mono flex-1 focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <button
+                type="button"
                 onClick={() => removeNavbarLink(link.id)}
-                className="p-1 text-slate-500 hover:text-rose-400"
+                className="p-1 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                title="Delete link"
               >
                 <Trash2 size={14} />
               </button>
@@ -123,63 +107,47 @@ export default function NavigationPageCMS() {
         </div>
 
         {/* Navbar CTA Button */}
-        <div className="pt-3 border-t border-slate-800/80">
-          <label className="block text-xs font-bold text-blue-400 mb-2">Navbar Primary Action Button</label>
+        <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800/80">
+          <label className="block text-xs font-bold text-blue-600 dark:text-blue-400 mb-2">Navbar Primary Action Button</label>
           <div className="grid grid-cols-2 gap-3">
-            <input
-              type="text"
+            <FormField
+              label="Button Label"
               value={nav.navbar_cta.label}
               onChange={(e) => setNav({ ...nav, navbar_cta: { ...nav.navbar_cta, label: e.target.value } })}
-              placeholder="Button Label"
-              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs"
             />
-            <input
-              type="text"
+            <FormField
+              label="Target URL"
+              mono
               value={nav.navbar_cta.url}
               onChange={(e) => setNav({ ...nav, navbar_cta: { ...nav.navbar_cta, url: e.target.value } })}
-              placeholder="Target URL"
-              className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs font-mono"
             />
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Footer Settings */}
-      <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
-        <h2 className="text-sm font-bold text-white">Footer Copy & Credits</h2>
+      <Card title="Footer Copy & Credits">
+        <div className="space-y-4">
+          <FormField
+            label="Copyright Notice"
+            value={nav.footer_copyright}
+            onChange={(e) => setNav({ ...nav, footer_copyright: e.target.value })}
+          />
 
-        <div className="space-y-3">
-          <div>
-            <label className="block text-[11px] text-slate-400 mb-1">Copyright Notice</label>
-            <input
-              type="text"
-              value={nav.footer_copyright}
-              onChange={(e) => setNav({ ...nav, footer_copyright: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs"
-            />
-          </div>
+          <FormField
+            label="Creator Attribution Text"
+            value={nav.footer_credit}
+            onChange={(e) => setNav({ ...nav, footer_credit: e.target.value })}
+          />
 
-          <div>
-            <label className="block text-[11px] text-slate-400 mb-1">Creator Attribution Text</label>
-            <input
-              type="text"
-              value={nav.footer_credit}
-              onChange={(e) => setNav({ ...nav, footer_credit: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs"
-            />
-          </div>
-
-          <div>
-            <label className="block text-[11px] text-slate-400 mb-1">GitHub Repo URL</label>
-            <input
-              type="text"
-              value={nav.footer_github_url}
-              onChange={(e) => setNav({ ...nav, footer_github_url: e.target.value })}
-              className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs font-mono"
-            />
-          </div>
+          <FormField
+            label="GitHub Repo URL"
+            mono
+            value={nav.footer_github_url}
+            onChange={(e) => setNav({ ...nav, footer_github_url: e.target.value })}
+          />
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

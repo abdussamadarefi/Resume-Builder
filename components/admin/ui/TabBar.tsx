@@ -12,17 +12,20 @@ export interface TabItem {
 
 export interface TabBarProps {
   tabs: TabItem[];
-  active: string;
+  active?: string;
+  activeTab?: string;
   onChange: (tabId: any) => void;
   className?: string;
 }
 
-export function TabBar({ tabs, active, onChange, className }: TabBarProps) {
+export function TabBar({ tabs, active, activeTab, onChange, className }: TabBarProps) {
+  const currentActive = active || activeTab;
+
   return (
     <div className={cn('flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800/80 pb-3', className)}>
       {tabs.map((tab) => {
         const Icon = tab.icon;
-        const isActive = active === tab.id;
+        const isActive = currentActive === tab.id;
         return (
           <button
             key={tab.id}

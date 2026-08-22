@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdminDraftStore } from '@/store/adminDraftStore';
-import { useDraftState } from '@/hooks/useDraftState';
-import { PageHeader, TabBar, Card, FormField } from '@/components/admin/ui';
 import {
   Layers,
+  Save,
+  CheckCircle2,
   Plus,
   Trash2,
   Eye,
@@ -15,18 +15,41 @@ import {
   Sparkles,
   HelpCircle,
   MessageSquare,
-  BarChart3,
 } from 'lucide-react';
 import landingDefault from '@/content/landing.json';
 import testimonialsDefault from '@/content/testimonials.json';
 import faqsDefault from '@/content/faqs.json';
 
 export default function LandingPageCMS() {
-  const { stageFile } = useAdminDraftStore();
+  const { stageFile, stagedFiles } = useAdminDraftStore();
 
-  const [landing, setLanding] = useDraftState('content/landing.json', landingDefault);
-  const [testimonials, setTestimonials] = useDraftState('content/testimonials.json', testimonialsDefault);
-  const [faqs, setFaqs] = useDraftState('content/faqs.json', faqsDefault);
+  // Load from draft if staged, otherwise default
+  const [landing, setLanding] = useState(() => {
+    if (stagedFiles['content/landing.json']) {
+      try {
+        return JSON.parse(stagedFiles['content/landing.json'].content);
+      } catch { }
+    }
+    return landingDefault;
+  });
+
+  const [testimonials, setTestimonials] = useState(() => {
+    if (stagedFiles['content/testimonials.json']) {
+      try {
+        return JSON.parse(stagedFiles['content/testimonials.json'].content);
+      } catch { }
+    }
+    return testimonialsDefault;
+  });
+
+  const [faqs, setFaqs] = useState(() => {
+    if (stagedFiles['content/faqs.json']) {
+      try {
+        return JSON.parse(stagedFiles['content/faqs.json'].content);
+      } catch { }
+    }
+    return faqsDefault;
+  });
 
   const [activeTab, setActiveTab] = useState<'hero' | 'sections' | 'stats' | 'testimonials' | 'faqs'>('hero');
   const [savedStatus, setSavedStatus] = useState(false);
@@ -40,6 +63,7 @@ export default function LandingPageCMS() {
     setTimeout(() => setSavedStatus(false), 2500);
   };
 
+  // Section toggle helper
   const toggleSection = (id: string) => {
     setLanding((prev: any) => ({
       ...prev,
@@ -49,6 +73,7 @@ export default function LandingPageCMS() {
     }));
   };
 
+  // Section move helper
   const moveSection = (index: number, direction: 'up' | 'down') => {
     setLanding((prev: any) => {
       const newSections = [...prev.sections];
@@ -66,6 +91,7 @@ export default function LandingPageCMS() {
     });
   };
 
+  // Testimonial helpers
   const addTestimonial = () => {
     const newT = {
       id: `t_${Date.now()}`,
@@ -86,6 +112,7 @@ export default function LandingPageCMS() {
     setTestimonials(testimonials.filter((t: any) => t.id !== id));
   };
 
+  // FAQ helpers
   const addFaq = () => {
     const newF = {
       id: `faq_${Date.now()}`,
@@ -104,189 +131,258 @@ export default function LandingPageCMS() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        icon={Layers}
-        title="Landing Page & Homepage CMS"
-        description="Edit Hero headlines, reorder homepage feature sections, manage live counter statistics, reviews, and FAQs."
-        onStage={handleStageAll}
-        saved={savedStatus}
-      />
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
+        <div>
+          <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+            <Layers className="text-blue-400" size={20} />
+            <span>Landing Page CMS Controller</span>
+          </h1>
+          <p className="text-xs text-slate-400 mt-1">
+            Edit hero copy, toggle & reorder 10 sections, update stats, reviews, and FAQs.
+          </p>
+        </div>
 
-      <TabBar
-        active={activeTab}
-        onChange={setActiveTab}
-        tabs={[
-          { id: 'hero', label: 'Hero Header', icon: Sparkles },
-          { id: 'sections', label: '10-Section Layout & Toggles', count: landing.sections?.length, icon: Layers },
-          { id: 'stats', label: 'Live Stats Counters', count: landing.stats?.length, icon: BarChart3 },
-          { id: 'testimonials', label: 'User Testimonials', count: testimonials.length, icon: MessageSquare },
-          { id: 'faqs', label: 'FAQ Accordions', count: faqs.length, icon: HelpCircle },
-        ]}
-      />
+        <button
+          onClick={handleStageAll}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-500/20"
+        >
+          {savedStatus ? (
+            <>
+              <CheckCircle2 size={14} className="text-emerald-300" />
+              <span>Staged in Draft!</span>
+            </>
+          ) : (
+            <>
+              <Save size={14} />
+              <span>Stage Changes</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex flex-wrap gap-2 border-b border-slate-800/80 pb-3">
+        {[
+          { id: 'hero', label: 'Hero Copy & CTAs' },
+          { id: 'sections', label: '10-Section Toggles & Order' },
+          { id: 'stats', label: 'Stats Counter Bar' },
+          { id: 'testimonials', label: `Testimonials (${testimonials.length})` },
+          { id: 'faqs', label: `FAQs (${faqs.length})` },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${activeTab === tab.id
+                ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+                : 'text-slate-400 hover:bg-slate-900 hover:text-white'
+              }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
       {/* TAB 1: HERO */}
       {activeTab === 'hero' && (
-        <Card title="Hero Showcase Headline & Callouts" icon={Sparkles}>
+        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-5">
+          <h2 className="text-sm font-bold text-white flex items-center gap-2">
+            <Sparkles size={16} className="text-blue-400" />
+            <span>Hero Header & Call-to-Actions</span>
+          </h2>
+
           <div className="space-y-4">
-            <FormField
-              label="Badge / Announcement Pill Text"
-              value={landing.hero.badge_text}
-              onChange={(e) =>
-                setLanding({
-                  ...landing,
-                  hero: { ...landing.hero, badge_text: e.target.value },
-                })
-              }
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                label="Main Headline Line 1"
-                value={landing.hero.headline_line1}
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Top Badge Text
+              </label>
+              <input
+                type="text"
+                value={landing.hero.badge_text}
                 onChange={(e) =>
                   setLanding({
                     ...landing,
-                    hero: { ...landing.hero, headline_line1: e.target.value },
+                    hero: { ...landing.hero, badge_text: e.target.value },
                   })
                 }
-              />
-
-              <FormField
-                label="Headline (Gradient Highlight Text)"
-                value={landing.hero.headline_gradient}
-                onChange={(e) =>
-                  setLanding({
-                    ...landing,
-                    hero: { ...landing.hero, headline_gradient: e.target.value },
-                  })
-                }
+                className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-slate-800 focus:border-blue-500 rounded-xl text-white text-xs"
               />
             </div>
 
-            <FormField
-              label="Subheadline Paragraph"
-              multiline
-              rows={3}
-              value={landing.hero.subheadline}
-              onChange={(e) =>
-                setLanding({
-                  ...landing,
-                  hero: { ...landing.hero, subheadline: e.target.value },
-                })
-              }
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-3 shadow-sm dark:shadow-none">
-                <span className="text-xs font-bold text-blue-600 dark:text-blue-400">Primary CTA Button</span>
-                <FormField
-                  label="Button Text"
-                  value={landing.hero.cta_primary_text}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Headline (Line 1)
+                </label>
+                <input
+                  type="text"
+                  value={landing.hero.headline_line1}
                   onChange={(e) =>
                     setLanding({
                       ...landing,
-                      hero: { ...landing.hero, cta_primary_text: e.target.value },
+                      hero: { ...landing.hero, headline_line1: e.target.value },
                     })
                   }
-                />
-                <FormField
-                  label="Target URL"
-                  mono
-                  value={landing.hero.cta_primary_url}
-                  onChange={(e) =>
-                    setLanding({
-                      ...landing,
-                      hero: { ...landing.hero, cta_primary_url: e.target.value },
-                    })
-                  }
+                  className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-slate-800 focus:border-blue-500 rounded-xl text-white text-xs"
                 />
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 space-y-3 shadow-sm dark:shadow-none">
-                <span className="text-xs font-bold text-purple-600 dark:text-purple-400">Secondary CTA Button</span>
-                <FormField
-                  label="Button Text"
-                  value={landing.hero.cta_secondary_text}
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Headline (Gradient Highlight Text)
+                </label>
+                <input
+                  type="text"
+                  value={landing.hero.headline_gradient}
                   onChange={(e) =>
                     setLanding({
                       ...landing,
-                      hero: { ...landing.hero, cta_secondary_text: e.target.value },
+                      hero: { ...landing.hero, headline_gradient: e.target.value },
                     })
                   }
+                  className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-slate-800 focus:border-blue-500 rounded-xl text-white text-xs"
                 />
-                <FormField
-                  label="Target URL"
-                  mono
-                  value={landing.hero.cta_secondary_url}
-                  onChange={(e) =>
-                    setLanding({
-                      ...landing,
-                      hero: { ...landing.hero, cta_secondary_url: e.target.value },
-                    })
-                  }
-                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Subheadline Paragraph
+              </label>
+              <textarea
+                rows={3}
+                value={landing.hero.subheadline}
+                onChange={(e) =>
+                  setLanding({
+                    ...landing,
+                    hero: { ...landing.hero, subheadline: e.target.value },
+                  })
+                }
+                className="w-full px-3.5 py-2.5 bg-slate-950/80 border border-slate-800 focus:border-blue-500 rounded-xl text-white text-xs leading-relaxed"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-3">
+                <span className="text-xs font-bold text-blue-400">Primary CTA Button</span>
+                <div>
+                  <label className="block text-[11px] text-slate-400 mb-1">Button Text</label>
+                  <input
+                    type="text"
+                    value={landing.hero.cta_primary_text}
+                    onChange={(e) =>
+                      setLanding({
+                        ...landing,
+                        hero: { ...landing.hero, cta_primary_text: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-white text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] text-slate-400 mb-1">Target URL</label>
+                  <input
+                    type="text"
+                    value={landing.hero.cta_primary_url}
+                    onChange={(e) =>
+                      setLanding({
+                        ...landing,
+                        hero: { ...landing.hero, cta_primary_url: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-white text-xs"
+                  />
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-3">
+                <span className="text-xs font-bold text-purple-400">Secondary CTA Button</span>
+                <div>
+                  <label className="block text-[11px] text-slate-400 mb-1">Button Text</label>
+                  <input
+                    type="text"
+                    value={landing.hero.cta_secondary_text}
+                    onChange={(e) =>
+                      setLanding({
+                        ...landing,
+                        hero: { ...landing.hero, cta_secondary_text: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-white text-xs"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] text-slate-400 mb-1">Target URL</label>
+                  <input
+                    type="text"
+                    value={landing.hero.cta_secondary_url}
+                    onChange={(e) =>
+                      setLanding({
+                        ...landing,
+                        hero: { ...landing.hero, cta_secondary_url: e.target.value },
+                      })
+                    }
+                    className="w-full px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-white text-xs"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </Card>
+        </div>
       )}
 
       {/* TAB 2: SECTIONS TOGGLES & ORDER */}
       {activeTab === 'sections' && (
-        <Card
-          title="Landing Page Sections (Enable / Disable & Reorder)"
-          badge="10 Sections Total"
-          icon={Layers}
-        >
+        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold text-white">
+              Landing Page Sections (Enable / Disable & Reorder)
+            </h2>
+            <span className="text-[11px] text-slate-500">10 Sections Total</span>
+          </div>
+
           <div className="space-y-2">
             {landing.sections.map((sec: any, index: number) => (
               <div
                 key={sec.id}
-                className={`p-3.5 rounded-xl border flex items-center justify-between transition-all shadow-sm dark:shadow-none ${
-                  sec.enabled
-                    ? 'bg-white dark:bg-slate-950/80 border-slate-200 dark:border-slate-800/80'
-                    : 'bg-slate-50 dark:bg-slate-950/30 border-slate-200 dark:border-slate-800/40 opacity-60'
-                }`}
+                className={`p-3.5 rounded-xl border flex items-center justify-between transition-all ${sec.enabled
+                    ? 'bg-slate-950/80 border-slate-800/80'
+                    : 'bg-slate-950/30 border-slate-800/40 opacity-60'
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-[10px] font-mono text-slate-500 w-5">
                     {index + 1}.
                   </span>
                   <div>
-                    <span className="text-xs font-bold text-slate-900 dark:text-white">{sec.title}</span>
+                    <span className="text-xs font-bold text-white">{sec.title}</span>
                     <span className="text-[10px] text-slate-500 ml-2 font-mono">id: {sec.id}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
-                    type="button"
                     onClick={() => moveSection(index, 'up')}
                     disabled={index === 0}
-                    className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 border border-slate-200 dark:border-slate-800"
-                    title="Move up"
+                    className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white disabled:opacity-30"
                   >
                     <MoveUp size={14} />
                   </button>
 
                   <button
-                    type="button"
                     onClick={() => moveSection(index, 'down')}
                     disabled={index === landing.sections.length - 1}
-                    className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 border border-slate-200 dark:border-slate-800"
-                    title="Move down"
+                    className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white disabled:opacity-30"
                   >
                     <MoveDown size={14} />
                   </button>
 
                   <button
-                    type="button"
                     onClick={() => toggleSection(sec.id)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                      sec.enabled
-                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
-                        : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-                    }`}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${sec.enabled
+                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        : 'bg-slate-800 text-slate-400'
+                      }`}
                   >
                     {sec.enabled ? <Eye size={12} /> : <EyeOff size={12} />}
                     <span>{sec.enabled ? 'Visible' : 'Hidden'}</span>
@@ -295,79 +391,93 @@ export default function LandingPageCMS() {
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       )}
 
       {/* TAB 3: STATS */}
       {activeTab === 'stats' && (
-        <Card title="Stats Counter Cards (4 Metrics)" icon={BarChart3}>
+        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
+          <h2 className="text-sm font-bold text-white">Stats Counter Cards (4 Metrics)</h2>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {landing.stats.map((st: any, idx: number) => (
-              <div key={st.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 space-y-3 shadow-sm dark:shadow-none">
+              <div key={st.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-blue-600 dark:text-blue-400">Stat #{idx + 1} ({st.id})</span>
+                  <span className="text-xs font-bold text-blue-400">Stat #{idx + 1} ({st.id})</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
-                  <FormField
-                    label="Value Display"
-                    value={st.value}
-                    bold
-                    onChange={(e) => {
-                      const newStats = [...landing.stats];
-                      newStats[idx].value = e.target.value;
-                      setLanding({ ...landing, stats: newStats });
-                    }}
-                  />
+                  <div>
+                    <label className="block text-[10px] text-slate-400 mb-1">Value Display</label>
+                    <input
+                      type="text"
+                      value={st.value}
+                      onChange={(e) => {
+                        const newStats = [...landing.stats];
+                        newStats[idx].value = e.target.value;
+                        setLanding({ ...landing, stats: newStats });
+                      }}
+                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
+                    />
+                  </div>
 
-                  <FormField
-                    label="Main Label"
-                    value={st.label}
-                    onChange={(e) => {
-                      const newStats = [...landing.stats];
-                      newStats[idx].label = e.target.value;
-                      setLanding({ ...landing, stats: newStats });
-                    }}
-                  />
+                  <div>
+                    <label className="block text-[10px] text-slate-400 mb-1">Main Label</label>
+                    <input
+                      type="text"
+                      value={st.label}
+                      onChange={(e) => {
+                        const newStats = [...landing.stats];
+                        newStats[idx].label = e.target.value;
+                        setLanding({ ...landing, stats: newStats });
+                      }}
+                      className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
+                    />
+                  </div>
                 </div>
 
-                <FormField
-                  label="Sublabel Description"
-                  value={st.sublabel}
-                  onChange={(e) => {
-                    const newStats = [...landing.stats];
-                    newStats[idx].sublabel = e.target.value;
-                    setLanding({ ...landing, stats: newStats });
-                  }}
-                />
+                <div>
+                  <label className="block text-[10px] text-slate-400 mb-1">Sublabel Description</label>
+                  <input
+                    type="text"
+                    value={st.sublabel}
+                    onChange={(e) => {
+                      const newStats = [...landing.stats];
+                      newStats[idx].sublabel = e.target.value;
+                      setLanding({ ...landing, stats: newStats });
+                    }}
+                    className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
+                  />
+                </div>
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       )}
 
       {/* TAB 4: TESTIMONIALS */}
       {activeTab === 'testimonials' && (
-        <Card
-          title="User Testimonials & Reviews"
-          icon={MessageSquare}
-          action={
+        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold text-white flex items-center gap-2">
+              <MessageSquare size={16} className="text-purple-400" />
+              <span>User Testimonials & Reviews</span>
+            </h2>
             <button
-              type="button"
               onClick={addTestimonial}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/10 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 text-xs font-bold hover:bg-blue-600/20"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 text-xs font-bold hover:bg-blue-600/30"
             >
               <Plus size={13} />
               <span>Add Review Card</span>
             </button>
-          }
-        >
+          </div>
+
           <div className="space-y-3">
             {testimonials.map((t: any, idx: number) => (
-              <div key={t.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 space-y-3 shadow-sm dark:shadow-none">
+              <div key={t.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white">#{idx + 1}</span>
+                    <span className="text-xs font-bold text-white">#{idx + 1}</span>
                     <input
                       type="text"
                       value={t.author_name}
@@ -377,7 +487,7 @@ export default function LandingPageCMS() {
                         setTestimonials(next);
                       }}
                       placeholder="Author Name"
-                      className="px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-lg text-slate-900 dark:text-white text-xs font-bold shadow-sm dark:shadow-none focus:outline-none focus:border-blue-500"
+                      className="px-2 py-1 bg-slate-900 border border-slate-800 rounded text-white text-xs font-bold"
                     />
                   </div>
 
@@ -389,7 +499,7 @@ export default function LandingPageCMS() {
                         next[idx].tag = e.target.value;
                         setTestimonials(next);
                       }}
-                      className="px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-300 shadow-sm dark:shadow-none focus:outline-none focus:border-blue-500"
+                      className="px-2 py-1 bg-slate-900 border border-slate-800 rounded text-xs text-slate-300"
                     >
                       <option value="Student">Student</option>
                       <option value="Academic">Academic</option>
@@ -398,10 +508,8 @@ export default function LandingPageCMS() {
                     </select>
 
                     <button
-                      type="button"
                       onClick={() => removeTestimonial(t.id)}
-                      className="p-1 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
-                      title="Delete Review"
+                      className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -409,64 +517,69 @@ export default function LandingPageCMS() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <FormField
-                    placeholder="Role / Title"
+                  <input
+                    type="text"
                     value={t.role}
                     onChange={(e) => {
                       const next = [...testimonials];
                       next[idx].role = e.target.value;
                       setTestimonials(next);
                     }}
+                    placeholder="Role / Title"
+                    className="px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
                   />
-                  <FormField
-                    placeholder="School or Company"
+                  <input
+                    type="text"
                     value={t.company_or_school}
                     onChange={(e) => {
                       const next = [...testimonials];
                       next[idx].company_or_school = e.target.value;
                       setTestimonials(next);
                     }}
+                    placeholder="School or Company"
+                    className="px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs"
                   />
                 </div>
 
-                <FormField
-                  multiline
+                <textarea
                   rows={2}
-                  placeholder="Review quote..."
                   value={t.quote}
                   onChange={(e) => {
                     const next = [...testimonials];
                     next[idx].quote = e.target.value;
                     setTestimonials(next);
                   }}
+                  placeholder="Review quote..."
+                  className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs leading-relaxed"
                 />
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       )}
 
       {/* TAB 5: FAQS */}
       {activeTab === 'faqs' && (
-        <Card
-          title="FAQ Accordion Q&A"
-          icon={HelpCircle}
-          action={
+        <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold text-white flex items-center gap-2">
+              <HelpCircle size={16} className="text-amber-400" />
+              <span>FAQ Accordion Q&A</span>
+            </h2>
             <button
-              type="button"
               onClick={addFaq}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/10 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 text-xs font-bold hover:bg-blue-600/20"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30 text-xs font-bold hover:bg-blue-600/30"
             >
               <Plus size={13} />
               <span>Add Question</span>
             </button>
-          }
-        >
+          </div>
+
           <div className="space-y-3">
             {faqs.map((f: any, idx: number) => (
-              <div key={f.id} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 space-y-2.5 shadow-sm dark:shadow-none">
+              <div key={f.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/80 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-amber-600 dark:text-amber-400">Q#{idx + 1}</span>
+                  <span className="text-xs font-bold text-amber-400">Q#{idx + 1}</span>
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
@@ -477,45 +590,44 @@ export default function LandingPageCMS() {
                         setFaqs(next);
                       }}
                       placeholder="Category"
-                      className="px-2.5 py-0.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-md text-[11px] text-slate-700 dark:text-slate-400 shadow-sm dark:shadow-none focus:outline-none focus:border-blue-500"
+                      className="px-2 py-0.5 bg-slate-900 border border-slate-800 rounded text-[11px] text-slate-400"
                     />
                     <button
-                      type="button"
                       onClick={() => removeFaq(f.id)}
-                      className="p-1 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
-                      title="Delete Question"
+                      className="p-1 text-slate-500 hover:text-rose-400 transition-colors"
                     >
                       <Trash2 size={15} />
                     </button>
                   </div>
                 </div>
 
-                <FormField
-                  placeholder="Question text"
+                <input
+                  type="text"
                   value={f.question}
-                  bold
                   onChange={(e) => {
                     const next = [...faqs];
                     next[idx].question = e.target.value;
                     setFaqs(next);
                   }}
+                  placeholder="Question text"
+                  className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-white text-xs font-semibold"
                 />
 
-                <FormField
-                  multiline
+                <textarea
                   rows={3}
-                  placeholder="Answer text..."
                   value={f.answer}
                   onChange={(e) => {
                     const next = [...faqs];
                     next[idx].answer = e.target.value;
                     setFaqs(next);
                   }}
+                  placeholder="Answer text..."
+                  className="w-full px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded text-slate-300 text-xs leading-relaxed"
                 />
               </div>
             ))}
           </div>
-        </Card>
+        </div>
       )}
     </div>
   );

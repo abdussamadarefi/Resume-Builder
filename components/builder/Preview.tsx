@@ -3,7 +3,6 @@
 import React from "react"
 import { useResumeStore } from "@/store/resumeStore"
 import { useSettingsStore } from "@/store/settingsStore"
-import { useUIStore } from "@/store/uiStore"
 import { NexusTemplate } from "@/components/templates/NexusTemplate"
 import { MeridianTemplate } from "@/components/templates/MeridianTemplate"
 import { AtlasTemplate } from "@/components/templates/AtlasTemplate"
@@ -49,9 +48,9 @@ export function Preview() {
   if (!activeData || !activeData.meta) return null
 
   return (
-    <div className="w-full h-full flex flex-col items-center p-4 bg-slate-800/20 overflow-auto scrollbar-thin">
+    <div className="w-full h-full flex flex-col items-center p-4 bg-slate-200/60 dark:bg-slate-950/60 overflow-auto scrollbar-thin transition-colors duration-200">
       {isOverflowing && activeData.meta.type === "resume" && (
-        <div className="mb-4 px-4 py-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-bold uppercase tracking-widest rounded-lg flex items-center gap-2 animate-pulse flex-shrink-0">
+        <div className="mb-4 px-4 py-2.5 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-widest rounded-lg flex items-center gap-2 animate-pulse flex-shrink-0">
           <span>⚠️ Content exceeds one page limit</span>
         </div>
       )}
@@ -67,7 +66,7 @@ export function Preview() {
         <div 
           id="rf-preview-doc"
           ref={contentRef}
-          className="relative bg-white shadow-2xl origin-top-left transition-transform duration-300 ease-out"
+          className="relative bg-white text-slate-900 shadow-2xl rounded-sm border border-slate-300/60 dark:border-slate-800 origin-top-left transition-transform duration-300 ease-out"
           style={{ 
             width: "210mm", 
             minHeight: `calc(297mm * ${pageCount})`,
@@ -105,29 +104,7 @@ export function Preview() {
           {templateId === "executive" && (
             <ExecutiveTemplate data={activeData} accentColor={accentColor} fontSize={fontSize} lineHeight={lineHeight} margin={margin} />
           )}
-
-          {/* Page Break Guides */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-30">
-            {Array.from({ length: pageCount - 1 }).map((_, index) => {
-              const top = (index + 1) * pageHeightPx
-              return (
-                <div 
-                  key={index} 
-                  className="absolute left-0 right-0 flex items-center justify-center"
-                  style={{ top: `${top}px`, transform: 'translateY(-50%)' }}
-                >
-                  <div className="w-full border-t border-dashed border-rose-500/50" />
-                  <span className="absolute right-4 px-2 py-0.5 bg-rose-500 text-white text-[9px] font-bold uppercase rounded shadow-lg pointer-events-auto">
-                    Page {index + 1} break (PDF page {index + 2} below)
-                  </span>
-                </div>
-              )
-            })}
-          </div>
         </div>
-      </div>
-      <div className="mt-4 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
-        Document Pages: {pageCount} {activeData.meta.type === "resume" && " (Target: 1 Page)"}
       </div>
     </div>
   )

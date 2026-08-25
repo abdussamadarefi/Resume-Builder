@@ -37,9 +37,9 @@ export default function Testimonials() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16 space-y-3"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
+          <p className="text-xs font-semibold text-primary uppercase tracking-widest">
             User Stories
-          </div>
+          </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
             Loved by Job Seekers &amp; Academics
           </h2>

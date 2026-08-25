@@ -30,14 +30,11 @@ export default function StudentVsProfessional() {
           transition={{ duration: 0.5 }}
           className="text-center max-w-2xl mx-auto mb-16 space-y-4"
         >
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider">
+          <p className="text-xs font-semibold text-primary uppercase tracking-widest">
             Built for Everyone
-          </span>
+          </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
-            Whether You&apos;re Starting Out or{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-400">
-              Leveling Up
-            </span>
+            Whether You&apos;re Starting Out or Leveling Up
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed">
             ResumeForge adapts to your career stage with tailored templates and features.

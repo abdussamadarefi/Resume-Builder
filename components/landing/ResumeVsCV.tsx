@@ -46,14 +46,11 @@ export default function ResumeVsCV() {
           transition={{ duration: 0.5 }}
           className="text-center max-w-2xl mx-auto mb-16 space-y-4"
         >
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-[10px] font-bold uppercase tracking-wider">
+          <p className="text-xs font-semibold text-primary uppercase tracking-widest">
             Know the Difference
-          </span>
+          </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
-            Resume vs. CV:{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-500">
-              Which Do You Need?
-            </span>
+            Resume vs. CV: Which Do You Need?
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed">
             Understanding the difference helps you apply with the right document every time.

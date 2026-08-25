@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronDown, HelpCircle } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import defaultFaqs from "@/content/faqs.json"
 
 export default function FAQ() {
@@ -23,9 +23,9 @@ export default function FAQ() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16 space-y-3"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider">
-            <HelpCircle size={12} /> Got Questions?
-          </div>
+          <p className="text-xs font-semibold text-primary uppercase tracking-widest">
+            Got Questions?
+          </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
             Frequently Asked Questions
           </h2>

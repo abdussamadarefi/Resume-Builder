@@ -97,7 +97,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="noise fixed inset-0 z-[9999]" />
           {children}
         </ThemeProvider>
       </body>

@@ -3,7 +3,7 @@
 import React, { useRef } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { ArrowRight, Sparkles } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import templatesData from "@/content/templates.json"
 
@@ -77,9 +77,9 @@ export default function TemplateShowcase() {
             transition={{ duration: 0.5 }}
             className="space-y-3"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
-              <Sparkles size={12} /> 10 Free Templates
-            </div>
+            <p className="text-xs font-semibold text-primary uppercase tracking-widest">
+              10 Free Templates
+            </p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
               Pick Your Template
             </h2>

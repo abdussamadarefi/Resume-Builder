@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
   FileText, ArrowRight, Code, 
-  ShieldCheck, Sparkles, UserCheck, Eye, FileCode2
+  ShieldCheck, FileCheck, UserCheck, Eye, FileCode2
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -52,7 +52,7 @@ const featureCards = [
     iconColor: "text-emerald-400",
   },
   {
-    icon: Sparkles,
+    icon: FileCheck,
     title: "ATS-Friendly Layouts",
     description: "Carefully formatted layouts designed to parse cleanly on automated applicant tracking system readers.",
     iconBg: "bg-blue-500/10",
@@ -107,15 +107,15 @@ export default function Home() {
             animate="visible"
             className="flex-1 text-left space-y-8 max-w-2xl"
           >
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-wider">
-              <Sparkles size={11} /> {hero.badge_text}
+            <motion.div variants={itemVariants} className="text-xs font-semibold text-primary uppercase tracking-widest">
+              {hero.badge_text}
             </motion.div>
 
             <motion.h1 
               variants={itemVariants} 
               className="text-4xl sm:text-5xl md:text-6xl font-heading font-black tracking-tight text-slate-900 dark:text-white leading-[1.08] lg:leading-[1.05]"
             >
-              {hero.headline_line1} <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-indigo-500 to-emerald-500">{hero.headline_gradient}</span>
+              {hero.headline_line1} <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500">{hero.headline_gradient}</span>
             </motion.h1>
 
             <motion.p 
@@ -157,14 +157,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex-1 w-full max-w-[500px] relative z-10"
           >
-            {/* Accent glow under widget */}
-            <div className={cn(
-              "absolute inset-0 blur-[50px] rounded-3xl opacity-25 transition-colors duration-500",
-              mockColors[mockColor].hex === "#3b82f6" && "bg-blue-500",
-              mockColors[mockColor].hex === "#e11d48" && "bg-rose-500",
-              mockColors[mockColor].hex === "#10b981" && "bg-emerald-500",
-              mockColors[mockColor].hex === "#deb887" && "bg-amber-500"
-            )} />
+
 
             <div className="relative bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 shadow-2xl backdrop-blur-xl transition-colors duration-200">
               {/* Widget Header Controls */}
@@ -338,7 +331,7 @@ export default function Home() {
                 {/* Bottom tag bar */}
                 <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[7px] text-slate-400 font-bold uppercase tracking-wider">
                   <span>ResumeForge Output</span>
-                  <span className="flex items-center gap-1"><Sparkles size={8} style={{ color: mockColors[mockColor].hex }} /> Print-ready</span>
+                  <span>Print-ready</span>
                 </div>
               </div>
             </div>
@@ -362,12 +355,11 @@ export default function Home() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.5 }}
             >
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-wider mb-4">
-                <ShieldCheck size={11} /> Core Features
-              </span>
+              <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-4">
+                Core Features
+              </p>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-slate-900 dark:text-white tracking-tight mt-4">
-                Designed for the Security Conscious{" "}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-teal-500">Professional</span>
+                Designed for the Privacy-Conscious Professional
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed mt-4">
                 ResumeForge combines complete client-side security with production-grade template performance.

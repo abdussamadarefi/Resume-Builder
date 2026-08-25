@@ -80,7 +80,7 @@ export default function TemplateShowcase() {
             <p className="text-xs font-semibold text-primary uppercase tracking-widest">
               10 Free Templates
             </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold text-slate-900 dark:text-white tracking-tight">
               Pick Your Template
             </h2>
             <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-lg">
@@ -126,7 +126,7 @@ export default function TemplateShowcase() {
                     </div>
 
                     {template.ats_score && (
-                      <div className="absolute top-3 left-3 px-2 py-1 rounded-md bg-emerald-500/10 dark:bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 shadow-sm">
+                      <div className="absolute top-3 left-3 px-2 py-1 rounded-md bg-emerald-500/10 dark:bg-emerald-500/20 backdrop-blur-md border border-emerald-500/30 text-[10px] font-bold tabular-nums text-emerald-700 dark:text-emerald-300 shadow-sm">
                         {template.ats_score}% ATS
                       </div>
                     )}

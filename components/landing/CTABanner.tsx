@@ -21,7 +21,7 @@ export default function CTABanner() {
               Get Started
             </p>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-slate-900 dark:text-white tracking-tight mb-6 leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-tight">
               Start Building Your Future.
               <br />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500">

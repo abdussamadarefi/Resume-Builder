@@ -65,7 +65,7 @@ export function SectionNavButtons() {
           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
             Progress
           </span>
-          <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 tabular-nums">
+          <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 font-mono tabular-nums">
             {progress} / {total}
           </span>
         </div>

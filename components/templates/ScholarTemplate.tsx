@@ -22,8 +22,8 @@ export function ScholarTemplate({ data, accentColor, fontSize, lineHeight, margi
 
   return (
     <div
-      className="bg-white text-slate-900 min-h-full"
-      style={{ padding: `${margin}px`, fontSize: `${fontSize}px`, lineHeight, fontFamily: '"Times New Roman", Times, serif' }}
+      className="bg-white text-slate-900 min-h-full font-serif"
+      style={{ padding: `${margin}px`, fontSize: `${fontSize}px`, lineHeight }}
     >
       {/* Header */}
       <header className="text-center mb-10 pb-8">
@@ -40,7 +40,7 @@ export function ScholarTemplate({ data, accentColor, fontSize, lineHeight, margi
           {personal.firstName} {personal.lastName}
         </h1>
         <p className="text-base font-normal italic text-slate-500 mb-4" style={{ color: accentColor }}>{personal.title}</p>
-        <div className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-xs text-slate-500 font-sans">
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-xs text-slate-600">
           {personal.email && <span>{personal.email}</span>}
           {personal.phone && <span>{personal.phone}</span>}
           {personal.location && <span>{personal.location}</span>}

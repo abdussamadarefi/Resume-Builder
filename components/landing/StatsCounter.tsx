@@ -40,7 +40,7 @@ export default function StatsCounter() {
                 <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl ${meta.bg} border border-slate-200 dark:border-slate-800 mb-3 ${meta.color}`}>
                   <Icon size={18} />
                 </div>
-                <div className="text-3xl md:text-4xl font-heading font-black text-slate-900 dark:text-white mb-1">
+                <div className="text-3xl md:text-4xl font-heading font-extrabold tracking-tight tabular-nums text-slate-900 dark:text-white mb-1">
                   {stat.value}
                 </div>
                 <div className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-widest">

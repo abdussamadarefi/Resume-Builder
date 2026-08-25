@@ -49,7 +49,7 @@ export default function ResumeVsCV() {
           <p className="text-xs font-semibold text-primary uppercase tracking-widest">
             Know the Difference
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading font-extrabold text-slate-900 dark:text-white tracking-tight">
             Resume vs. CV: Which Do You Need?
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base leading-relaxed">

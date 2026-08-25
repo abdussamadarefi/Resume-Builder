@@ -50,8 +50,10 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "Inter", "system-ui"],
-        heading: ["var(--font-heading)", "Outfit", "system-ui"],
+        sans: ["var(--font-sans)", "Inter", "system-ui", "sans-serif"],
+        heading: ["var(--font-heading)", "Outfit", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "Lora", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
       },
       animation: {
         "fade-in": "fade-in 0.5s ease-out forwards",

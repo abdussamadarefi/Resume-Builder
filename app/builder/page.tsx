@@ -168,7 +168,7 @@ function BuilderContent() {
 
             <div className="p-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
               <div className="flex items-center gap-2 flex-1">
-                <span className="text-xs text-slate-500">{Math.round(zoom * 100)}%</span>
+                <span className="text-xs text-slate-500 font-mono tabular-nums">{Math.round(zoom * 100)}%</span>
                 <input
                   type="range"
                   min="0.3"
@@ -309,7 +309,7 @@ function BuilderContent() {
             <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500 text-[10px]">Live Preview</h2>
             <div className="flex gap-4 items-center">
               <div className="flex items-center gap-2 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 px-2.5 py-1 rounded-lg shadow-sm">
-                <span className="text-[10px] text-slate-500 font-semibold">{Math.round(zoom * 100)}%</span>
+                <span className="text-[10px] text-slate-500 font-semibold font-mono tabular-nums">{Math.round(zoom * 100)}%</span>
                 <input
                   type="range"
                   min="0.4"

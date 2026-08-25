@@ -26,7 +26,7 @@ export default function FAQ() {
           <p className="text-xs font-semibold text-primary uppercase tracking-widest">
             Got Questions?
           </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-black text-slate-900 dark:text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-extrabold text-slate-900 dark:text-white tracking-tight">
             Frequently Asked Questions
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-lg mx-auto">
